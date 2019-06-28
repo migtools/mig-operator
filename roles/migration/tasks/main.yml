@@ -1,2 +1,16 @@
 ---
-# tasks file for migration
+- name: "Set up CRDs"
+  k8s:
+    state: "present"
+    src: "{{ role_path }}/files/{{ item }}"
+  with_items:
+    - "cluster-registry-crd.yaml"
+    - "migration_v1alpha1_migcluster.yaml"
+    - "migration_v1alpha1_migmigration.yaml"
+    - "migration_v1alpha1_migplan.yaml"
+    - "migration_v1alpha1_migstorage.yaml"
+
+- name: "Set up mig controller"
+  k8s:
+    state: "present"
+    definition: "{{ lookup('template', 'manifest.yml.j2') }}"
