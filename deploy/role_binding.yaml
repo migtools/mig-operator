@@ -1,0 +1,11 @@
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: mig-operator
+subjects:
+- kind: ServiceAccount
+  name: mig-operator
+roleRef:
+  kind: Role
+  name: mig-operator
+  apiGroup: rbac.authorization.k8s.io

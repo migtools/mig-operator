@@ -1,0 +1,7 @@
+apiVersion: migration.openshift.io/v1alpha1
+kind: Migration
+metadata:
+  name: example-migration
+spec:
+  # Add fields here
+  size: 3
