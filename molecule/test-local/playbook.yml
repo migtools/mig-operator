@@ -54,7 +54,7 @@
         namespace: '{{ namespace }}'
         definition: "{{ lookup('template', '/'.join([deploy_dir, 'operator.yaml'])) }}"
 
-    - name: Create the migration.openshift.io/v1alpha1.Migration
+    - name: Create the migration.openshift.io/v1alpha1.MigrationController
       k8s:
         state: present
         namespace: '{{ namespace }}'

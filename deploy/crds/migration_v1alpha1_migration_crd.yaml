@@ -5,10 +5,10 @@ metadata:
 spec:
   group: migration.openshift.io
   names:
-    kind: Migration
-    listKind: MigrationList
-    plural: migrations
-    singular: migration
+    kind: MigrationController
+    listKind: MigrationControllerList
+    plural: migrationcontrollers
+    singular: migrationcontroller
   scope: Namespaced
   subresources:
     status: {}

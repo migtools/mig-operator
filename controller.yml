@@ -1,6 +1,6 @@
 apiVersion: migration.openshift.io/v1alpha1
-kind: Migration
+kind: MigrationController
 metadata:
-  name: migration
+  name: migration-controller
   namespace: mig
 spec: {}
