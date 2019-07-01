@@ -1,4 +1,4 @@
-## mig-operator
+# mig-operator
 
 ## Operator Installation
 `oc create -f operator.yml`
