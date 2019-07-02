@@ -1,7 +1,9 @@
 # mig-operator
+This operator is compatible with Openshift 4
 
 ## Operator Installation
-`oc create -f operator.yml`
+1. `oc create -f operator.yml`
 
 ## Migration Controller Installation
-`oc create -f controller.yml`
+1. Optionally edit `controller.yml` and change the `cluster_name` to configure the MigCluster resource with
+1. `oc create -f controller.yml`
