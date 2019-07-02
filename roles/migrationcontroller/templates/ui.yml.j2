@@ -1,0 +1,62 @@
+---
+apiVersion: migration.openshift.io/v1alpha1
+kind: MigCluster
+metadata:
+  name: "{{ cluster_name }}"
+  namespace: "{{ mig_namespace}}"
+spec:
+  isHostCluster: true
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: migration-ui
+  namespace: "{{ mig_namespace }}"
+  labels:
+    app: migration
+    service: migration
+spec:
+  ports:
+    - name: port-9000
+      port: 9000
+      targetPort: 9000
+      protocol: TCP
+  selector:
+    app: migration
+    service: migration
+---
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: migration-ui
+  namespace: "{{ mig_namespace }}"
+  labels:
+    app: migration
+    service: migration
+spec:
+  replicas: 1
+  selector:
+    app: migration
+    service: migration
+  strategy:
+    type: Rolling
+  template:
+    metadata:
+      labels:
+        app: migration
+        service: migration
+    spec:
+      containers:
+        - name: mig-ui
+          image: "{{ mig_ui_image }}:{{ mig_ui_version }}"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9000
+              protocol: TCP
+          volumeMounts:
+            - name: "{{ mig_ui_configmap_name }}"
+              mountPath: /etc/mig-ui
+      volumes:
+        - name: "{{ mig_ui_configmap_name }}"
+          configMap:
+            name: "{{ mig_ui_configmap_name }}"

@@ -1,0 +1,209 @@
+---
+- name: "Set up CRDs"
+  k8s:
+    state: "present"
+    src: "{{ role_path }}/files/{{ item }}"
+  with_items:
+    - "cluster-registry-crd.yaml"
+    - "migration_v1alpha1_migcluster.yaml"
+    - "migration_v1alpha1_migmigration.yaml"
+    - "migration_v1alpha1_migplan.yaml"
+    - "migration_v1alpha1_migstorage.yaml"
+
+- name: "Set up mig controller"
+  k8s:
+    state: "present"
+    definition: "{{ lookup('template', 'controller.yml.j2') }}"
+
+- name: Get cluster config
+  k8s_facts:
+    api_version: v1
+    kind: ConfigMap
+    name: cluster-config-v1
+    namespace: kube-system
+  register: cluster_configmap
+
+- set_fact:
+    cluster_config_data: "{{ cluster_configmap.resources[0].data | regex_replace('install-config', 'install_config') }}"
+
+- set_fact:
+    cluster_config: "{{ cluster_config_data.install_config | from_yaml }}"
+
+- set_fact:
+    mig_ui_cluster_api_endpoint: "https://api.{{ cluster_config.metadata.name }}.{{ cluster_config.baseDomain }}:6443" 
+
+- name: "Set up mig ui route"
+  k8s:
+    state: "present"
+    definition: "{{ lookup('template', 'ui-route.yml.j2') }}"
+
+- name: Generate random secret value for oauth client
+  set_fact:
+    mig_ui_oauth_secret: "{{ 99999999 | random | to_uuid | b64encode }}"
+
+- name: Find generated route
+  k8s_facts:
+    api_version: "route.openshift.io/v1"
+    kind: "Route"
+    namespace: "{{ mig_namespace }}"
+    name: migration
+  register: route
+
+- name: Determine CORS URL
+  set_fact:
+    mig_ui_cors_url: "//{{ route.resources[0].spec.host }}"
+    mig_ui_cors_loopback: "//127.0.0.1(:|$)"
+    mig_ui_cors_localhost: "//localhost(:|$)"
+
+- name: Set OAuth redirect url
+  set_fact:
+    mig_ui_oauth_redirect_url: "https:{{ mig_ui_cors_url }}/login/callback"
+
+- name: Check if migration ui configmap exists already so we don't update it
+  k8s_facts:
+    api_version: v1
+    kind: ConfigMap
+    name: "{{ mig_ui_configmap_name }}"
+    namespace: "{{ mig_namespace }}"
+  register: configmap_status
+
+- name: Set up mig ui configmap
+  k8s:
+    state: "present"
+    definition: "{{ lookup('template', 'ui-configmap.yml.j2') }}"
+  when: (configmap_status.resources|length) == 0
+
+- name: Check if migration ui oauthclient secret exists already so we don't update it
+  k8s_facts:
+    api_version: v1
+    kind: OAuthClient
+    name: migration
+    namespace: "{{ mig_namespace }}"
+  register: oauthclient_status
+
+- name: Set up mig ui oauthclient secret
+  k8s:
+    state: "present"
+    definition: "{{ lookup('template', 'ui-oauthsecret.yml.j2') }}"
+  when: (oauthclient_status.resources|length) == 0
+
+- name: "Set up mig ui"
+  k8s:
+    state: "present"
+    definition: "{{ lookup('template', 'ui.yml.j2') }}"
+
+- name: Retrieve kubeapiserver operator definition
+  k8s_facts:
+    api_version: "operator.openshift.io/v1"
+    kind: "kubeapiserver"
+    name: "cluster"
+  register: kubeapiserver
+
+- when: kubeapiserver.resources[0].spec.unsupportedConfigOverrides is not defined or
+        kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
+        mig_ui_cors_url not in kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins
+  block:
+  - name: Write kubeapiserver operator definition for modification
+    copy:
+      dest: /tmp/kubeapiserver.yaml
+      content: "{{kubeapiserver.resources[0] | to_nice_yaml }}"
+
+  - name: Add CORS URL to kubeapiserver operator definition
+    yedit:
+      src: /tmp/kubeapiserver.yaml
+      key: spec.unsupportedConfigOverrides.corsAllowedOrigins
+      append: true
+      value: "{{ item }}"
+    with_items: "{{ mig_ui_cors_url }}"
+
+  - name: Update kubeapiserver operator definition on the cluster
+    k8s:
+      state: present
+      definition: "{{ lookup('file', '/tmp/kubeapiserver.yaml') | from_yaml }}"
+
+- name: Retrieve authentication operator definition
+  k8s_facts:
+    api_version: "operator.openshift.io/v1"
+    kind: "authentication"
+    name: "cluster"
+  register: authentication
+
+- when: authentication.resources[0].spec.unsupportedConfigOverrides is not defined or
+        authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
+        mig_ui_cors_url not in authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins
+  block:
+  - name: Write authentication operator definition for modification
+    copy:
+      dest: /tmp/authentication.yaml
+      content: "{{authentication.resources[0] | to_nice_yaml }}"
+
+  - name: Add CORS URL to authentication operator definition
+    yedit:
+      src: /tmp/authentication.yaml
+      key: spec.unsupportedConfigOverrides.corsAllowedOrigins
+      append: true
+      value: "{{ item }}"
+    with_items: "{{ mig_ui_cors_url }}"
+
+  - name: Update authentication operator definition on the cluster
+    k8s:
+      state: present
+      definition: "{{ lookup('file', '/tmp/authentication.yaml') | from_yaml }}"
+
+- name: Retrieve authentication operator definition
+  k8s_facts:
+    api_version: "operator.openshift.io/v1"
+    kind: "authentication"
+    name: "cluster"
+  register: authentication
+
+- when: authentication.resources[0].spec.unsupportedConfigOverrides is not defined or
+        authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
+        mig_ui_cors_localhost not in authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins
+  block:
+  - name: Write authentication operator definition for modification
+    copy:
+      dest: /tmp/authentication.yaml
+      content: "{{authentication.resources[0] | to_nice_yaml }}"
+
+  - name: Add CORS URL to authentication operator definition
+    yedit:
+      src: /tmp/authentication.yaml
+      key: spec.unsupportedConfigOverrides.corsAllowedOrigins
+      append: true
+      value: "{{ item }}"
+    with_items: "{{ mig_ui_cors_localhost }}"
+
+  - name: Update authentication operator definition on the cluster
+    k8s:
+      state: present
+      definition: "{{ lookup('file', '/tmp/authentication.yaml') | from_yaml }}"
+
+- name: Retrieve authentication operator definition
+  k8s_facts:
+    api_version: "operator.openshift.io/v1"
+    kind: "authentication"
+    name: "cluster"
+  register: authentication
+
+- when: authentication.resources[0].spec.unsupportedConfigOverrides is not defined or
+        authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
+        mig_ui_cors_loopback not in authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins
+  block:
+  - name: Write authentication operator definition for modification
+    copy:
+      dest: /tmp/authentication.yaml
+      content: "{{authentication.resources[0] | to_nice_yaml }}"
+
+  - name: Add CORS URL to authentication operator definition
+    yedit:
+      src: /tmp/authentication.yaml
+      key: spec.unsupportedConfigOverrides.corsAllowedOrigins
+      append: true
+      value: "{{ item }}"
+    with_items: "{{ mig_ui_cors_loopback }}"
+
+  - name: Update authentication operator definition on the cluster
+    k8s:
+      state: present
+      definition: "{{ lookup('file', '/tmp/authentication.yaml') | from_yaml }}"

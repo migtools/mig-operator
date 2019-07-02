@@ -3,4 +3,5 @@ kind: MigrationController
 metadata:
   name: migration-controller
   namespace: mig
-spec: {}
+spec:
+  cluster_name: host

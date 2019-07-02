@@ -2,4 +2,4 @@
 - version: v1alpha1
   group: migration.openshift.io
   kind: MigrationController
-  role: /opt/ansible/roles/migration
+  role: /opt/ansible/roles/migrationcontroller

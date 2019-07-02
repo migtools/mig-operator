@@ -1,0 +1,19 @@
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    haproxy.router.openshift.io/timeout: 300s
+  name: migration
+  namespace: "{{ mig_namespace }}"
+  labels:
+    app: migration
+    service: migration
+spec:
+  to:
+    kind: Service
+    name: migration-ui
+  port:
+    targetPort: port-9000
+  tls:
+    termination: edge

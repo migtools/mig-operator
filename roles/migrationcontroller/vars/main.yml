@@ -1,0 +1,9 @@
+---
+mig_ui_configmap_data:
+  clusterApi: "{{ mig_ui_cluster_api_endpoint }}"
+  namespace: "{{ mig_namespace }}"
+  oauth:
+    clientId: migration
+    redirectUrl: "{{ mig_ui_oauth_redirect_url }}"
+    userScope: "{{ mig_ui_oauth_user_scope }}"
+    clientSecret: "{{ mig_ui_oauth_secret }}"

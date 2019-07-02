@@ -1,4 +1,0 @@
----
-mig_controller_image: quay.io/ocpmigrate/mig-controller
-mig_controller_version: latest
-mig_namespace: mig
