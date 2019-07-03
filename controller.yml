@@ -5,3 +5,11 @@ metadata:
   namespace: mig
 spec:
   cluster_name: host
+  migration_velero: true
+  migration_controller: true
+  migration_ui: true
+  #velero should be installed Openshift 3 and 4 clusters involved in migrations.
+  #It is recommended to install the controller and ui on Openshift 4.
+  #The following must be defined to install the UI on Openshift 3.
+  #In addition see documentation regarding configuration of CORS URL's on Openshift 3.
+  #mig_ui_cluster_api_endpoint: https://replace-with-openshift-cluster-hostname:8443/api
