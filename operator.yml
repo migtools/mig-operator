@@ -131,14 +131,14 @@ spec:
         - /usr/local/bin/ao-logs
         - /tmp/ansible-operator/runner
         - stdout
-        image: docker.io/jmontleon/mig-operator:latest
+        image: docker.io/jmontleon/migration-operator:v0.0.1
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /tmp/ansible-operator/runner
           name: runner
           readOnly: true
       - name: operator
-        image: docker.io/jmontleon/mig-operator:latest
+        image: docker.io/jmontleon/migration-operator:v0.0.1
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /tmp/ansible-operator/runner
