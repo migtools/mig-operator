@@ -124,20 +124,36 @@ spec:
       labels:
         app: migration-operator
     spec:
-     serviceAccountName: migration-operator
-     containers:
-     - name: migration-operator
-       image: docker.io/jmontleon/migration-operator:v0.0.1
-       imagePullPolicy: Always
-       env:
-       - name: OPERATOR_NAME
-         value: migration-operator
-       - name: POD_NAME
-         valueFrom:
-           fieldRef:
-             fieldPath: metadata.name
-       - name: WATCH_NAMESPACE
-         valueFrom:
-           fieldRef:
-             fieldPath: metadata.namespace
-
+      serviceAccountName: migration-operator
+      containers:
+      - name: ansible
+        command:
+        - /usr/local/bin/ao-logs
+        - /tmp/ansible-operator/runner
+        - stdout
+        image: quay.io/ocpmigrate/mig-operator:latest
+        imagePullPolicy: Always
+        volumeMounts:
+        - mountPath: /tmp/ansible-operator/runner
+          name: runner
+          readOnly: true
+      - name: operator
+        image: quay.io/ocpmigrate/mig-operator:latest
+        imagePullPolicy: Always
+        volumeMounts:
+        - mountPath: /tmp/ansible-operator/runner
+          name: runner
+        env:
+        - name: OPERATOR_NAME
+          value: migration-operator
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: WATCH_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+      volumes:
+        - name: runner
+          emptyDir: {}
