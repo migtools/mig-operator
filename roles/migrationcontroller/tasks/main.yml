@@ -30,7 +30,7 @@
     restic_pv_host_path: /tmp/openshift.local.clusterup/openshift.local.volumes/pods
   when:
   - cluster_configmap.resources|length == 0
-  - origin3_dev is defined and origin3_dev
+  - origin_three_dev is defined and origin_three_dev
 
 - when: migration_velero
   block:
