@@ -1,5 +1,5 @@
 ---
-mig_controller_image: quay.io/ocpmigrate/mig-controller
+mig_controller_image: docker.io/jmontleon/mig-controller
 mig_controller_version: latest
 mig_namespace: mig
 mig_ui_configmap_name : mig-ui-config
