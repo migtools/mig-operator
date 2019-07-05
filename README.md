@@ -33,7 +33,7 @@ spec:
     - //localhost(:|$)
     - //127.0.0.1(:|$)
     - //$output-from-previous-command
-``
+```
 
 `oc edit kubeapiserver.operator cluster` and ensure the following exist:
 ```
