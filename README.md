@@ -8,9 +8,48 @@ This operator will install velero with customized migration plugins, the migrati
 1. Edit `controller.yml` and adjust desired options
 1. `oc create -f controller.yml`
 
-## Openshift 3 CORS (Cross-Origin Resource Sharing) Configuration
-In order to enable the UI on Openshift 3 it is necessary to edit the master-config.yaml and restart the Openshift master nodes. On Openshift 4 Cluster Resources are modified by the operator so these steps are not necessary. It is therefore recommended, though not necessary, that the migration controller and UI are run on the Openshift 4 cluster.
+## Manual CORS (Cross-Origin Resource Sharing) Configuration
+In order to enable the UI to talk to an Openshift 3 cluster (whether local or remote) it is necessary to edit the master-config.yaml and restart the Openshift master nodes. 
 
-### TODO:
-- Add steps here for configuring CORS on Openshift 3.
-- [origin3-dev](https://github.com/fusor/origin3-dev/blob/master/ansible/roles/openshift_setup/tasks/main.yml#L347-L353) can be used as a rough guide for pulling these instructions together.
+To determine the CORS URL that needs to be added retrieve the route URL
+`oc get -n mig route/migration -o go-template='{{ .spec.host }}{{ println }}'`
+
+Add the hostname for /etc/origin/master/master-config.yaml under corsAllowedOrigins, for instance:
+```
+corsAllowedOrigins:
+- //$output-from-previous-command
+```
+
+On Openshift 4 Cluster Resources are modified by the operator so these steps are not necessary if you install the controller and UI on the Openshift 4 cluster. If you chose not to configure the UI and Controller on Openshift 4 you will need to do this manually.
+
+If you haven't already, determine the CORS URL that needs to be added retrieve the route URL
+`oc get -n mig route/migration -o go-template='{{ .spec.host }}{{ println }}'`
+
+`oc edit authentication.operator cluster` and ensure the following exist:
+```
+spec:
+  unsupportedConfigOverrides:
+    corsAllowedOrigins:
+    - //localhost(:|$)
+    - //127.0.0.1(:|$)
+    - //$output-from-previous-command
+``
+
+`oc edit kubeapiserver.operator cluster` and ensure the following exist:
+```
+spec:
+  unsupportedConfigOverrides:
+    corsAllowedOrigins:
+    - //$output-from-previous-command
+```
+
+## Creating a service account to connect to the remote cluster.
+When adding a remote cluster in the migration UI you will be prompted for a serviceaccount token. 
+
+On the remote cluster you can create a service account and token with the following commands:
+```
+oc new-project mig
+oc create sa -n mig mig
+oc adm policy add-cluster-role-to-user cluster-admin system:serviceaccount:mig:mig
+oc sa get-token -n mig mig
+```
