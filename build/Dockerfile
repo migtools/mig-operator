@@ -1,5 +1,8 @@
 FROM quay.io/operator-framework/ansible-operator:v0.8.1
+
+USER root
 RUN yum -y update && yum clean all
+USER 1001
 
 COPY watches.yaml ${HOME}/watches.yaml
 
