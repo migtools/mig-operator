@@ -14,7 +14,7 @@ metadata:
   namespace: "{{ mig_namespace }}"
   labels:
     app: migration
-    service: migration
+    service: migration-ui
 spec:
   ports:
     - name: port-9000
@@ -23,7 +23,7 @@ spec:
       protocol: TCP
   selector:
     app: migration
-    service: migration
+    service: migration-ui
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -32,16 +32,17 @@ metadata:
   namespace: "{{ mig_namespace }}"
   labels:
     app: migration
-    service: migration
+    service: migration-ui
 spec:
   selector:
-    app: migration
-    service: migration
+     matchLabels:
+       app: migration
+       service: migration-ui
   template:
     metadata:
       labels:
         app: migration
-        service: migration
+        service: migration-ui
     spec:
       containers:
         - name: mig-ui
