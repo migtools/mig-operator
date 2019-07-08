@@ -25,8 +25,8 @@ spec:
     app: migration
     service: migration
 ---
-apiVersion: apps.openshift.io/v1
-kind: DeploymentConfig
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: migration-ui
   namespace: "{{ mig_namespace }}"
@@ -34,12 +34,9 @@ metadata:
     app: migration
     service: migration
 spec:
-  replicas: 1
   selector:
     app: migration
     service: migration
-  strategy:
-    type: Rolling
   template:
     metadata:
       labels:
