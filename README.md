@@ -6,21 +6,38 @@ This operator will install velero with customized migration plugins, the migrati
 
 ## Migration Controller Installation
 1. Edit `controller.yml` and adjust desired options
+
+Recommended settings for Openshift 3 are:
+```
+  migration_velero: true
+  migration_controller: false
+  migration_ui: false
+```
+
+Recommended settings for Openshift 4 are:
+```
+  migration_velero: true
+  migration_controller: true
+  migration_ui: true
+```
+
+It is possible to reverse this setup and install the controller and UI pods on Openshift 3, but additional setup will be required on Openshift 4. See the manual CORS configuration section below for more details.
+
 1. `oc create -f controller.yml`
 
 ## Manual CORS (Cross-Origin Resource Sharing) Configuration
 In order to enable the UI to talk to an Openshift 3 cluster (whether local or remote) it is necessary to edit the master-config.yaml and restart the Openshift master nodes. 
 
-To determine the CORS URL that needs to be added retrieve the route URL
+To determine the CORS URL that needs to be added retrieve the route URL after installing the controller.
 `oc get -n mig route/migration -o go-template='{{ .spec.host }}{{ println }}'`
 
-Add the hostname for /etc/origin/master/master-config.yaml under corsAllowedOrigins, for instance:
+Add the hostname to /etc/origin/master/master-config.yaml under corsAllowedOrigins, for instance:
 ```
 corsAllowedOrigins:
 - //$output-from-previous-command
 ```
 
-On Openshift 4 Cluster Resources are modified by the operator so these steps are not necessary if you install the controller and UI on the Openshift 4 cluster. If you chose not to configure the UI and Controller on Openshift 4 you will need to do this manually.
+On Openshift 4 cluster resources are modified by the operator if the controller is installed there. If you chose not to install the controller on Openshift 4 you will need to do this manually.
 
 If you haven't already, determine the CORS URL that needs to be added retrieve the route URL
 `oc get -n mig route/migration -o go-template='{{ .spec.host }}{{ println }}'`
@@ -44,7 +61,7 @@ spec:
 ```
 
 ## Creating a service account to connect to the remote cluster.
-When adding a remote cluster in the migration UI you will be prompted for a serviceaccount token. 
+When adding a remote cluster in the migration UI you will be prompted for a serviceaccount token.
 
 On the remote cluster you can create a service account and token with the following commands:
 ```
