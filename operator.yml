@@ -38,6 +38,7 @@ kind: Role
 metadata:
   creationTimestamp: null
   name: migration-operator
+  namespace: mig
 rules:
 - apiGroups:
   - ""
