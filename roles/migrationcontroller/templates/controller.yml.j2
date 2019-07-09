@@ -360,11 +360,11 @@ spec:
           protocol: TCP
         resources:
           limits:
-            cpu: 100m
-            memory: 300Mi
+            cpu: {{ mig_controller_limits_cpu }}
+            memory: {{ mig_controller_limits_memory }}
           requests:
-            cpu: 100m
-            memory: 250Mi
+            cpu: {{ mig_controller_requests_cpu }}
+            memory: {{ mig_controller_requests_memory }}
         volumeMounts:
         - mountPath: /tmp/cert
           name: cert
