@@ -10,3 +10,8 @@ velero_aws_secret_name: cloud-credentials
 velero_image: quay.io/ocpmigrate/velero:fusor-dev
 velero_plugin_image: quay.io/ocpmigrate/velero-plugin:latest
 restic_pv_host_path: /var/lib/kubelet/pods
+# optional resource limits for controller
+mig_controller_limits_memory: 300Mi
+mig_controller_limits_cpu: 100m
+mig_controller_requests_memory: 250Mi
+mig_controller_requests_cpu: 100m
