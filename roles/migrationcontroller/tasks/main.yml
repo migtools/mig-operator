@@ -85,10 +85,6 @@
       state: "present"
       definition: "{{ lookup('template', 'ui-route.yml.j2') }}"
 
-  - name: Generate random secret value for oauth client
-    set_fact:
-      mig_ui_oauth_secret: "{{ 99999999 | random | to_uuid | b64encode }}"
-
   - name: Find generated route
     k8s_facts:
       api_version: "route.openshift.io/v1"
@@ -107,6 +103,29 @@
     set_fact:
       mig_ui_oauth_redirect_url: "https:{{ mig_ui_cors_url }}/login/callback"
 
+  - name: Check if migration ui oauthclient secret exists already so we don't update it
+    k8s_facts:
+      api_version: v1
+      kind: OAuthClient
+      name: migration
+      namespace: "{{ mig_namespace }}"
+    register: oauthclient_status
+
+  - name: Generate random secret value for oauth client
+    set_fact:
+      mig_ui_oauth_secret: "{{ 99999999 | random | to_uuid | b64encode }}"
+    when: (oauthclient_status.resources|length) == 0
+
+  - name: Use existing secret value for oauth client
+    set_fact:
+      mig_ui_oauth_secret: "{{ oauthclient_status.resources[0].secret }}"
+    when: (oauthclient_status.resources|length) > 0
+
+  - name: Set up mig ui oauthclient secret
+    k8s:
+      state: "present"
+      definition: "{{ lookup('template', 'ui-oauthsecret.yml.j2') }}"
+
   - name: Check if migration ui configmap exists already so we don't update it
     k8s_facts:
       api_version: v1
@@ -119,21 +138,22 @@
     k8s:
       state: "present"
       definition: "{{ lookup('template', 'ui-configmap.yml.j2') }}"
-    when: (configmap_status.resources|length) == 0
 
-  - name: Check if migration ui oauthclient secret exists already so we don't update it
-    k8s_facts:
-      api_version: v1
-      kind: OAuthClient
-      name: migration
-      namespace: "{{ mig_namespace }}"
-    register: oauthclient_status
+  - when: configmap_status.resources|length > 0
+    block:
+    - set_fact:
+        configmap_status_data: "{{ configmap_status.resources[0].data | regex_replace('migmeta.json', 'migmeta_json') }}"
+    - set_fact:
+        configmap_status_json: "{{ configmap_status_data.migmeta_json }}"
 
-  - name: Set up mig ui oauthclient secret
-    k8s:
-      state: "present"
-      definition: "{{ lookup('template', 'ui-oauthsecret.yml.j2') }}"
-    when: (oauthclient_status.resources|length) == 0
+    - set_fact:
+        configmap_secret: "{{ configmap_status_json.oauth.clientSecret }}"
+
+    - name: "Take down mig-ui"
+      k8s:
+        state: "absent"
+        definition: "{{ lookup('template', 'ui.yml.j2') }}"
+      when: not(configmap_secret == mig_ui_oauth_secret)
 
   - name: "Set up mig ui"
     k8s:
