@@ -2,10 +2,10 @@
 This operator will install velero with customized migration plugins, the migration controller, and migration UI used for migrating workloads from Openshift 3 to Openshift 4.
 
 ## Operator Installation
-1. `oc create -f operator.yml`
+`oc create -f operator.yml`
 
 ## Migration Controller Installation
-1. Edit `controller.yml` and adjust desired options
+Edit `controller.yml` and adjust desired options
 
 Recommended settings for Openshift 3 are:
 ```
