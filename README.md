@@ -63,14 +63,11 @@ spec:
     - //$output-from-previous-command
 ```
 
-## Creating a service account to connect to the remote cluster.
+## Obtaining a remote cluster serviceaccount token
 When adding a remote cluster in the migration UI you will be prompted for a serviceaccount token.
 
-On the remote cluster you can create a service account and token with the following commands:
+To get a serviceaccount token use the following command:
 ```
-oc new-project mig
-oc create sa -n mig mig
-oc adm policy add-cluster-role-to-user cluster-admin system:serviceaccount:mig:mig
 oc sa get-token -n mig mig
 ```
 
