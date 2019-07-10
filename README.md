@@ -40,7 +40,7 @@ corsAllowedOrigins:
 ```
 
 ### Openshift 4
-On Openshift 4 cluster resources are modified by the operator if the controller is installed there. If you chose not to install the controller on Openshift 4 you will need to do this manually.
+On Openshift 4 cluster resources are modified by the operator if the controller is installed there and you can skip these steps. If you chose not to install the controller on your Openshift 4 cluster you will need to perform these steps manually.
 
 If you haven't already, determine the CORS URL that needs to be added retrieve the route URL
 `oc get -n mig route/migration -o go-template='{{ .spec.host }}{{ println }}'`
