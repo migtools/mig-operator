@@ -26,6 +26,8 @@ It is possible to reverse this setup and install the controller and UI pods on O
 1. `oc create -f controller.yml`
 
 ## Manual CORS (Cross-Origin Resource Sharing) Configuration
+
+### Openshift 3
 In order to enable the UI to talk to an Openshift 3 cluster (whether local or remote) it is necessary to edit the master-config.yaml and restart the Openshift master nodes. 
 
 To determine the CORS URL that needs to be added retrieve the route URL after installing the controller.
@@ -37,6 +39,7 @@ corsAllowedOrigins:
 - //$output-from-previous-command
 ```
 
+### Openshift 4
 On Openshift 4 cluster resources are modified by the operator if the controller is installed there. If you chose not to install the controller on Openshift 4 you will need to do this manually.
 
 If you haven't already, determine the CORS URL that needs to be added retrieve the route URL
