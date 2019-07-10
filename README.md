@@ -80,5 +80,7 @@ oc delete crd backups.velero.io backupstoragelocations.velero.io deletebackupreq
 
 oc delete clusterrolebindings migration-operator velero
 
+oc delete oauthclient migration
+
 oc delete scc velero-privileged
 ```
