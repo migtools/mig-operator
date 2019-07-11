@@ -277,3 +277,10 @@
         k8s:
           state: present
           definition: "{{ lookup('file', '/tmp/authentication.yaml') | from_yaml }}"
+
+- when: mig_svc_account
+  block:
+  - name: "Set up mig svc account for remote connections"
+    k8s:
+      state: "present"
+      definition: "{{ lookup('template', 'mig_service_account.yml.j2') }}"

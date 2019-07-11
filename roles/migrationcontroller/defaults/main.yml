@@ -15,3 +15,4 @@ mig_controller_limits_memory: "300Mi"
 mig_controller_limits_cpu: "100m"
 mig_controller_requests_memory: "250Mi"
 mig_controller_requests_cpu: "100m"
+mig_svc_account: true
