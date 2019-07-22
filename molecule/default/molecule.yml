@@ -28,7 +28,7 @@ provisioner:
   inventory:
     group_vars:
       all:
-        namespace: ${TEST_NAMESPACE:-osdk-test}
+        namespace: ${TEST_NAMESPACE:-mig}
   env:
     K8S_AUTH_KUBECONFIG: /tmp/molecule/kind-default/kubeconfig
     KUBECONFIG: /tmp/molecule/kind-default/kubeconfig

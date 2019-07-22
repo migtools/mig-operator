@@ -1,11 +1,27 @@
+---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: mig-operator
+  name: migration-operator
+  namespace: mig
 subjects:
 - kind: ServiceAccount
-  name: mig-operator
+  name: migration-operator
 roleRef:
   kind: Role
-  name: mig-operator
+  name: migration-operator
   apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: migration-operator
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+  - kind: ServiceAccount
+    name: migration-operator
+    namespace: mig
+namespace: mig

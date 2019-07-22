@@ -18,7 +18,7 @@ provisioner:
   inventory:
     group_vars:
       all:
-        namespace: ${TEST_NAMESPACE:-osdk-test}
+        namespace: ${TEST_NAMESPACE:-mig}
   lint:
     name: ansible-lint
     enabled: False

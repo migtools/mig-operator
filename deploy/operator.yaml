@@ -1,49 +1,50 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mig-operator
+  name: migration-operator
+  namespace: mig
+  labels:
+    app: migration-operator
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      name: mig-operator
+      app: migration-operator
   template:
     metadata:
       labels:
-        name: mig-operator
+        app: migration-operator
     spec:
-      serviceAccountName: mig-operator
+      serviceAccountName: migration-operator
       containers:
-        - name: ansible
-          command:
-          - /usr/local/bin/ao-logs
-          - /tmp/ansible-operator/runner
-          - stdout
-          # Replace this with the built image name
-          image: "{{ REPLACE_IMAGE }}"
-          imagePullPolicy: "{{ pull_policy|default('Always') }}"
-          volumeMounts:
-          - mountPath: /tmp/ansible-operator/runner
-            name: runner
-            readOnly: true
-        - name: operator
-          # Replace this with the built image name
-          image: "{{ REPLACE_IMAGE }}"
-          imagePullPolicy: "{{ pull_policy|default('Always') }}"
-          volumeMounts:
-          - mountPath: /tmp/ansible-operator/runner
-            name: runner
-          env:
-            - name: WATCH_NAMESPACE
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.namespace
-            - name: POD_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-            - name: OPERATOR_NAME
-              value: "mig-operator"
+      - name: ansible
+        command:
+        - /usr/local/bin/ao-logs
+        - /tmp/ansible-operator/runner
+        - stdout
+        image: quay.io/ocpmigrate/mig-operator:latest
+        imagePullPolicy: Always
+        volumeMounts:
+        - mountPath: /tmp/ansible-operator/runner
+          name: runner
+          readOnly: true
+      - name: operator
+        image: quay.io/ocpmigrate/mig-operator:latest
+        imagePullPolicy: Always
+        volumeMounts:
+        - mountPath: /tmp/ansible-operator/runner
+          name: runner
+        env:
+        - name: OPERATOR_NAME
+          value: migration-operator
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: WATCH_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
       volumes:
         - name: runner
           emptyDir: {}
