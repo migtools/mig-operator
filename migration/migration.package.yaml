@@ -1,0 +1,4 @@
+packageName: migration
+channels:
+- name: beta
+  currentCSV: migration.0.0.1
