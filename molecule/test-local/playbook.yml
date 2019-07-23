@@ -60,7 +60,7 @@
         namespace: '{{ namespace }}'
         definition: '{{ custom_resource }}'
 
-    - name: Wait 40s for reconciliation to run
+    - name: Wait 120s for reconciliation to run
       k8s_facts:
         api_version: '{{ custom_resource.apiVersion }}'
         kind: '{{ custom_resource.kind }}'
@@ -69,8 +69,8 @@
       register: cr
       until:
       - "'Successful' in (cr | json_query('resources[].status.conditions[].reason'))"
-      delay: 4
-      retries: 10
+      delay: 10
+      retries: 12
     rescue:
     - name: debug cr
       ignore_errors: yes
@@ -85,7 +85,7 @@
           resource_name=custom_resource.metadata.name
         )}}'
 
-    - name: debug memcached lookup
+    - name: debug migration-operator lookup
       ignore_errors: yes
       failed_when: false
       debug:
@@ -94,8 +94,8 @@
         deploy: '{{ lookup("k8s",
           kind="Deployment",
           api_version="apps/v1",
-          namespace=namespace,
-          label_selector="app=memcached"
+          namespace=mig,
+          label_selector="app=migration-operator"
         )}}'
 
     - name: get operator logs

@@ -2,4 +2,9 @@ apiVersion: migration.openshift.io/v1alpha1
 kind: MigrationController
 metadata:
   name: example-migrationcontroller
-spec: {}
+spec:
+  cluster_name: host
+  migration_velero: false
+  migration_controller: false
+  migration_ui: false
+  mig_ui_cluster_api_endpoint: https://nowhere.localhost:8443/api
