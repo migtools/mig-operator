@@ -85,6 +85,9 @@
           resource_name=custom_resource.metadata.name
         )}}'
 
+    - name: download kubectl
+      shell: "curl -o /tmp/kubectl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x /tmp/kubectl"
+
     - name: debug migration-operator lookup
       ignore_errors: yes
       failed_when: false
@@ -94,21 +97,17 @@
         deploy: '{{ lookup("k8s",
           kind="Deployment",
           api_version="apps/v1",
-          namespace=mig,
+          namespace="mig",
           label_selector="app=migration-operator"
         )}}'
 
     - name: get operator logs
-      ignore_errors: yes
       failed_when: false
-      command: kubectl logs deployment/{{ definition.metadata.name }} -n {{ namespace }}
-      environment:
-        KUBECONFIG: '{{ lookup("env", "KUBECONFIG") }}'
-      vars:
-        definition: "{{ lookup('template', '/'.join([deploy_dir, 'operator.yaml'])) | from_yaml }}"
+      command: /tmp/kubectl logs deployment/migration-operator -n mig -c ansible
       register: log
 
-    - debug: var=log.stdout_lines
+    - debug:
+        var: log
 
     - fail:
         msg: "Failed on action: converge"

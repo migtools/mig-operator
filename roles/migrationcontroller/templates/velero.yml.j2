@@ -157,11 +157,7 @@ spec:
   names:
     plural: serverstatusrequests
     kind: ServerStatusRequest
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: {{ mig_namespace }}
+{% if molecule is not defined %}
 ---
 allowHostDirVolumePlugin: true
 allowHostIPC: true
@@ -344,4 +340,4 @@ spec:
               value: /credentials/cloud
             - name: VELERO_SCRATCH_DIR
               value: /scratch
-
+{% endif %}
