@@ -60,7 +60,7 @@
         namespace: '{{ namespace }}'
         definition: '{{ custom_resource }}'
 
-    - name: Wait 120s for reconciliation to run
+    - name: Wait 360s for reconciliation to run
       k8s_facts:
         api_version: '{{ custom_resource.apiVersion }}'
         kind: '{{ custom_resource.kind }}'
@@ -70,7 +70,7 @@
       until:
       - "'Successful' in (cr | json_query('resources[].status.conditions[].reason'))"
       delay: 10
-      retries: 12
+      retries: 36
     rescue:
     - name: debug cr
       ignore_errors: yes
@@ -94,18 +94,17 @@
         deploy: '{{ lookup("k8s",
           kind="Deployment",
           api_version="apps/v1",
-          namespace=mig,
+          namespace="mig",
           label_selector="app=migration-operator"
         )}}'
+
+    - name: Get kubectl
+      shell: "curl -o /tmp/kubectl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl && chmod +x /tmp/kubectl"
 
     - name: get operator logs
       ignore_errors: yes
       failed_when: false
-      command: kubectl logs deployment/{{ definition.metadata.name }} -n {{ namespace }}
-      environment:
-        KUBECONFIG: '{{ lookup("env", "KUBECONFIG") }}'
-      vars:
-        definition: "{{ lookup('template', '/'.join([deploy_dir, 'operator.yaml'])) | from_yaml }}"
+      command: /tmp/kubectl logs deployment/migration-operator -n mig -c ansible
       register: log
 
     - debug: var=log.stdout_lines

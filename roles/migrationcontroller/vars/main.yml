@@ -5,6 +5,6 @@ mig_ui_configmap_data:
   configNamespace: "{{ mig_namespace }}"
   oauth:
     clientId: migration
-    redirectUrl: "{{ mig_ui_oauth_redirect_url }}"
+    redirectUrl: "{{ mig_ui_oauth_redirect_url | default('https://localhost') }}"
     userScope: "{{ mig_ui_oauth_user_scope }}"
     clientSecret: "{{ mig_ui_oauth_secret }}"

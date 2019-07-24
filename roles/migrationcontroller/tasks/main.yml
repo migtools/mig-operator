@@ -80,28 +80,30 @@
 
 - when: migration_ui
   block:
-  - name: "Set up mig ui route"
-    k8s:
-      state: "present"
-      definition: "{{ lookup('template', 'ui-route.yml.j2') }}"
+  - when: "'routes.openshift.io' in lookup('k8s', cluster_info='api_groups')"
+    block:
+    - name: "Set up mig ui route"
+      k8s:
+        state: "present"
+        definition: "{{ lookup('template', 'ui-route.yml.j2') }}"
 
-  - name: Find generated route
-    k8s_facts:
-      api_version: "route.openshift.io/v1"
-      kind: "Route"
-      namespace: "{{ mig_namespace }}"
-      name: migration
-    register: route
+    - name: Find generated route
+      k8s_facts:
+        api_version: "route.openshift.io/v1"
+        kind: "Route"
+        namespace: "{{ mig_namespace }}"
+        name: migration
+      register: route
 
-  - name: Determine CORS URL
-    set_fact:
-      mig_ui_cors_url: "//{{ route.resources[0].spec.host }}"
-      mig_ui_cors_loopback: "//127.0.0.1(:|$)"
-      mig_ui_cors_localhost: "//localhost(:|$)"
+    - name: Determine CORS URL
+      set_fact:
+        mig_ui_cors_url: "//{{ route.resources[0].spec.host }}"
+        mig_ui_cors_loopback: "//127.0.0.1(:|$)"
+        mig_ui_cors_localhost: "//localhost(:|$)"
 
-  - name: Set OAuth redirect url
-    set_fact:
-      mig_ui_oauth_redirect_url: "https:{{ mig_ui_cors_url }}/login/callback"
+    - name: Set OAuth redirect url
+      set_fact:
+        mig_ui_oauth_redirect_url: "https:{{ mig_ui_cors_url }}/login/callback"
 
   - name: Check if migration ui oauthclient secret exists already so we don't update it
     k8s_facts:
@@ -125,6 +127,7 @@
     k8s:
       state: "present"
       definition: "{{ lookup('template', 'ui-oauthsecret.yml.j2') }}"
+    when: "'oauth.openshift.io' in lookup('k8s', cluster_info='api_groups')"
 
   - name: Check if migration ui configmap exists already so we don't update it
     k8s_facts:
