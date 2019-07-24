@@ -99,7 +99,6 @@
 
 - name: migration_ui
   block:
-
   - name: Check if mig ui route exists already so we don't update it
     k8s_facts:
       api_version: v1
@@ -122,19 +121,42 @@
       namespace: "{{ mig_namespace }}"
       name: migration
     register: route
+    when: 
+    - migration_ui
+    - "'route.openshift.io' in lookup('k8s', cluster_info='api_groups')"
+
+    block:
+    - name: "Set up mig ui route"
+      k8s:
+        state: "present"
+        definition: "{{ lookup('template', 'ui-route.yml.j2') }}"
+
+    - name: Find generated route
+      k8s_facts:
+        api_version: "route.openshift.io/v1"
+        kind: "Route"
+        namespace: "{{ mig_namespace }}"
+        name: migration
+      register: route
+
+    - name: Determine CORS URL
+      set_fact:
+        mig_ui_cors_url: "//{{ route.resources[0].spec.host }}"
+        mig_ui_cors_loopback: "//127.0.0.1(:|$)"
+        mig_ui_cors_localhost: "//localhost(:|$)"
+
+    - name: Set OAuth redirect url
+      set_fact:
+        mig_ui_oauth_redirect_url: "https:{{ mig_ui_cors_url }}/login/callback"
+
     when: migration_ui
 
-  - name: Determine CORS URL
-    set_fact:
-      mig_ui_cors_url: "//{{ route.resources[0].spec.host }}"
+  - set_fact:
+      mig_ui_cors_url: "//localhost"
       mig_ui_cors_loopback: "//127.0.0.1(:|$)"
       mig_ui_cors_localhost: "//localhost(:|$)"
-    when: migration_ui
-
-  - name: Set OAuth redirect url
-    set_fact:
-      mig_ui_oauth_redirect_url: "https:{{ mig_ui_cors_url }}/login/callback"
-    when: migration_ui
+      mig_ui_oauth_redirect_url: "https://localhost/login/callback"
+    when: "'route.openshift.io' not in lookup('k8s', cluster_info='api_groups')"
 
   - name: Check if migration ui oauthclient secret exists already so we don't update it
     k8s_facts:
@@ -159,6 +181,7 @@
     k8s:
       state: "{{ ui_state }}"
       definition: "{{ lookup('template', 'ui-oauthsecret.yml.j2') }}"
+    when: "'oauth.openshift.io' in lookup('k8s', cluster_info='api_groups')"
 
   - name: Check if migration ui configmap exists already so we don't update it
     k8s_facts:
@@ -172,11 +195,16 @@
     k8s:
       state: "{{ ui_state }}"
       definition: "{{ lookup('template', 'ui-configmap.yml.j2') }}"
+    when: "'oauth.openshift.io' in lookup('k8s', cluster_info='api_groups') or configmap_status.resources|length == 0"
 
-  - when: migration_ui and configmap_status.resources|length > 0
+  - when:
+    - migration_ui
+    - configmap_status.resources|length > 0
+    - "'oauth.openshift.io' in lookup('k8s', cluster_info='api_groups')"
     block:
     - set_fact:
         configmap_status_data: "{{ configmap_status.resources[0].data | regex_replace('migmeta.json', 'migmeta_json') }}"
+
     - set_fact:
         configmap_status_json: "{{ configmap_status_data.migmeta_json }}"
 
