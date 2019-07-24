@@ -4,7 +4,8 @@ metadata:
   name: example-migrationcontroller
 spec:
   cluster_name: host
-  migration_velero: false
+  migration_velero: true
   migration_controller: true
-  migration_ui: true
+  migration_ui: false
+  molecule: true
   mig_ui_cluster_api_endpoint: https://nowhere.localhost:8443/api
