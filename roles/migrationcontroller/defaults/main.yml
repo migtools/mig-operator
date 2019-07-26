@@ -1,6 +1,6 @@
 ---
 mig_controller_image: quay.io/ocpmigrate/mig-controller
-mig_controller_version: improved-copy-mig
+mig_controller_version: latest
 mig_namespace: mig
 mig_ui_configmap_name : mig-ui-config
 mig_ui_oauth_user_scope: "user:full"
