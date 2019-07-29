@@ -112,6 +112,7 @@ spec:
           - ""
           resources:
           - configmaps
+          verbs:
           - get
           - list
       - serviceAccountName: migration-controller
@@ -463,13 +464,11 @@ spec:
                   valueFrom:
                     fieldRef:
                       fieldPath: metadata.namespace
-                volumes:
-                - name: runner
-                emptyDir: {}
+            volumes:
+            - name: runner
+              emptyDir: {}
   maturity: alpha
   version: 0.0.1
-
-
   customresourcedefinitions:
     owned:
     - name: backupstoragelocations.velero.io
