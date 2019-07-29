@@ -1,7 +1,16 @@
 # mig-operator
 This operator will install velero with customized migration plugins, the migration controller, and migration UI used for migrating workloads from Openshift 3 to Openshift 4.
 
-## Operator Installation
+## Operator Installation with OLM on Openshift 4
+1. `oc create -f mig-operator-source.yaml`
+1. Create a mig namespace
+1. In the left menu select Operator Hub and find `Migration Operator` in the list
+1. Click Install and install it in the mig namespace
+1. Once installation is complete select `Installed Operators` on the left menu
+1. Create a `MigrationController` CR. The default vales should be acceptable.
+
+## Operator Installation without OLM
+
 `oc create -f operator.yml`
 
 ## Migration Controller Installation
