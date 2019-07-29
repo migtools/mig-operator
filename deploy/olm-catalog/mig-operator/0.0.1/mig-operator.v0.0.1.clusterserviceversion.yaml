@@ -2,20 +2,20 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
-  name: migrationoperator.0.0.1
+  name: mig-operator.0.0.1
   namespace: placeholder
   annotations:
     capabilities: Seamless Upgrades
-    categories: Migration
     description: Facilitates migration of workloads from Openshift 3.x to Openshift 4.x
+    categories: 'OpenShift Optional'
     containerImage: quay.io/ocpmigrate/mig-operator:v0.0.10
     createdAt: 2019-07-25T10:21:00Z
     repository: https://github.com/fusor/mig-operator
-    alm-examples: '[{"apiVersion":"migration.openshift.io/v1alpha1","kind":"MigrationController","metadata":{"name":"migration-controller","namespace":"mig"},"spec":{"cluster_name":"host","migration_velero":true,"migration_controller":true,"migration_ui":true}'
+    alm-examples: '[{"apiVersion":"migration.openshift.io/v1alpha1","kind":"MigrationController","metadata":{"name":"migration-controller","namespace":"mig"},"spec":{"cluster_name":"host","migration_velero":true,"migration_controller":true,"migration_ui":true}},{"apiVersion":"velero.io/v1","kind":"Backup","metadata":{"name":"backup","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"BackupStorageLocation","metadata":{"name":"backupstoragelocation","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"DeleteBackupRequest","metadata":{"name":"deletebackuprequest","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"DownloadRequest","metadata":{"name":"downloadrequest","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"PodVolumeBackup","metadata":{"name":"podvolumebackup","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"PodVolumeRestore","metadata":{"name":"podvolumerestore","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"ResticRepository","metadata":{"name":"resticrepository","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"Restore","metadata":{"name":"restore","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"Schedule","metadata":{"name":"schedule","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"ServerStatusRequest","metadata":{"name":"serverstatusrequest","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"VolumeSnapshotLocation","metadata":{"name":"volumesnapshotlocation","namespace":"mig"},"spec":{}},{"apiVersion":"clusterregistry.k8s.io/v1alpha1","kind":"Cluster","metadata":{"name":"cluster","namespace":"mig"},"spec":{}},{"apiVersion":"migration.openshift.io/v1alpha1","kind":"MigCluster","metadata":{"name":"host","namespace":"mig"},"spec":{}},{"apiVersion":"migration.openshift.io/v1alpha1","kind":"MigPlan","metadata":{"name":"migplan","namespace":"mig"},"spec":{}},{"apiVersion":"migration.openshift.io/v1alpha1","kind":"MigMigration","metadata":{"name":"migmigration","namespace":"mig"},"spec":{}},{"apiVersion":"migration.openshift.io/v1alpha1","kind":"MigStorage","metadata":{"name":"migstorage","namespace":"mig"},"spec":{}}]'
     certified: "false"
     support: Jason Montleon
 spec:
-  replaces: migrationoperator.0.0.0
+  replaces: mig-operator.0.0.0
   displayName: Migration Operator
   description: |
     The Migration Operator for Openshift enables installation of the Openshift 3.x to Openshift 4.x solution.
@@ -37,12 +37,12 @@ spec:
     url: https://github.com/fusor/mig-operator
 
   labels:
-    alm-status-descriptors: migrationoperator.0.0.1
-    alm-owner-prometheus: migrationoperator
+    alm-status-descriptors: mig-operator.0.0.1
+    alm-owner-prometheus: mig-operator
 
   selector:
     matchLabels:
-      alm-owner-prometheus: migrationoperator
+      alm-owner-prometheus: mig-operator
 
   icon:
   - base64data: PHN2ZyBpZD0iTGF5ZXJfMSIgZGF0YS1uYW1lPSJMYXllciAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTQ1Ij48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6I2UwMDt9PC9zdHlsZT48L2RlZnM+PHRpdGxlPlJlZEhhdC1Mb2dvLUhhdC1Db2xvcjwvdGl0bGU+PHBhdGggZD0iTTE1Ny43Nyw2Mi42MWExNCwxNCwwLDAsMSwuMzEsMy40MmMwLDE0Ljg4LTE4LjEsMTcuNDYtMzAuNjEsMTcuNDZDNzguODMsODMuNDksNDIuNTMsNTMuMjYsNDIuNTMsNDRhNi40Myw2LjQzLDAsMCwxLC4yMi0xLjk0bC0zLjY2LDkuMDZhMTguNDUsMTguNDUsMCwwLDAtMS41MSw3LjMzYzAsMTguMTEsNDEsNDUuNDgsODcuNzQsNDUuNDgsMjAuNjksMCwzNi40My03Ljc2LDM2LjQzLTIxLjc3LDAtMS4wOCwwLTEuOTQtMS43My0xMC4xM1oiLz48cGF0aCBjbGFzcz0iY2xzLTEiIGQ9Ik0xMjcuNDcsODMuNDljMTIuNTEsMCwzMC42MS0yLjU4LDMwLjYxLTE3LjQ2YTE0LDE0LDAsMCwwLS4zMS0zLjQybC03LjQ1LTMyLjM2Yy0xLjcyLTcuMTItMy4yMy0xMC4zNS0xNS43My0xNi42QzEyNC44OSw4LjY5LDEwMy43Ni41LDk3LjUxLjUsOTEuNjkuNSw5MCw4LDgzLjA2LDhjLTYuNjgsMC0xMS42NC01LjYtMTcuODktNS42LTYsMC05LjkxLDQuMDktMTIuOTMsMTIuNSwwLDAtOC40MSwyMy43Mi05LjQ5LDI3LjE2QTYuNDMsNi40MywwLDAsMCw0Mi41Myw0NGMwLDkuMjIsMzYuMywzOS40NSw4NC45NCwzOS40NU0xNjAsNzIuMDdjMS43Myw4LjE5LDEuNzMsOS4wNSwxLjczLDEwLjEzLDAsMTQtMTUuNzQsMjEuNzctMzYuNDMsMjEuNzdDNzguNTQsMTA0LDM3LjU4LDc2LjYsMzcuNTgsNTguNDlhMTguNDUsMTguNDUsMCwwLDEsMS41MS03LjMzQzIyLjI3LDUyLC41LDU1LC41LDc0LjIyYzAsMzEuNDgsNzQuNTksNzAuMjgsMTMzLjY1LDcwLjI4LDQ1LjI4LDAsNTYuNy0yMC40OCw1Ni43LTM2LjY1LDAtMTIuNzItMTEtMjcuMTYtMzAuODMtMzUuNzgiLz48L3N2Zz4=
@@ -406,14 +406,14 @@ spec:
           - '*'
           verbs:
           - '*'
-       - apiGroups:
-         - security.openshift.io"
-         resources:
-         - securitycontextconstraints
-         verbs:
-         - use
-         resourceNames:
-         - privileged
+        - apiGroups:
+          - security.openshift.io"
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - use
+          resourceNames:
+          - privileged
       deployments:
       - name: migration-operator
         spec:
@@ -476,7 +476,7 @@ spec:
       displayName: Backup
       description: A velero backup
     - name: clusters.clusterregistry.k8s.io
-      version: v1
+      version: v1alpha1
       kind: Cluster
       displayName: Cluster
       description: A k8s cluster
@@ -491,22 +491,22 @@ spec:
       displayName: DownloadRequest
       description: A download request for velero
     - name: migclusters.migration.openshift.io
-      version: v1
+      version: v1alpha1
       kind: MigCluster
       displayName: MigCluster
       description: A cluster defined for migration
     - name: migmigrations.migration.openshift.io
-      version: v1
+      version: v1alpha1
       kind: MigMigration
       displayName: MigMigration
       description: A migration process
     - name: migplans.migration.openshift.io
-      version: v1
+      version: v1alpha1
       kind: MigPlan
       displayName: MigPlan
       description: A migration plan
     - name: migrationcontrollers.migration.openshift.io
-      version: v1
+      version: v1alpha1
       kind: MigrationController
       displayName: MigrationController
       description: A migration contoller deployment
@@ -528,7 +528,7 @@ spec:
       - kind: Daemonset
         version: apps/v1
     - name: migstorages.migration.openshift.io
-      version: v1
+      version: v1alpha1
       kind: MigStorage
       displayName: MigStorage
       description: A migration storage location
