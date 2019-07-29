@@ -44,6 +44,7 @@ spec:
         app: migration
         service: migration-ui
     spec:
+      serviceAccountName: migration-controller
       containers:
         - name: mig-ui
           image: "{{ mig_ui_image }}:{{ mig_ui_version }}"
