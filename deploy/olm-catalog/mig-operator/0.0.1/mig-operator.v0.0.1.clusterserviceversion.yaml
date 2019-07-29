@@ -128,13 +128,13 @@ spec:
           - oauthclients
           verbs:
           - '*'
-       - apiGroups:
-         - operator.openshift.io
-         resources:
-         - kubeapiservers
-         - authentications
-         verbs:
-         - '*'
+        - apiGroups:
+          - operator.openshift.io
+          resources:
+          - kubeapiservers
+          - authentications
+          verbs:
+          - '*'
       - serviceAccountName: migration-controller
         rules:
         - apiGroups:
