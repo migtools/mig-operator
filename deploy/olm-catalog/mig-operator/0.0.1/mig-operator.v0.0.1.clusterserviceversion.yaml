@@ -15,7 +15,6 @@ metadata:
     certified: "false"
     support: Jason Montleon
 spec:
-  replaces: mig-operator.0.0.0
   displayName: Migration Operator
   description: |
     The Migration Operator for Openshift enables installation of the Openshift 3.x to Openshift 4.x solution.
@@ -95,7 +94,7 @@ spec:
         - apiGroups:
           - apps
           resourceNames:
-          - mig-operator
+          - migration-operator
           resources:
           - deployments/finalizers
           verbs:
@@ -107,6 +106,14 @@ spec:
           verbs:
           - '*'
       clusterPermissions:
+      - serviceAccountName: migration-operator
+        rules:
+        - apiGroups:
+          - ""
+          resources:
+          - configmaps
+          - get
+          - list
       - serviceAccountName: migration-controller
         rules:
         - apiGroups:
