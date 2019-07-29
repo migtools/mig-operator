@@ -64,6 +64,12 @@ spec:
       - serviceAccountName: migration-operator
         rules:
         - apiGroups:
+          - route.openshift.io
+          resources:
+          - routes
+          verbs:
+          - '*'
+        - apiGroups:
           - ""
           resources:
           - pods
@@ -112,9 +118,23 @@ spec:
           - ""
           resources:
           - configmaps
+          - namespaces
           verbs:
           - get
           - list
+        - apiGroups:
+          - oauth.openshift.io
+          resources:
+          - oauthclients
+          verbs:
+          - '*'
+       - apiGroups:
+         - operator.openshift.io
+         resources:
+         - kubeapiservers
+         - authentications
+         verbs:
+         - '*'
       - serviceAccountName: migration-controller
         rules:
         - apiGroups:
