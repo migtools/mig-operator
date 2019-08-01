@@ -1,12 +1,4 @@
 ---
-apiVersion: migration.openshift.io/v1alpha1
-kind: MigCluster
-metadata:
-  name: "{{ cluster_name }}"
-  namespace: "{{ mig_namespace}}"
-spec:
-  isHostCluster: true
----
 apiVersion: v1
 kind: Service
 metadata:

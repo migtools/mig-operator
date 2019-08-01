@@ -10,6 +10,56 @@
     namespace: kube-system
   register: cluster_configmap
 
+- name: Set defaults to allow deletion of resources with template vars
+  set_fact:
+    mig_ui_oauth_redirect_url: ""
+    mig_ui_oauth_secret: ""
+    mig_ui_configmap_data: ""
+    configmap_secret: ""
+
+# Set ui_state
+- set_fact: 
+    ui_state: present
+  when: migration_ui
+
+- set_fact: 
+    ui_state: absent
+  when: not migration_ui
+
+# Set controller_state 
+- set_fact: 
+    controller_state: present
+  when: migration_controller
+
+- set_fact: 
+    controller_state: absent
+  when: not migration_controller
+
+# Set velero_state
+- set_fact: 
+    velero_state: present
+  when: migration_velero
+
+- set_fact: 
+    velero_state: absent
+  when: not migration_velero
+
+# Set crd_state
+- set_fact:
+    crd_state: present
+  when: migration_controller or migration_ui
+
+- set_fact:
+    crd_state: absent
+  when: (not migration_controller) and (not migration_ui)
+
+# Create mig namespace
+- name: "Set up mig namespace"
+  k8s:
+    state: "present"
+    definition: "{{ lookup('template', 'mig_namespace.yml.j2') }}"
+  when: migration_ui or migration_controller or migration_velero
+
 - when: cluster_configmap.resources|length > 0
   block:
   - set_fact:
@@ -34,12 +84,6 @@
     
 - name: migration_velero
   block:
-  - set_fact: velero_state="present"
-    when: migration_velero
-
-  - set_fact: velero_state="absent"
-    when: not migration_velero
-
   - name: Check if cloud-credentials secret exists already so we don't update it
     k8s_facts:
       api_version: v1
@@ -51,7 +95,7 @@
 
   - name: "Create empty velero S3 secret"
     k8s:
-      state: velero_state
+      state: "{{ velero_state }}"
       definition:
         apiVersion: v1
         kind: Secret
@@ -60,24 +104,19 @@
           namespace: "{{ mig_namespace }}"
         data:
           cloud: ""
-    when: (secret_status.resources|length) == 0
+    when: migration_velero and (secret_status.resources|length) == 0
 
   - name: "Set up velero controller"
     k8s:
-      state: velero_state
+      state: "{{ velero_state }}"
       definition: "{{ lookup('template', 'velero.yml.j2') }}"
 
 - name: migration_controller
   block:
-  - set_fact: controller_state="present"
-    when: migration_controller
-
-  - set_fact: controller_state="absent"
-    when: not migration_controller
 
   - name: "Set up migration CRDs"
     k8s:
-      state: controller_state
+      state: "{{ crd_state }}"
       src: "{{ role_path }}/files/{{ item }}"
     with_items:
       - "cluster-registry-crd.yaml"
@@ -88,21 +127,26 @@
 
   - name: "Set up mig controller"
     k8s:
-      state: controller_state
+      state: "{{ controller_state }}"
       definition: "{{ lookup('template', 'controller.yml.j2') }}"
 
 - name: migration_ui
   block:
-  - set_fact: ui_state="present"
-    when: migration_ui
 
-  - set_fact: ui_state="absent"
-    when: not migration_ui
+  - name: Check if mig ui route exists already so we don't update it
+    k8s_facts:
+      api_version: v1
+      kind: Route
+      name: migration
+      namespace: "{{ mig_namespace }}"
+    register: route_status
+    when: migration_ui
 
   - name: "Set up mig ui route"
     k8s:
-      state: ui_state
+      state: "{{ ui_state }}"
       definition: "{{ lookup('template', 'ui-route.yml.j2') }}"
+    when: migration_ui and (route_status.resources|length) == 0
 
   - name: Find generated route
     k8s_facts:
@@ -146,7 +190,7 @@
 
   - name: Set up mig ui oauthclient secret
     k8s:
-      state: ui_state
+      state: "{{ ui_state }}"
       definition: "{{ lookup('template', 'ui-oauthsecret.yml.j2') }}"
 
   - name: Check if migration ui configmap exists already so we don't update it
@@ -156,11 +200,10 @@
       name: "{{ mig_ui_configmap_name }}"
       namespace: "{{ mig_namespace }}"
     register: configmap_status
-    when: migration_ui
 
   - name: Set up mig ui configmap
     k8s:
-      state: ui_state
+      state: "{{ ui_state }}"
       definition: "{{ lookup('template', 'ui-configmap.yml.j2') }}"
 
   - when: migration_ui and configmap_status.resources|length > 0
@@ -172,19 +215,24 @@
 
     - set_fact:
         configmap_secret: "{{ configmap_status_json.oauth.clientSecret }}"
+      when: not configmap_status_data.get("oauth", {}).get("clientSecret",-1) == -1
+
+    - set_fact:
+        skip_ui_restart: true
+      when: configmap_status_data.get("oauth", {}).get("clientSecret",-1) == -1        
 
     - name: "Take down mig-ui"
       k8s:
         state: "absent"
         definition: "{{ lookup('template', 'ui.yml.j2') }}"
-      when: not(configmap_secret == mig_ui_oauth_secret)
+      when: not(configmap_secret == mig_ui_oauth_secret) and not skip_ui_restart
 
   - name: "Set up mig ui"
     k8s:
-      state: "present"
+      state: "{{ ui_state }}"
       definition: "{{ lookup('template', 'ui.yml.j2') }}"
 
-  - when: cluster_configmap.resources|length > 0
+  - when: migration_ui and (cluster_configmap.resources|length > 0)
     block:
     - name: Retrieve kubeapiserver operator definition
       k8s_facts:
