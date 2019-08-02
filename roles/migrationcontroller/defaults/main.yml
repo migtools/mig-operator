@@ -25,4 +25,5 @@ crd_state: absent
 mig_ui_oauth_redirect_url: ""
 mig_ui_oauth_secret: ""
 mig_ui_configmap_data: ""
+mig_ui_cluster_api_endpoint: ""
 configmap_secret: ""

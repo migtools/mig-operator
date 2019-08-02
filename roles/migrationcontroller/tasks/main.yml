@@ -1,14 +1,4 @@
 ---
-#This ConfigMap contains the cluster config on Openshift 4.
-#Looking for it provides a rudimentary way to see what version we're on.
-#It also lets us generate the cluster API endpoint URL on Openshift 4.
-- name: Get cluster config
-  k8s_facts:
-    api_version: v1
-    kind: ConfigMap
-    name: cluster-config-v1
-    namespace: kube-system
-  register: cluster_configmap
 
 - set_fact: ui_state="present"
   when: migration_ui
@@ -28,7 +18,18 @@
     definition: "{{ lookup('template', 'mig_namespace.yml.j2') }}"
   when: migration_ui or migration_controller or migration_velero
 
-- when: cluster_configmap.resources|length > 0
+#This ConfigMap contains the cluster config on Openshift 4.
+#Looking for it provides a rudimentary way to see what version we're on.
+#It also lets us generate the cluster API endpoint URL on Openshift 4.
+- name: Get cluster config
+  k8s_facts:
+    api_version: v1
+    kind: ConfigMap
+    name: cluster-config-v1
+    namespace: kube-system
+  register: cluster_configmap
+
+- when: migration_ui and cluster_configmap.resources|length > 0
   block:
   - set_fact:
       cluster_config_data: "{{ cluster_configmap.resources[0].data | regex_replace('install-config', 'install_config') }}"
