@@ -10,50 +10,18 @@
     namespace: kube-system
   register: cluster_configmap
 
-- name: Set defaults to allow deletion of resources with template vars
-  set_fact:
-    mig_ui_oauth_redirect_url: ""
-    mig_ui_oauth_secret: ""
-    mig_ui_configmap_data: ""
-    configmap_secret: ""
-
-# Set ui_state
-- set_fact: 
-    ui_state: present
+- set_fact: ui_state="present"
   when: migration_ui
 
-- set_fact: 
-    ui_state: absent
-  when: not migration_ui
-
-# Set controller_state 
-- set_fact: 
-    controller_state: present
+- set_fact: controller_state="present"
   when: migration_controller
 
-- set_fact: 
-    controller_state: absent
-  when: not migration_controller
-
-# Set velero_state
-- set_fact: 
-    velero_state: present
+- set_fact: velero_state="present"
   when: migration_velero
 
-- set_fact: 
-    velero_state: absent
-  when: not migration_velero
-
-# Set crd_state
-- set_fact:
-    crd_state: present
+- set_fact: crd_state="present"
   when: migration_controller or migration_ui
 
-- set_fact:
-    crd_state: absent
-  when: (not migration_controller) and (not migration_ui)
-
-# Create mig namespace
 - name: "Set up mig namespace"
   k8s:
     state: "present"

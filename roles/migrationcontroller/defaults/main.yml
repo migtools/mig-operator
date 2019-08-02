@@ -16,3 +16,13 @@ mig_controller_limits_cpu: "100m"
 mig_controller_requests_memory: "350Mi"
 mig_controller_requests_cpu: "100m"
 mig_svc_account: true
+# defaults for setting presence of mig components
+ui_state: absent
+controller_state: absent
+velero_state: absent
+crd_state: absent
+# defaults to help with templating during deletion
+mig_ui_oauth_redirect_url: ""
+mig_ui_oauth_secret: ""
+mig_ui_configmap_data: ""
+configmap_secret: ""
