@@ -9,9 +9,6 @@
 - set_fact: velero_state="present"
   when: migration_velero
 
-- set_fact: crd_state="present"
-  when: migration_controller or migration_ui
-
 - name: "Set up mig namespace"
   k8s:
     state: "present"
@@ -85,7 +82,7 @@
 
   - name: "Set up migration CRDs"
     k8s:
-      state: "{{ crd_state }}"
+      state: "present"
       src: "{{ role_path }}/files/{{ item }}"
     with_items:
       - "cluster-registry-crd.yaml"
@@ -93,11 +90,13 @@
       - "migration_v1alpha1_migmigration.yaml"
       - "migration_v1alpha1_migplan.yaml"
       - "migration_v1alpha1_migstorage.yaml"
+    when: migration_controller or migration_ui
 
   - name: "Set up mig controller"
     k8s:
       state: "{{ controller_state }}"
       definition: "{{ lookup('template', 'controller.yml.j2') }}"
+    when: migration_controller
 
 - name: migration_ui
   block:

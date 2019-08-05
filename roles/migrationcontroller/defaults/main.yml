@@ -20,7 +20,6 @@ mig_svc_account: true
 ui_state: absent
 controller_state: absent
 velero_state: absent
-crd_state: absent
 # defaults to help with templating during deletion
 mig_ui_oauth_redirect_url: ""
 mig_ui_oauth_secret: ""
