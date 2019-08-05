@@ -96,7 +96,6 @@
     k8s:
       state: "{{ controller_state }}"
       definition: "{{ lookup('template', 'controller.yml.j2') }}"
-    when: migration_controller
 
 - name: migration_ui
   block:
