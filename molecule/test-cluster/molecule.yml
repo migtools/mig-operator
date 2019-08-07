@@ -18,7 +18,8 @@ provisioner:
   inventory:
     group_vars:
       all:
-        namespace: ${TEST_NAMESPACE:-openshift-migration-operator}
+        controller_namespace: ${TEST_CONTROLLER_NAMESPACE:-openshift-migration-operator}
+        migration_namespace: ${TEST_MIGRATION_NAMESPACE:-openshift-migration}
   lint:
     name: ansible-lint
     enabled: False
