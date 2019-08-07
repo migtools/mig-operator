@@ -298,13 +298,13 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: {{ mig_namespace }}
+  namespace: {{ mig_manager_namespace }}
 ---
 apiVersion: v1
 kind: Secret
 metadata:
   name: webhook-server-secret
-  namespace: {{ mig_namespace }}
+  namespace: {{ mig_manager_namespace }}
 ---
 apiVersion: v1
 kind: Service
@@ -313,7 +313,7 @@ metadata:
     control-plane: controller-manager
     controller-tools.k8s.io: "1.0"
   name: controller-manager-service
-  namespace: {{ mig_namespace }}
+  namespace: {{ mig_manager_namespace }}
 spec:
   ports:
   - port: 443
@@ -328,7 +328,7 @@ metadata:
     control-plane: controller-manager
     controller-tools.k8s.io: "1.0"
   name: controller-manager
-  namespace: {{ mig_namespace }}
+  namespace: {{ mig_manager_namespace }}
 spec:
   selector:
     matchLabels:

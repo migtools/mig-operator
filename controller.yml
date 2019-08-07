@@ -2,7 +2,7 @@ apiVersion: migration.openshift.io/v1alpha1
 kind: MigrationController
 metadata:
   name: migration-controller
-  namespace: mig
+  namespace: openshift-migration-operator
 spec:
   cluster_name: host
   migration_velero: true

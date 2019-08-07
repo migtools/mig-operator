@@ -38,6 +38,49 @@ spec:
               items:
                 type: string
               type: array
+            persistentVolumes:
+              items:
+                properties:
+                  capacity:
+                    type: string
+                  name:
+                    type: string
+                  pvc:
+                    properties:
+                      accessModes:
+                        items:
+                          type: string
+                        type: array
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                    type: object
+                  selection:
+                    properties:
+                      accessMode:
+                        type: string
+                      action:
+                        type: string
+                      storageClass:
+                        type: string
+                    type: object
+                  storageClass:
+                    type: string
+                  supported:
+                    properties:
+                      actions:
+                        items:
+                          type: string
+                        type: array
+                    required:
+                    - actions
+                    type: object
+                required:
+                - supported
+                - selection
+                type: object
+              type: array
             srcMigClusterRef:
               type: object
           type: object

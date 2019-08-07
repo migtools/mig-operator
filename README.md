@@ -40,7 +40,7 @@ Once you've made your configuration choices run `oc create -f controller.yml`.
 In order to enable the UI to talk to an Openshift 3 cluster (whether local or remote) it is necessary to edit the master-config.yaml and restart the Openshift master nodes. 
 
 To determine the CORS URL that needs to be added retrieve the route URL after installing the controller.
-`oc get -n mig route/migration -o go-template='{{ .spec.host }}{{ println }}'`
+`oc get -n openshift-migration-operator route/migration -o go-template='{{ .spec.host }}{{ println }}'`
 
 Add the hostname to /etc/origin/master/master-config.yaml under corsAllowedOrigins, for instance:
 ```
@@ -52,7 +52,7 @@ corsAllowedOrigins:
 On Openshift 4 cluster resources are modified by the operator if the controller is installed there and you can skip these steps. If you chose not to install the controller on your Openshift 4 cluster you will need to perform these steps manually.
 
 If you haven't already, determine the CORS URL that needs to be added retrieve the route URL
-`oc get -n mig route/migration -o go-template='{{ .spec.host }}{{ println }}'`
+`oc get -n openshift-migration-operator route/migration -o go-template='{{ .spec.host }}{{ println }}'`
 
 `oc edit authentication.operator cluster` and ensure the following exist:
 ```
@@ -77,13 +77,12 @@ When adding a remote cluster in the migration UI you will be prompted for a serv
 
 To get a serviceaccount token use the following command:
 ```
-oc sa get-token -n mig mig
+oc sa get-token -n openshift-migration-operator mig
 ```
 
 ## Cleanup
 To clean up all the resources created by the operator you can do the following:
 ```
-oc delete namespace mig
 
 oc delete crd backups.velero.io backupstoragelocations.velero.io deletebackuprequests.velero.io downloadrequests.velero.io migrationcontrollers.migration.openshift.io podvolumebackups.velero.io podvolumerestores.velero.io resticrepositories.velero.io restores.velero.io schedules.velero.io serverstatusrequests.velero.io volumesnapshotlocations.velero.io
 
@@ -91,5 +90,7 @@ oc delete clusterrolebindings migration-operator velero mig-cluster-admin
 
 oc delete oauthclient migration
 
-oc delete scc velero-privileged
+oc delete namespace openshift-migration
+
+oc delete namespace openshift-migration-operator
 ```

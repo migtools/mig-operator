@@ -9,10 +9,15 @@
 - set_fact: velero_state="present"
   when: migration_velero
 
-- name: "Set up mig namespace"
+- name: "Set up namespace for mig resources"
   k8s:
     state: "present"
     definition: "{{ lookup('template', 'mig_namespace.yml.j2') }}"
+
+- name: "Set up mig operator namespace"
+  k8s:
+    state: "present"
+    definition: "{{ lookup('template', 'mig_manager_namespace.yml.j2') }}"
   when: migration_ui or migration_controller or migration_velero
 
 #This ConfigMap contains the cluster config on Openshift 4.
@@ -47,17 +52,16 @@
   when:
   - cluster_configmap.resources|length == 0
   - origin_three_dev is defined and origin_three_dev
-    
-- name: migration_velero
+
+- when: migration_velero
   block:
   - name: Check if cloud-credentials secret exists already so we don't update it
     k8s_facts:
       api_version: v1
       kind: Secret
       name: "{{ velero_aws_secret_name }}"
-      namespace: "{{ mig_namespace }}"
+      namespace: "{{ mig_resources_namespace }}"
     register: secret_status
-    when: migration_velero
 
   - name: "Create empty velero S3 secret"
     k8s:
@@ -67,10 +71,10 @@
         kind: Secret
         metadata:
           name: "{{ velero_aws_secret_name }}"
-          namespace: "{{ mig_namespace }}"
+          namespace: "{{ mig_resources_namespace }}"
         data:
           cloud: ""
-    when: migration_velero and (secret_status.resources|length) == 0
+    when: (secret_status.resources|length) == 0
 
   - name: "Set up velero controller"
     k8s:
@@ -105,7 +109,7 @@
       api_version: v1
       kind: Route
       name: migration
-      namespace: "{{ mig_namespace }}"
+      namespace: "{{ mig_manager_namespace }}"
     register: route_status
     when: migration_ui
 
@@ -119,7 +123,7 @@
     k8s_facts:
       api_version: "route.openshift.io/v1"
       kind: "Route"
-      namespace: "{{ mig_namespace }}"
+      namespace: "{{ mig_manager_namespace }}"
       name: migration
     register: route
     when: migration_ui
@@ -141,7 +145,7 @@
       api_version: v1
       kind: OAuthClient
       name: migration
-      namespace: "{{ mig_namespace }}"
+      namespace: "{{ mig_manager_namespace }}"
     register: oauthclient_status
     when: migration_ui
 
@@ -165,7 +169,7 @@
       api_version: v1
       kind: ConfigMap
       name: "{{ mig_ui_configmap_name }}"
-      namespace: "{{ mig_namespace }}"
+      namespace: "{{ mig_manager_namespace }}"
     register: configmap_status
 
   - name: Set up mig ui configmap
