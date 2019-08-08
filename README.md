@@ -83,14 +83,13 @@ oc sa get-token -n openshift-migration-operator mig
 ## Cleanup
 To clean up all the resources created by the operator you can do the following:
 ```
+oc delete namespace openshift-migration
+
+oc delete namespace openshift-migration-operator
 
 oc delete crd backups.velero.io backupstoragelocations.velero.io deletebackuprequests.velero.io downloadrequests.velero.io migrationcontrollers.migration.openshift.io podvolumebackups.velero.io podvolumerestores.velero.io resticrepositories.velero.io restores.velero.io schedules.velero.io serverstatusrequests.velero.io volumesnapshotlocations.velero.io
 
 oc delete clusterrolebindings migration-operator velero mig-cluster-admin
 
 oc delete oauthclient migration
-
-oc delete namespace openshift-migration
-
-oc delete namespace openshift-migration-operator
 ```
