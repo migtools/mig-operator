@@ -3,3 +3,4 @@
   group: migration.openshift.io
   kind: MigrationController
   role: /opt/ansible/roles/migrationcontroller
+  manageStatus: False
