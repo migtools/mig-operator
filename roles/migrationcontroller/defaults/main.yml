@@ -1,14 +1,14 @@
 ---
 mig_controller_image: quay.io/ocpmigrate/mig-controller
-mig_controller_version: htb1
+mig_controller_version: "{{ snapshot_tag | default('latest') }}"
 mig_namespace: mig
 mig_ui_configmap_name : mig-ui-config
 mig_ui_oauth_user_scope: "user:full"
 mig_ui_image: quay.io/ocpmigrate/mig-ui
-mig_ui_version: htb1
+mig_ui_version: "{{ snapshot_tag | default('latest') }}"
 velero_aws_secret_name: cloud-credentials
-velero_image: quay.io/ocpmigrate/velero:fusor-dev
-velero_plugin_image: quay.io/ocpmigrate/migration-plugin:htb1
+velero_image: "quay.io/ocpmigrate/velero:{{ snapshot_tag | default('fusor-dev') }}"
+velero_plugin_image: "quay.io/ocpmigrate/migration-plugin:{{ snapshot_tag | default('latest') }}"
 restic_pv_host_path: /var/lib/kubelet/pods
 # optional resource limits for controller
 mig_controller_limits_memory: "800Mi"
