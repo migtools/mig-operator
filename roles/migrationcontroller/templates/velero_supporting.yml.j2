@@ -1,0 +1,219 @@
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: backups.velero.io
+  labels:
+    component: velero
+spec:
+  group: velero.io
+  version: v1
+  scope: Namespaced
+  names:
+    plural: backups
+    kind: Backup
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: schedules.velero.io
+  labels:
+    component: velero
+spec:
+  group: velero.io
+  version: v1
+  scope: Namespaced
+  names:
+    plural: schedules
+    kind: Schedule
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: restores.velero.io
+  labels:
+    component: velero
+spec:
+  group: velero.io
+  version: v1
+  scope: Namespaced
+  names:
+    plural: restores
+    kind: Restore
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: downloadrequests.velero.io
+  labels:
+    component: velero
+spec:
+  group: velero.io
+  version: v1
+  scope: Namespaced
+  names:
+    plural: downloadrequests
+    kind: DownloadRequest
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: deletebackuprequests.velero.io
+  labels:
+    component: velero
+spec:
+  group: velero.io
+  version: v1
+  scope: Namespaced
+  names:
+    plural: deletebackuprequests
+    kind: DeleteBackupRequest
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: podvolumebackups.velero.io
+  labels:
+    component: velero
+spec:
+  group: velero.io
+  version: v1
+  scope: Namespaced
+  names:
+    plural: podvolumebackups
+    kind: PodVolumeBackup
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: podvolumerestores.velero.io
+  labels:
+    component: velero
+spec:
+  group: velero.io
+  version: v1
+  scope: Namespaced
+  names:
+    plural: podvolumerestores
+    kind: PodVolumeRestore
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: resticrepositories.velero.io
+  labels:
+    component: velero
+spec:
+  group: velero.io
+  version: v1
+  scope: Namespaced
+  names:
+    plural: resticrepositories
+    kind: ResticRepository
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: backupstoragelocations.velero.io
+  labels:
+    component: velero
+spec:
+  group: velero.io
+  version: v1
+  scope: Namespaced
+  names:
+    plural: backupstoragelocations
+    kind: BackupStorageLocation
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: volumesnapshotlocations.velero.io
+  labels:
+    component: velero
+spec:
+  group: velero.io
+  version: v1
+  scope: Namespaced
+  names:
+    plural: volumesnapshotlocations
+    kind: VolumeSnapshotLocation
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  name: serverstatusrequests.velero.io
+  labels:
+    component: velero
+spec:
+  group: velero.io
+  version: v1
+  scope: Namespaced
+  names:
+    plural: serverstatusrequests
+    kind: ServerStatusRequest
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: velero
+  namespace: {{ mig_namespace }}
+  labels:
+    component: velero
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: velero
+  labels:
+    component: velero
+subjects:
+  - kind: ServiceAccount
+    namespace: {{ mig_namespace }}
+    name: velero
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+allowHostDirVolumePlugin: true
+allowHostIPC: true
+allowHostNetwork: true
+allowHostPID: true
+allowHostPorts: true
+allowPrivilegeEscalation: true
+allowPrivilegedContainer: true
+allowedCapabilities:
+- '*'
+allowedUnsafeSysctls:
+- '*'
+apiVersion: security.openshift.io/v1
+defaultAddCapabilities: null
+fsGroup:
+  type: RunAsAny
+kind: SecurityContextConstraints
+metadata:
+  annotations:
+    kubernetes.io/description: 'privileged allows access to all privileged and host
+      features and the ability to run as any user, any group, any fsGroup, and with
+      any SELinux context.  WARNING: this is the most relaxed SCC and should be used
+      only for cluster administration. Grant with caution.'
+  creationTimestamp: null
+  generation: 1
+  name: velero-privileged
+priority: null
+readOnlyRootFilesystem: false
+requiredDropCapabilities: null
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: RunAsAny
+seccompProfiles:
+- '*'
+supplementalGroups:
+  type: RunAsAny
+users:
+- system:admin
+- system:serviceaccount:{{ mig_namespace }}:velero
+volumes:
+- '*'

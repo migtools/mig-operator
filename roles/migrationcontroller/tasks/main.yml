@@ -72,6 +72,12 @@
           cloud: ""
     when: migration_velero and (secret_status.resources|length) == 0
 
+  - name: "Set up velero CRDs, RBAC, SCC"
+    k8s:
+      state: "{{ velero_state }}"
+      definition: "{{ lookup('template', 'velero_supporting.yml.j2') }}"
+    when: not olm_managed
+
   - name: "Set up velero controller"
     k8s:
       state: "{{ velero_state }}"
