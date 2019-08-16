@@ -13,7 +13,7 @@
   k8s:
     state: "present"
     definition: "{{ lookup('template', 'mig_namespace.yml.j2') }}"
-  when: migration_ui or migration_controller or migration_velero
+  when: not olm_managed and (migration_ui or migration_controller or migration_velero)
 
 #This ConfigMap contains the cluster config on Openshift 4.
 #Looking for it provides a rudimentary way to see what version we're on.
@@ -90,7 +90,13 @@
       - "migration_v1alpha1_migmigration.yaml"
       - "migration_v1alpha1_migplan.yaml"
       - "migration_v1alpha1_migstorage.yaml"
-    when: migration_controller or migration_ui
+    when: not olm_managed and (migration_controller or migration_ui)
+
+  - name: "Set up mig controller RBAC"
+    k8s:
+      state: "{{ controller_state }}"
+      definition: "{{ lookup('template', 'controller_rbac.yml.j2') }}"
+    when: not olm_managed
 
   - name: "Set up mig controller"
     k8s:
@@ -329,4 +335,5 @@
   k8s:
     state: "present"
     definition: "{{ lookup('template', 'mig_host_cluster.yml.j2') }}"
+  when: not olm_managed
   
