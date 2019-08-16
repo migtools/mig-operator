@@ -1,11 +1,11 @@
 apiVersion: operators.coreos.com/v1
 kind: OperatorSource
 metadata:
-  name: jmontleon-operators
+  name: ocpmigrate-operators
   namespace: openshift-marketplace
 spec:
   type: appregistry
   endpoint: https://quay.io/cnr
-  registryNamespace: jmontleon
-  displayName: "Jason's Operators"
-  publisher: "Jason Montleon"
+  registryNamespace: ocpmigrateoperator
+  displayName: "Migration Operators"
+  publisher: "ocp-migrate-team@redhat.com"
