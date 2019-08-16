@@ -101,8 +101,8 @@
   - name: "Set up mig controller RBAC"
     k8s:
       state: "{{ controller_state }}"
-      definition: "{{ lookup('template', 'controller_rbac.yml.j2') }}"
-    when: not olm_managed
+      definition: "{{ lookup('template', 'mig_rbac.yml.j2') }}"
+    when: not olm_managed and (migration_controller or migration_ui)
 
   - name: "Set up mig controller"
     k8s:

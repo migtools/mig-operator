@@ -287,6 +287,14 @@ rules:
   - list
   - watch
 ---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: migration-controller
+  namespace: {{ mig_namespace }}
+  labels:
+    component: mig
+---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
@@ -297,5 +305,5 @@ roleRef:
   name: manager-role
 subjects:
 - kind: ServiceAccount
-  name: default
+  name: migration-controller
   namespace: {{ mig_namespace }}
