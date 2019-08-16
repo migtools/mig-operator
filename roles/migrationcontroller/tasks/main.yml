@@ -329,11 +329,11 @@
     k8s:
       state: "present"
       definition: "{{ lookup('template', 'mig_service_account.yml.j2') }}"
+    when: not olm_managed
   
 - when: migration_controller or migration_ui
   name: "Set up host MigCluster"
   k8s:
     state: "present"
     definition: "{{ lookup('template', 'mig_host_cluster.yml.j2') }}"
-  when: not olm_managed
   
