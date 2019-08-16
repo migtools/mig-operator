@@ -1,0 +1,4 @@
+packageName: mig-operator
+channels:
+- name: alpha
+  currentCSV: mig-operator.0.0.1
