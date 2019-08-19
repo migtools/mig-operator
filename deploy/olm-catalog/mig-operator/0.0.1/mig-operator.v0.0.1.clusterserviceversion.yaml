@@ -178,6 +178,18 @@ spec:
           - update
           - patch
         - apiGroups:
+          - apps
+          resources:
+          - '*'
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
           - clusterregistry.k8s.io
           resources:
           - clusters
