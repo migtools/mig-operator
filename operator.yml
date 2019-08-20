@@ -133,14 +133,14 @@ spec:
         - /usr/local/bin/ao-logs
         - /tmp/ansible-operator/runner
         - stdout
-        image: quay.io/ocpmigrate/mig-operator:latest
+        image: quay.io/ocpmigrate/mig-operator:stable
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /tmp/ansible-operator/runner
           name: runner
           readOnly: true
       - name: operator
-        image: quay.io/ocpmigrate/mig-operator:latest
+        image: quay.io/ocpmigrate/mig-operator:stable
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /tmp/ansible-operator/runner
