@@ -6,26 +6,6 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
-  - ""
-  resources:
-  - namespaces
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - namespaces/status
-  verbs:
-  - get
-  - update
-  - patch
-- apiGroups:
   - migration.openshift.io
   resources:
   - migclusters
@@ -106,6 +86,62 @@ rules:
   - update
   - patch
 - apiGroups:
+  - apps.openshift.io
+  resources:
+  - '*'
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - apps
+  resources:
+  - '*'
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - extensions
+  resources:
+  - '*'
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - namespaces/status
+  verbs:
+  - get
+  - update
+  - patch
+- apiGroups:
   - ""
   resources:
   - pods
@@ -168,26 +204,6 @@ rules:
 - apiGroups:
   - migration.openshift.io
   resources:
-  - migstages
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - migration.openshift.io
-  resources:
-  - migstages/status
-  verbs:
-  - get
-  - update
-  - patch
-- apiGroups:
-  - migration.openshift.io
-  resources:
   - migstorages
   verbs:
   - get
@@ -230,9 +246,9 @@ rules:
   - patch
   - delete
 - apiGroups:
-  - apps.openshift.io
+  - storage.k8s.io
   resources:
-  - '*'
+  - storageclasses
   verbs:
   - get
   - list
@@ -253,6 +269,106 @@ rules:
   - update
   - patch
   - delete
+- apiGroups:
+  - admissionregistration.k8s.io
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - namespaces/status
+  verbs:
+  - get
+  - update
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - pods/status
+  verbs:
+  - get
+  - update
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumes
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumes/status
+  verbs:
+  - get
+  - update
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumeclaims
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumeclaims/status
+  verbs:
+  - get
+  - update
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - secret
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - secret/status
+  verbs:
+  - get
+  - update
+  - patch
 - apiGroups:
   - admissionregistration.k8s.io
   resources:
@@ -290,14 +406,7 @@ rules:
   - update
   - patch
   - delete
-- apiGroups:
-  - storage.k8s.io
-  resources:
-  - storageclasses
-  verbs:
-  - get
-  - list
-  - watch
+
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
@@ -310,13 +419,13 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: {{ mig_namespace }}
+  namespace: {{ mig_manager_namespace }}
 ---
 apiVersion: v1
 kind: Secret
 metadata:
   name: webhook-server-secret
-  namespace: {{ mig_namespace }}
+  namespace: {{ mig_manager_namespace }}
 ---
 apiVersion: v1
 kind: Service
@@ -325,7 +434,7 @@ metadata:
     control-plane: controller-manager
     controller-tools.k8s.io: "1.0"
   name: controller-manager-service
-  namespace: {{ mig_namespace }}
+  namespace: {{ mig_manager_namespace }}
 spec:
   ports:
   - port: 443
@@ -340,7 +449,7 @@ metadata:
     control-plane: controller-manager
     controller-tools.k8s.io: "1.0"
   name: controller-manager
-  namespace: {{ mig_namespace }}
+  namespace: {{ mig_manager_namespace }}
 spec:
   selector:
     matchLabels:

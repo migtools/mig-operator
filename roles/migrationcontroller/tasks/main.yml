@@ -9,10 +9,15 @@
 - set_fact: velero_state="present"
   when: migration_velero
 
-- name: "Set up mig namespace"
+- name: "Set up namespace for mig resources"
   k8s:
     state: "present"
     definition: "{{ lookup('template', 'mig_namespace.yml.j2') }}"
+
+- name: "Set up mig operator namespace"
+  k8s:
+    state: "present"
+    definition: "{{ lookup('template', 'mig_manager_namespace.yml.j2') }}"
   when: migration_ui or migration_controller or migration_velero
 
 #This ConfigMap contains the cluster config on Openshift 4.
@@ -47,17 +52,16 @@
   when:
   - cluster_configmap.resources|length == 0
   - origin_three_dev is defined and origin_three_dev
-    
-- name: migration_velero
+
+- when: migration_velero
   block:
   - name: Check if cloud-credentials secret exists already so we don't update it
     k8s_facts:
       api_version: v1
       kind: Secret
       name: "{{ velero_aws_secret_name }}"
-      namespace: "{{ mig_namespace }}"
+      namespace: "{{ mig_resources_namespace }}"
     register: secret_status
-    when: migration_velero
 
   - name: "Create empty velero S3 secret"
     k8s:
@@ -67,10 +71,10 @@
         kind: Secret
         metadata:
           name: "{{ velero_aws_secret_name }}"
-          namespace: "{{ mig_namespace }}"
+          namespace: "{{ mig_resources_namespace }}"
         data:
           cloud: ""
-    when: migration_velero and (secret_status.resources|length) == 0
+    when: (secret_status.resources|length) == 0
 
   - name: "Set up velero controller"
     k8s:
@@ -97,63 +101,57 @@
       state: "{{ controller_state }}"
       definition: "{{ lookup('template', 'controller.yml.j2') }}"
 
-- name: migration_ui
+- when: migration_ui
   block:
-
   - name: Check if mig ui route exists already so we don't update it
     k8s_facts:
       api_version: v1
       kind: Route
       name: migration
-      namespace: "{{ mig_namespace }}"
+      namespace: "{{ mig_manager_namespace }}"
     register: route_status
-    when: migration_ui
 
   - name: "Set up mig ui route"
     k8s:
       state: "{{ ui_state }}"
       definition: "{{ lookup('template', 'ui-route.yml.j2') }}"
-    when: migration_ui and (route_status.resources|length) == 0
+    when: (route_status.resources|length) == 0
 
   - name: Find generated route
     k8s_facts:
       api_version: "route.openshift.io/v1"
       kind: "Route"
-      namespace: "{{ mig_namespace }}"
+      namespace: "{{ mig_manager_namespace }}"
       name: migration
     register: route
-    when: migration_ui
 
   - name: Determine CORS URL
     set_fact:
       mig_ui_cors_url: "//{{ route.resources[0].spec.host }}"
       mig_ui_cors_loopback: "//127.0.0.1(:|$)"
       mig_ui_cors_localhost: "//localhost(:|$)"
-    when: migration_ui
 
   - name: Set OAuth redirect url
     set_fact:
       mig_ui_oauth_redirect_url: "https:{{ mig_ui_cors_url }}/login/callback"
-    when: migration_ui
 
   - name: Check if migration ui oauthclient secret exists already so we don't update it
     k8s_facts:
       api_version: v1
       kind: OAuthClient
       name: migration
-      namespace: "{{ mig_namespace }}"
+      namespace: "{{ mig_manager_namespace }}"
     register: oauthclient_status
-    when: migration_ui
 
   - name: Generate random secret value for oauth client
     set_fact:
       mig_ui_oauth_secret: "{{ 99999999 | random | to_uuid | b64encode }}"
-    when: migration_ui and (oauthclient_status.resources|length) == 0
+    when: (oauthclient_status.resources|length) == 0
 
   - name: Use existing secret value for oauth client
     set_fact:
       mig_ui_oauth_secret: "{{ oauthclient_status.resources[0].secret }}"
-    when: migration_ui and (oauthclient_status.resources|length) > 0
+    when: (oauthclient_status.resources|length) > 0
 
   - name: Set up mig ui oauthclient secret
     k8s:
@@ -165,7 +163,7 @@
       api_version: v1
       kind: ConfigMap
       name: "{{ mig_ui_configmap_name }}"
-      namespace: "{{ mig_namespace }}"
+      namespace: "{{ mig_manager_namespace }}"
     register: configmap_status
 
   - name: Set up mig ui configmap
@@ -323,10 +321,9 @@
     k8s:
       state: "present"
       definition: "{{ lookup('template', 'mig_service_account.yml.j2') }}"
-  
+
 - when: migration_controller or migration_ui
   name: "Set up host MigCluster"
   k8s:
     state: "present"
     definition: "{{ lookup('template', 'mig_host_cluster.yml.j2') }}"
-  
