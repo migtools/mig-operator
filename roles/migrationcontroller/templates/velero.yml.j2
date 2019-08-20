@@ -257,7 +257,7 @@ spec:
             - name: AWS_SHARED_CREDENTIALS_FILE
               value: /credentials/cloud
             - name: VELERO_NAMESPACE
-              value: {{ mig_namespace }}
+              value: {{ mig_resources_namespace }}
             - name: VELERO_SCRATCH_DIR
               value: /scratch
       volumes:
