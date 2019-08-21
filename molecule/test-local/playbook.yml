@@ -2,17 +2,15 @@
 
 - name: Build Operator in Kubernetes docker container
   hosts: k8s
-  vars:
-    image_name: migration.openshift.io/mig-operator:testing
   tasks:
   # using command so we don't need to install any dependencies
   - name: Get existing image hash
-    command: docker images -q {{ image_name }}
+    command: docker images -q {{ test_image }}
     register: prev_hash
     changed_when: false
 
   - name: Build Operator Image
-    command: docker build -f /build/build/Dockerfile -t {{ image_name }} /build
+    command: docker build -f /build/build/Dockerfile -t {{ test_image }} /build
     register: build_cmd
     changed_when: not prev_hash.stdout or (prev_hash.stdout and prev_hash.stdout not in ''.join(build_cmd.stdout_lines[-2:]))
 
@@ -23,14 +21,13 @@
     ansible_python_interpreter: '{{ ansible_playbook_python }}'
     deploy_dir: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy"
     pull_policy: Never
-    REPLACE_IMAGE: migration.openshift.io/mig-operator:testing
     custom_resource: "{{ lookup('file', '/'.join([deploy_dir, 'crds/migration_v1alpha1_migration_cr.yaml'])) | from_yaml }}"
   tasks:
   - block:
     - name: Delete the Operator Deployment
       k8s:
         state: absent
-        namespace: '{{ namespace }}'
+        namespace: '{{ controller_namespace }}'
         definition: "{{ lookup('template', '/'.join([deploy_dir, 'operator.yaml'])) }}"
       register: delete_deployment
       when: hostvars[groups.k8s.0].build_cmd.changed
@@ -39,7 +36,7 @@
       k8s_facts:
         api_version: '{{ definition.apiVersion }}'
         kind: '{{ definition.kind }}'
-        namespace: '{{ namespace }}'
+        namespace: '{{ controller_namespace }}'
         name: '{{ definition.metadata.name }}'
       vars:
         definition: "{{ lookup('template', '/'.join([deploy_dir, 'operator.yaml'])) | from_yaml }}"
@@ -49,28 +46,37 @@
       retries: 10
       when: delete_deployment.changed
 
+    - name: "Replace latest image with {{ test_image }}"
+      replace:
+        path: "{{ deploy_dir }}/operator.yaml"
+        regexp: '^(.*)image:( *)quay.io/ocpmigrate/mig-operator(.*)$'
+        replace: "\\1image:\\2{{ test_image }}"
+
+    - debug:
+        msg: "{{ lookup('template', '/'.join([deploy_dir, 'operator.yaml'])) | from_yaml }}"
+
     - name: Create the Operator Deployment
       k8s:
-        namespace: '{{ namespace }}'
+        namespace: '{{ controller_namespace }}'
         definition: "{{ lookup('template', '/'.join([deploy_dir, 'operator.yaml'])) }}"
 
     - name: Create the migration.openshift.io/v1alpha1.MigrationController
       k8s:
         state: present
-        namespace: '{{ namespace }}'
+        namespace: '{{ controller_namespace }}'
         definition: '{{ custom_resource }}'
 
-    - name: Wait 120s for reconciliation to run
+    - name: Wait 240s for reconciliation to run
       k8s_facts:
         api_version: '{{ custom_resource.apiVersion }}'
         kind: '{{ custom_resource.kind }}'
-        namespace: '{{ namespace }}'
+        namespace: '{{ controller_namespace }}'
         name: '{{ custom_resource.metadata.name }}'
       register: cr
       until:
       - "'Successful' in (cr | json_query('resources[].status.conditions[].reason'))"
       delay: 10
-      retries: 12
+      retries: 24
     rescue:
     - name: debug cr
       ignore_errors: yes
@@ -81,7 +87,7 @@
         debug_cr: '{{ lookup("k8s",
           kind=custom_resource.kind,
           api_version=custom_resource.apiVersion,
-          namespace=namespace,
+          namespace=controller_namespace,
           resource_name=custom_resource.metadata.name
         )}}'
 
@@ -94,14 +100,14 @@
         deploy: '{{ lookup("k8s",
           kind="Deployment",
           api_version="apps/v1",
-          namespace=mig,
+          namespace=controller_namespace,
           label_selector="app=migration-operator"
         )}}'
 
     - name: get operator logs
       ignore_errors: yes
       failed_when: false
-      command: kubectl logs deployment/{{ definition.metadata.name }} -n {{ namespace }}
+      command: kubectl logs deployment/{{ definition.metadata.name }} -n {{ controller_namespace }}
       environment:
         KUBECONFIG: '{{ lookup("env", "KUBECONFIG") }}'
       vars:

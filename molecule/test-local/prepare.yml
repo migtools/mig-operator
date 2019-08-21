@@ -12,16 +12,22 @@
     k8s:
       definition: "{{ lookup('file', '/'.join([deploy_dir, 'crds/migration_v1alpha1_migration_crd.yaml'])) }}"
 
-  - name: Ensure specified namespace is present
+  - name: Ensure controller namespace is present
     k8s:
       api_version: v1
       kind: Namespace
-      name: '{{ namespace }}'
+      name: '{{ controller_namespace }}'
+
+  - name: Ensure migration namespace is present
+    k8s:
+      api_version: v1
+      kind: Namespace
+      name: '{{ migration_namespace }}'
 
   - name: Create RBAC resources
     k8s:
       definition: "{{ lookup('template', '/'.join([deploy_dir, item])) }}"
-      namespace: '{{ namespace }}'
+      namespace: '{{ controller_namespace }}'
     with_items:
       - role.yaml
       - role_binding.yaml

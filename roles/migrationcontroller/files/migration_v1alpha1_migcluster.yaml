@@ -34,6 +34,21 @@ spec:
               type: boolean
             serviceAccountSecretRef:
               type: object
+            storageClasses:
+              items:
+                properties:
+                  accessModes:
+                    items:
+                      type: string
+                    type: array
+                  default:
+                    type: boolean
+                  name:
+                    type: string
+                  provisioner:
+                    type: string
+                type: object
+              type: array
           required:
           - isHostCluster
           type: object
