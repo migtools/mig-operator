@@ -3,7 +3,7 @@ This operator will install velero with customized migration plugins, the migrati
 
 ## Operator Installation with OLM on Openshift 4
 1. `oc create -f mig-operator-source.yaml`
-1. Create a mig namespace
+1. Create a openshift-migration-operator namespace
 1. In the left menu select Operator Hub and find `Migration Operator` in the list
 1. Click Install and install it in the mig namespace
 1. Once installation is complete select `Installed Operators` on the left menu
@@ -14,7 +14,9 @@ This operator will install velero with customized migration plugins, the migrati
 `oc create -f operator.yml`
 
 ## Migration Controller Installation
-Edit `controller.yml` and adjust desired options
+'controller-3.yml' and 'controller-4.yml' contain the recommended settings for OCP 3 and 4 respectively.
+
+Edit `controller.yml` and adjust options if desired.
 
 Recommended settings for Openshift 3 are:
 ```
@@ -30,7 +32,7 @@ Recommended settings for Openshift 4 are:
   migration_ui: true
 ```
 
-It is possible to reverse this setup and install the controller and UI pods on Openshift 3, but you will also need to provide the cluster endpoint in controller.yml via the `mig_ui_cluster_api_endpoint` parameter. Additional setup will also be required on the Openshift 4 cluster if you take this route. See the manual CORS configuration section below for more details. `migration_velero` is required on every cluster that will act as a source or destination for migrated workloads.
+It is possible to reverse this setup and install the controller and UI pods on Openshift 3, but you will also need to provide the cluster endpoint in `controller-3.yml` via the `mig_ui_cluster_api_endpoint` parameter. Additional setup will also be required on the Openshift 4 cluster if you take this route. See the manual CORS configuration section below for more details. `migration_velero` is required on every cluster that will act as a source or destination for migrated workloads.
 
 Once you've made your configuration choices run `oc create -f controller.yml`.
 
