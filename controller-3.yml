@@ -1,0 +1,12 @@
+apiVersion: migration.openshift.io/v1alpha1
+kind: MigrationController
+metadata:
+  name: migration-controller
+  namespace: mig
+spec:
+  cluster_name: host
+  migration_velero: true
+  migration_controller: false
+  migration_ui: false
+  #To install the controller on Openshift 3 you will need to configure the API endpoint:
+  #mig_ui_cluster_api_endpoint: https://replace-with-openshift-cluster-hostname:8443/api
