@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: velero
-  namespace: {{ mig_resources_namespace }}
+  namespace: {{ mig_manager_namespace }}
   labels:
     component: velero
 ---
@@ -15,7 +15,7 @@ metadata:
     component: velero
 subjects:
   - kind: ServiceAccount
-    namespace: {{ mig_resources_namespace }}
+    namespace: {{ mig_manager_namespace }}
     name: velero
 roleRef:
   kind: ClusterRole
@@ -60,14 +60,14 @@ supplementalGroups:
   type: RunAsAny
 users:
 - system:admin
-- system:serviceaccount:{{ mig_resources_namespace }}:velero
+- system:serviceaccount:{{ mig_manager_namespace }}:velero
 volumes:
 - '*'
 ---
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  namespace: {{ mig_resources_namespace }}
+  namespace: {{ mig_manager_namespace }}
   name: velero
 spec:
   replicas: 1
@@ -103,7 +103,7 @@ spec:
             - name: AWS_SHARED_CREDENTIALS_FILE
               value: /credentials/cloud
             - name: VELERO_NAMESPACE
-              value: {{ mig_resources_namespace }}
+              value: {{ mig_manager_namespace }}
             - name: VELERO_SCRATCH_DIR
               value: /scratch
       volumes:
@@ -129,7 +129,7 @@ apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
   name: restic
-  namespace: {{ mig_resources_namespace }}
+  namespace: {{ mig_manager_namespace }}
 spec:
   selector:
     matchLabels:

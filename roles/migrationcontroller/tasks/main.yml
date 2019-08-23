@@ -61,7 +61,7 @@
       api_version: v1
       kind: Secret
       name: "{{ velero_aws_secret_name }}"
-      namespace: "{{ mig_resources_namespace }}"
+      namespace: "{{ mig_manager_namespace }}"
     register: secret_status
 
   - name: "Create empty velero S3 secret"
@@ -72,7 +72,7 @@
         kind: Secret
         metadata:
           name: "{{ velero_aws_secret_name }}"
-          namespace: "{{ mig_resources_namespace }}"
+          namespace: "{{ mig_manager_namespace }}"
         data:
           cloud: ""
     when: (secret_status.resources|length) == 0
