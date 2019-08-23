@@ -95,3 +95,32 @@ oc delete clusterrolebindings migration-operator velero mig-cluster-admin
 
 oc delete oauthclient migration
 ```
+
+## Testing Changes to the mig-operator CSV with OLM
+1. Make desired changes to the [mig-operator CSV](https://github.com/fusor/mig-operator/blob/olm/deploy/olm-catalog/mig-operator/0.0.1/mig-operator.v0.0.1.clusterserviceversion.yaml)
+2. Edit [mig-operator-source.yaml](https://github.com/fusor/mig-operator/blob/olm/mig-operator-source.yaml) setting 'registryNamespace' to an unused quay.io repo name under your personal account or under a quay.io organization of your choice
+```
+apiVersion: operators.coreos.com/v1
+kind: OperatorSource
+[...]
+spec:
+  [...]
+  # set to an unused quay.io repo name under your user or organization
+  registryNamespace: mig-operator
+  [...]
+```
+3. Get a quay.io [auth token](https://github.com/operator-framework/operator-courier#authentication)
+4. Using operator-courier, push the packaged CSV to your quay user account 
+```
+# Before doing this, delete any currently existing quay.io repo sharing the name you're pushing to.
+# Also, visit https://quay.io/application/ and check to see if the app you're trying to push already exists. Delete it if it does, otherwise the operator-courier push will fail.
+
+operator-courier --verbose push ./deploy/olm-catalog/mig-operator/0.0.1/ your-quay-username mig-operator 0.0.1 "$AUTH_TOKEN"
+
+# After a successful push, visit https://quay.io/application/your-quay-username/mig-operator?tab=settings and set the app to public
+```
+
+5. On an OpenShift 4 cluster, create the mig-operator OperatorSource. After some time has passed, you should see the Migration Controller appear within OperatorHub in the OCP 4 Web UI, where you'll be able to create a subscription to it.
+```
+oc create -f mig-operator-source.yaml
+```
