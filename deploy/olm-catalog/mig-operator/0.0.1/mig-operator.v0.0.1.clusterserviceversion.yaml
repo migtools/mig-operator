@@ -13,7 +13,7 @@ metadata:
     repository: https://github.com/fusor/mig-operator
     alm-examples: '[{"apiVersion":"migration.openshift.io/v1alpha1","kind":"MigrationController","metadata":{"name":"migration-controller","namespace":"mig"},"spec":{"cluster_name":"host","migration_velero":true,"migration_controller":true,"migration_ui":true,"olm_managed":true}},{"apiVersion":"velero.io/v1","kind":"Backup","metadata":{"name":"backup","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"BackupStorageLocation","metadata":{"name":"backupstoragelocation","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"DeleteBackupRequest","metadata":{"name":"deletebackuprequest","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"DownloadRequest","metadata":{"name":"downloadrequest","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"PodVolumeBackup","metadata":{"name":"podvolumebackup","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"PodVolumeRestore","metadata":{"name":"podvolumerestore","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"ResticRepository","metadata":{"name":"resticrepository","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"Restore","metadata":{"name":"restore","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"Schedule","metadata":{"name":"schedule","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"ServerStatusRequest","metadata":{"name":"serverstatusrequest","namespace":"mig"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"VolumeSnapshotLocation","metadata":{"name":"volumesnapshotlocation","namespace":"mig"},"spec":{}},{"apiVersion":"clusterregistry.k8s.io/v1alpha1","kind":"Cluster","metadata":{"name":"cluster","namespace":"mig"},"spec":{}},{"apiVersion":"migration.openshift.io/v1alpha1","kind":"MigCluster","metadata":{"name":"host","namespace":"mig"},"spec":{}},{"apiVersion":"migration.openshift.io/v1alpha1","kind":"MigPlan","metadata":{"name":"migplan","namespace":"mig"},"spec":{}},{"apiVersion":"migration.openshift.io/v1alpha1","kind":"MigMigration","metadata":{"name":"migmigration","namespace":"mig"},"spec":{}},{"apiVersion":"migration.openshift.io/v1alpha1","kind":"MigStorage","metadata":{"name":"migstorage","namespace":"mig"},"spec":{}}]'
     certified: "false"
-    support: Jason Montleon
+    support: Derek Whatley - NEW NS
 spec:
   displayName: Migration Operator
   description: |
@@ -120,8 +120,7 @@ spec:
           - configmaps
           - namespaces
           verbs:
-          - get
-          - list
+          - '*'
         - apiGroups:
           - oauth.openshift.io
           resources:
@@ -133,6 +132,12 @@ spec:
           resources:
           - kubeapiservers
           - authentications
+          verbs:
+          - '*'
+        - apiGroups:
+          - migration.openshift.io
+          resources:
+          - migclusters
           verbs:
           - '*'
       - serviceAccountName: migration-controller
@@ -430,26 +435,6 @@ spec:
           - '*'
           verbs:
           - '*'
-      - serviceAccountName: velero
-        rules:
-        - apiGroups:
-          - '*'
-          resources:
-          - '*'
-          verbs:
-          - '*'
-        - nonResourceURLs:
-          - '*'
-          verbs:
-          - '*'
-        - apiGroups:
-          - security.openshift.io"
-          resources:
-          - securitycontextconstraints
-          verbs:
-          - use
-          resourceNames:
-          - privileged
       deployments:
       - name: migration-operator
         spec:
@@ -465,7 +450,7 @@ spec:
               serviceAccount: migration-operator
               containers:
               - name: ansible
-                image: quay.io/ocpmigrate/mig-operator:olm
+                image: quay.io/djwhatle/mig-op:latest
                 command:
                 - /usr/local/bin/ao-logs
                 - /tmp/ansible-operator/runner
@@ -476,7 +461,7 @@ spec:
                   name: runner
                   readOnly: true
               - name: operator
-                image: quay.io/ocpmigrate/mig-operator:olm
+                image: quay.io/djwhatle/mig-op:latest
                 imagePullPolicy: Always
                 volumeMounts:
                 - mountPath: /tmp/ansible-operator/runner
