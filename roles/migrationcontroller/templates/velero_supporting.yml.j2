@@ -152,3 +152,68 @@ spec:
   names:
     plural: serverstatusrequests
     kind: ServerStatusRequest
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: velero
+  namespace: {{ mig_manager_namespace }}
+  labels:
+    component: velero
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: velero
+  labels:
+    component: velero
+subjects:
+  - kind: ServiceAccount
+    namespace: {{ mig_manager_namespace }}
+    name: velero
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+allowHostDirVolumePlugin: true
+allowHostIPC: true
+allowHostNetwork: true
+allowHostPID: true
+allowHostPorts: true
+allowPrivilegeEscalation: true
+allowPrivilegedContainer: true
+allowedCapabilities:
+- '*'
+allowedUnsafeSysctls:
+- '*'
+apiVersion: security.openshift.io/v1
+defaultAddCapabilities: null
+fsGroup:
+  type: RunAsAny
+kind: SecurityContextConstraints
+metadata:
+  annotations:
+    kubernetes.io/description: 'privileged allows access to all privileged and host
+      features and the ability to run as any user, any group, any fsGroup, and with
+      any SELinux context.  WARNING: this is the most relaxed SCC and should be used
+      only for cluster administration. Grant with caution.'
+  creationTimestamp: null
+  generation: 1
+  name: velero-privileged
+priority: null
+readOnlyRootFilesystem: false
+requiredDropCapabilities: null
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: RunAsAny
+seccompProfiles:
+- '*'
+supplementalGroups:
+  type: RunAsAny
+users:
+- system:admin
+- system:serviceaccount:{{ mig_manager_namespace }}:velero
+volumes:
+- '*'
