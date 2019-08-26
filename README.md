@@ -126,8 +126,8 @@ operator-courier --verbose push ./deploy/olm-catalog/mig-operator/0.0.1/ your-qu
 oc create -f mig-operator-source.yaml
 ```
 
-6. After some time has passed, you should see the Migration Controller appear within OperatorHub in the Web Console. From OperatorHub, click "Install" on the "Migration Operator" to create an OLM subscription and start mig-operator.
+6. Navigate to 'Catalog -> OperatorHub' in the Web Console. Search for 'Migration Controller' and click "Install" to create an OLM subscription and start mig-operator.
 
-7. From the 'Catalog -> Installed Operators' tab in the Web Console, open the 'Migration Operator' item and create a 'MigrationController' CR to test the full system functionality.
+7. Navigate to 'Catalog -> Installed Operators' tab in the Web Console. Open the 'Migration Operator' item and create a 'MigrationController' CR to exercise mig-operator and test your changes.
 
 
