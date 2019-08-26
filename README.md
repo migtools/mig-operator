@@ -121,11 +121,13 @@ operator-courier --verbose push ./deploy/olm-catalog/mig-operator/0.0.1/ your-qu
 # After a successful push, visit https://quay.io/application/your-quay-org/mig-operator?tab=settings and set the app to public
 ```
 
-5. On an OpenShift 4 cluster, create the mig-operator OperatorSource. After some time has passed, you should see the Migration Controller appear within OperatorHub in the Web Console. From OperatorHub, click "Install" on the "Migration Operator" to create an OLM subscription and start mig-operator.
+5. On an OpenShift 4 cluster, create the mig-operator OperatorSource. 
 ```
 oc create -f mig-operator-source.yaml
 ```
 
-6. From the 'Catalog -> Installed Operators' tab in the Web Console, open the 'Migration Operator' item and create a 'MigrationController' CR to test the full system functionality.
+6. After some time has passed, you should see the Migration Controller appear within OperatorHub in the Web Console. From OperatorHub, click "Install" on the "Migration Operator" to create an OLM subscription and start mig-operator.
+
+7. From the 'Catalog -> Installed Operators' tab in the Web Console, open the 'Migration Operator' item and create a 'MigrationController' CR to test the full system functionality.
 
 
