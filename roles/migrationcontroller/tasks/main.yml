@@ -13,12 +13,13 @@
   k8s:
     state: "present"
     definition: "{{ lookup('template', 'mig_namespace.yml.j2') }}"
+  when: migration_ui or migration_controller or migration_velero
 
 - name: "Set up mig operator namespace"
   k8s:
     state: "present"
     definition: "{{ lookup('template', 'mig_manager_namespace.yml.j2') }}"
-  when: migration_ui or migration_controller or migration_velero
+  when: not olm_managed and (migration_ui or migration_controller or migration_velero)
 
 #This ConfigMap contains the cluster config on Openshift 4.
 #Looking for it provides a rudimentary way to see what version we're on.
@@ -60,7 +61,7 @@
       api_version: v1
       kind: Secret
       name: "{{ velero_aws_secret_name }}"
-      namespace: "{{ mig_resources_namespace }}"
+      namespace: "{{ mig_manager_namespace }}"
     register: secret_status
 
   - name: "Create empty velero S3 secret"
@@ -71,10 +72,16 @@
         kind: Secret
         metadata:
           name: "{{ velero_aws_secret_name }}"
-          namespace: "{{ mig_resources_namespace }}"
+          namespace: "{{ mig_manager_namespace }}"
         data:
           cloud: ""
     when: (secret_status.resources|length) == 0
+
+  - name: "Set up velero supporting resources (CRDS, SA, SCC) when not managed by OLM"
+    k8s:
+      state: "{{ velero_state }}"
+      definition: "{{ lookup('template', 'velero_supporting.yml.j2') }}"
+    when: not olm_managed
 
   - name: "Set up velero controller"
     k8s:
@@ -94,7 +101,13 @@
       - "migration_v1alpha1_migmigration.yaml"
       - "migration_v1alpha1_migplan.yaml"
       - "migration_v1alpha1_migstorage.yaml"
-    when: migration_controller or migration_ui
+    when: not olm_managed and (migration_controller or migration_ui)
+
+  - name: "Set up mig controller RBAC"
+    k8s:
+      state: "{{ controller_state }}"
+      definition: "{{ lookup('template', 'mig_rbac.yml.j2') }}"
+    when: not olm_managed and (migration_controller or migration_ui)
 
   - name: "Set up mig controller"
     k8s:
@@ -321,7 +334,8 @@
     k8s:
       state: "present"
       definition: "{{ lookup('template', 'mig_service_account.yml.j2') }}"
-
+    when: not olm_managed
+  
 - when: migration_controller or migration_ui
   name: "Set up host MigCluster"
   k8s:
