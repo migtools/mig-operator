@@ -95,3 +95,5 @@ oc delete clusterrolebindings migration-operator velero mig-cluster-admin
 
 oc delete oauthclient migration
 ```
+
+
