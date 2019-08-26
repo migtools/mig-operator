@@ -1,16 +1,16 @@
 ---
 mig_controller_image: quay.io/ocpmigrate/mig-controller
-mig_controller_version: "{{ snapshot_tag | default('latest') }}"
+mig_controller_version: "{{ snapshot_tag | default('stable') }}"
 mig_resources_namespace: openshift-migration
 mig_manager_namespace: openshift-migration-operator
 mig_ui_configmap_name : mig-ui-config
 mig_ui_config_namespace: openshift-config
 mig_ui_oauth_user_scope: "user:full"
 mig_ui_image: quay.io/ocpmigrate/mig-ui
-mig_ui_version: "{{ snapshot_tag | default('latest') }}"
+mig_ui_version: "{{ snapshot_tag | default('stable') }}"
 velero_aws_secret_name: cloud-credentials
-velero_image: "quay.io/ocpmigrate/velero:{{ snapshot_tag | default('fusor-dev') }}"
-velero_plugin_image: "quay.io/ocpmigrate/migration-plugin:{{ snapshot_tag | default('latest') }}"
+velero_image: "quay.io/ocpmigrate/velero:{{ snapshot_tag | default('stable') }}"
+velero_plugin_image: "quay.io/ocpmigrate/migration-plugin:{{ snapshot_tag | default('stable') }}"
 restic_pv_host_path: /var/lib/kubelet/pods
 # optional resource limits for controller
 mig_controller_limits_memory: "800Mi"
