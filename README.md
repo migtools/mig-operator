@@ -113,7 +113,8 @@ spec:
 4. Use [operator-courier](https://github.com/operator-framework/operator-courier) to push the packaged CSV as an 'app' to your quay.io org. 
 ```
 # Before doing this, ensure the quay.io org you're pushing to doesn't have any existing 'repo' or 'app' by the same name.
-# Visit https://quay.io/application/ and check to see if the 'app' you're trying to push already exists, removing the existing app if one is found.
+# Visit https://quay.io/application/ and check to see if the 'app' you're trying to push already exists.
+# Remove any existing 'app' or 'repo' by the same name if one is found.
 
 operator-courier --verbose push ./deploy/olm-catalog/mig-operator/0.0.1/ your-quay-org mig-operator 0.0.1 "$AUTH_TOKEN"
 
