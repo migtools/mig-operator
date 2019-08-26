@@ -2,7 +2,7 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  namespace: {{ mig_manager_namespace }}
+  namespace: {{ mig_namespace }}
   name: velero
 spec:
   replicas: 1
@@ -38,7 +38,7 @@ spec:
             - name: AWS_SHARED_CREDENTIALS_FILE
               value: /credentials/cloud
             - name: VELERO_NAMESPACE
-              value: {{ mig_manager_namespace }}
+              value: {{ mig_namespace }}
             - name: VELERO_SCRATCH_DIR
               value: /scratch
       volumes:
@@ -64,7 +64,7 @@ apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
   name: restic
-  namespace: {{ mig_manager_namespace }}
+  namespace: {{ mig_namespace }}
 spec:
   selector:
     matchLabels:

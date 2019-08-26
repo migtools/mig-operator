@@ -30,7 +30,7 @@ provisioner:
   inventory:
     group_vars:
       all:
-        controller_namespace: ${TEST_CONTROLLER_NAMESPACE:-openshift-migration-operator}
+        controller_namespace: ${TEST_CONTROLLER_NAMESPACE:-openshift-migration}
         migration_namespace: ${TEST_MIGRATION_NAMESPACE:-openshift-migration}
         test_image: ${REPLACE_IMAGE:-quay.io/ocpmigrate/mig-operator:test}
   env:

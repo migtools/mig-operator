@@ -4,7 +4,7 @@ kind: Role
 metadata:
   creationTimestamp: null
   name: migration-operator
-  namespace: openshift-migration-operator
+  namespace: openshift-migration
 rules:
 - apiGroups:
   - ""

@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: migration-operator
-  namespace: openshift-migration-operator
+  namespace: openshift-migration
   labels:
     app: migration-operator
 spec:

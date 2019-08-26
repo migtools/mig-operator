@@ -18,7 +18,7 @@
 - name: "Set up mig operator namespace"
   k8s:
     state: "present"
-    definition: "{{ lookup('template', 'mig_manager_namespace.yml.j2') }}"
+    definition: "{{ lookup('template', 'mig_namespace.yml.j2') }}"
   when: not olm_managed and (migration_ui or migration_controller or migration_velero)
 
 #This ConfigMap contains the cluster config on Openshift 4.
@@ -61,7 +61,7 @@
       api_version: v1
       kind: Secret
       name: "{{ velero_aws_secret_name }}"
-      namespace: "{{ mig_manager_namespace }}"
+      namespace: "{{ mig_namespace }}"
     register: secret_status
 
   - name: "Create empty velero S3 secret"
@@ -72,7 +72,7 @@
         kind: Secret
         metadata:
           name: "{{ velero_aws_secret_name }}"
-          namespace: "{{ mig_manager_namespace }}"
+          namespace: "{{ mig_namespace }}"
         data:
           cloud: ""
     when: (secret_status.resources|length) == 0
@@ -121,7 +121,7 @@
       api_version: v1
       kind: Route
       name: migration
-      namespace: "{{ mig_manager_namespace }}"
+      namespace: "{{ mig_namespace }}"
     register: route_status
 
   - name: "Set up mig ui route"
@@ -134,7 +134,7 @@
     k8s_facts:
       api_version: "route.openshift.io/v1"
       kind: "Route"
-      namespace: "{{ mig_manager_namespace }}"
+      namespace: "{{ mig_namespace }}"
       name: migration
     register: route
 
@@ -153,7 +153,7 @@
       api_version: v1
       kind: OAuthClient
       name: migration
-      namespace: "{{ mig_manager_namespace }}"
+      namespace: "{{ mig_namespace }}"
     register: oauthclient_status
 
   - name: Generate random secret value for oauth client
@@ -176,7 +176,7 @@
       api_version: v1
       kind: ConfigMap
       name: "{{ mig_ui_configmap_name }}"
-      namespace: "{{ mig_manager_namespace }}"
+      namespace: "{{ mig_namespace }}"
     register: configmap_status
 
   - name: Set up mig ui configmap
