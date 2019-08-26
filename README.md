@@ -97,7 +97,7 @@ oc delete oauthclient migration
 ```
 
 ## Testing Changes to the mig-operator CSV with OLM
-1. Make desired changes to the [mig-operator CSV](https://github.com/fusor/mig-operator/blob/master/deploy/olm-catalog/mig-operator/0.0.1/mig-operator.v0.0.1.clusterserviceversion.yaml)
+1. Edit [mig-operator CSV](https://github.com/fusor/mig-operator/blob/master/deploy/olm-catalog/mig-operator/0.0.1/mig-operator.v0.0.1.clusterserviceversion.yaml) making desired changes.
 2. Edit [mig-operator-source.yaml](https://github.com/fusor/mig-operator/blob/master/mig-operator-source.yaml) setting 'registryNamespace' to an unused repo name under your quay.io org.
 ```
 apiVersion: operators.coreos.com/v1
@@ -124,3 +124,5 @@ operator-courier --verbose push ./deploy/olm-catalog/mig-operator/0.0.1/ your-qu
 ```
 oc create -f mig-operator-source.yaml
 ```
+
+
