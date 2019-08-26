@@ -109,8 +109,8 @@ spec:
   registryNamespace: mig-operator
   [...]
 ```
-3. Get a quay.io [auth token](https://github.com/operator-framework/operator-courier#authentication)
-4. Using operator-courier, push the packaged CSV to your quay.io org. 
+3. Get [auth token](https://github.com/operator-framework/operator-courier#authentication) from quay.io
+4. Use [operator-courier](https://github.com/operator-framework/operator-courier) to push the packaged CSV as an 'app' to your quay.io org. 
 ```
 # Before doing this, ensure the quay.io org you're pushing to doesn't have any existing 'repo' or 'app' by the same name.
 # Visit https://quay.io/application/ and check to see if the 'app' you're trying to push already exists, removing the existing app if one is found.
