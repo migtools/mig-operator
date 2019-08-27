@@ -1,8 +1,7 @@
 ---
 mig_controller_image: quay.io/ocpmigrate/mig-controller
 mig_controller_version: "{{ snapshot_tag | default('stable') }}"
-mig_resources_namespace: openshift-migration
-mig_manager_namespace: openshift-migration-operator
+mig_namespace: openshift-migration
 mig_ui_configmap_name : mig-ui-config
 mig_ui_config_namespace: openshift-config
 mig_ui_oauth_user_scope: "user:full"

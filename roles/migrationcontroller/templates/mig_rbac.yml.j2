@@ -291,7 +291,7 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: migration-controller
-  namespace: {{ mig_manager_namespace }}
+  namespace: {{ mig_namespace }}
   labels:
     component: mig
 ---
@@ -306,4 +306,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: migration-controller
-  namespace: {{ mig_manager_namespace }}
+  namespace: {{ mig_namespace }}
