@@ -8,5 +8,9 @@ spec:
   migration_velero: true
   migration_controller: false
   migration_ui: false
-  #To install the controller on Openshift 3 you will need to configure the API endpoint:
+  
+  # To install the controller on Openshift 3 you will need to configure the API endpoint:
   #mig_ui_cluster_api_endpoint: https://replace-with-openshift-cluster-hostname:8443/api
+
+  # If 3.x cluster was deployed with `oc cluster up`, restic must mount a different kubelet path
+  #origin_three_dev: true
