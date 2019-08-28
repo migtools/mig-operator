@@ -52,7 +52,7 @@ spec:
         - name: SECRET_NAME
           value: webhook-server-secret
         image: {{ mig_controller_image }}:{{ mig_controller_version }}
-        imagePullPolicy: Always
+        imagePullPolicy: "{{ image_pull_policy }}"
         name: manager
         ports:
         - containerPort: 9876

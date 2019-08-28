@@ -20,6 +20,7 @@ spec:
       containers:
         - name: velero
           image: {{ velero_image }}
+          imagePullPolicy: "{{ image_pull_policy }}"
           ports:
             - name: metrics
               containerPort: 8085
@@ -51,7 +52,7 @@ spec:
           emptyDir: {}
       initContainers:
         - image: {{ velero_plugin_image }}
-          imagePullPolicy: Always
+          imagePullPolicy: "{{ image_pull_policy }}"
           name: velero-plugin
           resources: {}
           terminationMessagePath: /dev/termination-log
@@ -91,6 +92,7 @@ spec:
           securityContext:
             privileged: true
           image: {{ velero_image }}
+          imagePullPolicy: "{{ image_pull_policy }}"
           command:
             - /velero
           args:

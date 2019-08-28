@@ -1,31 +1,28 @@
 ---
+configmap_secret: ""
+controller_state: absent
+image_pull_policy: Always
 mig_controller_image: quay.io/ocpmigrate/mig-controller
+mig_controller_limits_cpu: "100m"
+mig_controller_limits_memory: "800Mi"
+mig_controller_requests_cpu: "100m"
+mig_controller_requests_memory: "350Mi"
 mig_controller_version: "{{ snapshot_tag | default('stable') }}"
 mig_namespace: openshift-migration
+mig_svc_account: true
+mig_ui_cluster_api_endpoint: ""
+mig_ui_configmap_data: ""
 mig_ui_configmap_name : mig-ui-config
 mig_ui_config_namespace: openshift-config
-mig_ui_oauth_user_scope: "user:full"
 mig_ui_image: quay.io/ocpmigrate/mig-ui
+mig_ui_oauth_user_scope: "user:full"
+mig_ui_oauth_redirect_url: ""
+mig_ui_oauth_secret: ""
 mig_ui_version: "{{ snapshot_tag | default('stable') }}"
+olm_managed: false
+restic_pv_host_path: /var/lib/kubelet/pods
+ui_state: absent
 velero_aws_secret_name: cloud-credentials
 velero_image: "quay.io/ocpmigrate/velero:{{ snapshot_tag | default('stable') }}"
 velero_plugin_image: "quay.io/ocpmigrate/migration-plugin:{{ snapshot_tag | default('stable') }}"
-restic_pv_host_path: /var/lib/kubelet/pods
-# optional resource limits for controller
-mig_controller_limits_memory: "800Mi"
-mig_controller_limits_cpu: "100m"
-mig_controller_requests_memory: "350Mi"
-mig_controller_requests_cpu: "100m"
-mig_svc_account: true
-# defaults for setting presence of mig components
-ui_state: absent
-controller_state: absent
 velero_state: absent
-# defaults to help with templating during deletion
-mig_ui_oauth_redirect_url: ""
-mig_ui_oauth_secret: ""
-mig_ui_configmap_data: ""
-mig_ui_cluster_api_endpoint: ""
-configmap_secret: ""
-# default to deploying CRDs, RBAC, etc. unless deployed by OLM
-olm_managed: false
