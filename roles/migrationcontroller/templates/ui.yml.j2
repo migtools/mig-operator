@@ -39,7 +39,7 @@ spec:
       containers:
         - name: mig-ui
           image: "{{ mig_ui_image }}:{{ mig_ui_version }}"
-          imagePullPolicy: Always
+          imagePullPolicy: "{{ image_pull_policy }}"
           ports:
             - containerPort: 9000
               protocol: TCP
