@@ -149,6 +149,18 @@ spec:
       - serviceAccountName: migration-controller
         rules:
         - apiGroups:
+          - ""
+          resources:
+          - serviceaccounts
+          verbs:
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
+        - apiGroups:
           - apps
           resources:
           - '*'
