@@ -1,0 +1,57 @@
+allowHostDirVolumePlugin: false
+allowHostIPC: false
+allowHostNetwork: false
+allowHostPID: false
+allowHostPorts: false
+allowPrivilegeEscalation: true
+allowPrivilegedContainer: true
+allowedCapabilities: null
+apiVersion: security.openshift.io/v1
+defaultAddCapabilities: null
+fsGroup:
+  type: RunAsAny
+groups: []
+kind: SecurityContextConstraints
+metadata:
+  creationTimestamp: null
+  name: mssql-persistent-scc
+  selfLink: /apis/security.openshift.io/v1/securitycontextconstraints/mssql-persistent-scc
+priority: null
+readOnlyRootFilesystem: false
+requiredDropCapabilities: null
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: RunAsAny
+supplementalGroups:
+  type: RunAsAny
+users:
+- system:admin
+- system:serviceaccount:mssql-persistent:mssql-persistent-sa
+volumes:
+- awsElasticBlockStore
+- azureDisk
+- azureFile
+- cephFS
+- cinder
+- configMap
+- downwardAPI
+- emptyDir
+- fc
+- flexVolume
+- flocker
+- gcePersistentDisk
+- gitRepo
+- glusterfs
+- iscsi
+- nfs
+- persistentVolumeClaim
+- photonPersistentDisk
+- portworxVolume
+- projected
+- quobyte
+- rbd
+- scaleIO
+- secret
+- storageOS
+- vsphere

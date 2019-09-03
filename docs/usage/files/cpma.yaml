@@ -1,0 +1,56 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+  - name: "Reading v4 variables"
+    include_vars: "../4.x/my_vars.yml"
+
+  - name: "Setting facts"
+    set_fact:
+      guid_v4: "{{ guid }}"
+      subdomain_v4: "{{ subdomain_base_suffix }}"
+
+  - name: "Reading v3 variables"
+    include_vars: "../3.x/my_vars.yml"
+
+  - name: "Setting facts"
+    set_fact:
+      guid_v3: "{{ guid }}"
+      subdomain_v3: "{{ subdomain_base_suffix }}"
+      output_dir_v3: "{{ output_dir }}"
+
+  - name: "Registering host"
+    add_host:
+      hostname: "bastion.{{ guid_v3 }}{{ subdomain_v3 }}"
+      groups: "remote"
+
+- hosts: remote
+  vars_files:
+    - "../3.x/my_vars.yml"
+  vars:
+    ansible_ssh_private_key_file: "{{ output_dir }}/{{ guid }}key"
+    ansible_user: ec2-user
+  tasks:
+  - name: "Including v4 variables"
+    include_vars: "../4.x/my_vars.yml"
+    delegate_to: localhost
+
+  - name: Copy ssh key to bastion host
+    copy:
+      src: ~/.ssh/libra.pem
+      dest: /home/ec2-user/.ssh/libra.pem
+      owner: ec2-user
+      group: ec2-user
+      mode: '0600'
+
+  - name: Create directory if it does not exist
+    file:
+      path: ~/cpma/bin
+      state: directory
+      mode: '0755'
+
+  - name: Download cpma binary
+    get_url:
+      url: https://cpma.s3.us-east-2.amazonaws.com/cpma
+      dest: ~/cpma/bin/cpma
+      mode: 'u+rwx'
