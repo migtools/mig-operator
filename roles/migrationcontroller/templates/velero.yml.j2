@@ -75,6 +75,8 @@ spec:
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
+  annotations:
+    openshift.io/node-selector: ""
   name: restic
   namespace: {{ mig_namespace }}
 spec:
