@@ -8,7 +8,7 @@ mig_controller_limits_memory: "800Mi"
 mig_controller_requests_cpu: "100m"
 mig_controller_requests_memory: "350Mi"
 mig_controller_version: "{{ snapshot_tag | default('stable') }}"
-mig_namespace: openshift-migration
+mig_namespace: migration
 mig_svc_account: true
 mig_ui_cluster_api_endpoint: ""
 mig_ui_configmap_data: ""

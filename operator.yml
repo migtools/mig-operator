@@ -5,13 +5,13 @@ metadata:
   labels:
     control-plane: controller-manager
     controller-tools.k8s.io: "1.0"
-  name: "openshift-migration"
+  name: "migration"
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: migration-operator
-  namespace: "openshift-migration"
+  namespace: "migration"
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -38,7 +38,7 @@ kind: Role
 metadata:
   creationTimestamp: null
   name: migration-operator
-  namespace: "openshift-migration"
+  namespace: "migration"
 rules:
 - apiGroups:
   - ""
@@ -87,7 +87,7 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: migration-operator
-  namespace: "openshift-migration"
+  namespace: "migration"
 subjects:
 - kind: ServiceAccount
   name: migration-operator
@@ -107,14 +107,14 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: migration-operator
-    namespace: "openshift-migration"
-namespace: "openshift-migration"
+    namespace: "migration"
+namespace: "migration"
 ---
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: migration-operator
-  namespace: "openshift-migration"
+  namespace: "migration"
   labels:
     app: migration-operator
 spec:

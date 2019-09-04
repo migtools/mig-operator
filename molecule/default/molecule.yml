@@ -28,8 +28,8 @@ provisioner:
   inventory:
     group_vars:
       all:
-        controller_namespace: ${TEST_CONTROLLER_NAMESPACE:-openshift-migration}
-        migration_namespace: ${TEST_MIGRATION_NAMESPACE:-openshift-migration}
+        controller_namespace: ${TEST_CONTROLLER_NAMESPACE:-migration}
+        migration_namespace: ${TEST_MIGRATION_NAMESPACE:-migration}
 
   env:
     K8S_AUTH_KUBECONFIG: /tmp/molecule/kind-default/kubeconfig
