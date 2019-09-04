@@ -28,8 +28,9 @@ spec:
           type: object
         spec:
           properties:
-            clusterRef:
-              type: object
+            caBundle:
+              format: byte
+              type: string
             isHostCluster:
               type: boolean
             serviceAccountSecretRef:
@@ -49,6 +50,8 @@ spec:
                     type: string
                 type: object
               type: array
+            url:
+              type: string
           required:
           - isHostCluster
           type: object
