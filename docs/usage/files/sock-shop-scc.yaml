@@ -1,0 +1,26 @@
+---
+kind: SecurityContextConstraints
+apiVersion: v1
+metadata:
+  name: sock-shop
+readOnlyRootFilesystem: true
+allowPrivilegedContainer: true
+runAsUser:
+  type: RunAsAny
+seLinuxContext:
+  type: RunAsAny
+supplementalGroups:
+  type: RunAsAny
+volumes:
+- '*'
+users:
+- system:admin
+- system:serviceaccount:sock-shop:sock-shop
+requiredDropCapabilities:
+- all
+defaultAddCapabilities:
+- CHOWN
+- SETGID
+- SETUID
+- NET_BIND_SERVICE
+- DAC_OVERRIDE
