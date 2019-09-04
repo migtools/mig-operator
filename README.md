@@ -11,9 +11,7 @@ This operator will install velero with customized migration plugins, the migrati
 
 ## Operator Installation without OLM
 
-Use oc create with `operator-3.yml` for OpenShift 3 or `operator-4.yml` for OpenShift 4. The only difference between these files is the way they create the namespace. Older versions of Openshift 3 need to use a ProjectRequest in order to ensure default service accounts are created, whereas with OpenShift 4 a Namespace request is needed to create a namespace that begins with the string `openshift-`.
-
-`oc create -f operator-3.yml` 
+`oc create -f operator.yml` 
 
 ## Migration Controller Installation
 'controller-3.yml' and 'controller-4.yml' contain the recommended settings for OCP 3 and 4 respectively.
