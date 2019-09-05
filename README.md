@@ -89,7 +89,9 @@ oc delete namespace openshift-migration
 
 oc delete crd backups.velero.io backupstoragelocations.velero.io deletebackuprequests.velero.io downloadrequests.velero.io migrationcontrollers.migration.openshift.io podvolumebackups.velero.io podvolumerestores.velero.io resticrepositories.velero.io restores.velero.io schedules.velero.io serverstatusrequests.velero.io volumesnapshotlocations.velero.io
 
-oc delete clusterrolebindings migration-operator velero mig-cluster-admin
+oc delete clusterrole migration-manager-role manager-role
+
+oc delete clusterrolebindings migration-operator velero mig-cluster-admin migration-manager-rolebinding manager-rolebinding
 
 oc delete oauthclient migration
 ```
