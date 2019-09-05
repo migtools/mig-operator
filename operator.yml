@@ -7,7 +7,7 @@ metadata:
     controller-tools.k8s.io: "1.0"
   name: "openshift-migration"
 ---
-apiVersion: v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
   annotations:
@@ -17,6 +17,8 @@ metadata:
   name: system:deployers
   namespace: openshift-migration
 roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
   name: system:deployer
 subjects:
 - kind: ServiceAccount
@@ -25,7 +27,7 @@ subjects:
 userNames:
 - system:serviceaccount:openshift-migration:deployer
 ---
-apiVersion: v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: RoleBinding
 metadata:
   annotations:
@@ -34,6 +36,8 @@ metadata:
   name: system:image-builders
   namespace: openshift-migration
 roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
   name: system:image-builder
 subjects:
 - kind: ServiceAccount
@@ -42,7 +46,7 @@ subjects:
 userNames:
 - system:serviceaccount:openshift-migration:builder
 ---
-apiVersion: v1
+apiVersion: rbac.authorization.k8s.io/v1beta1
 groupNames:
 - system:serviceaccounts:openshift-migration
 kind: RoleBinding
@@ -54,9 +58,11 @@ metadata:
   name: system:image-pullers
   namespace: openshift-migration
 roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
   name: system:image-puller
 subjects:
-- kind: SystemGroup
+- kind: Group
   name: system:serviceaccounts:openshift-migration
 ---
 apiVersion: v1
