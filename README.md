@@ -50,6 +50,20 @@ corsAllowedOrigins:
 - //$output-from-previous-command
 ```
 
+After making these changes on 3.x you'll need to restart OpenShift components to pick up the changed config values. The process for restarting 3.x control plane components [differs based on the OpenShift version](https://docs.openshift.com/container-platform/3.10/architecture/infrastructure_components/kubernetes_infrastructure.html#control-plane-static-pods).
+
+```
+# In OpenShift 3.7-3.9, the control plane runs within systemd services
+$ systemctl restart atomic-openshift-master-api
+$ systemctl restart atomic-openshift-master-controllers
+
+
+# In OpenShift 3.10-3.11, the control plane runs in 'Static Pods'
+$ /usr/local/bin/master-restart api
+$ /usr/local/bin/master-restart controller
+```
+
+
 ### Openshift 4
 On Openshift 4 cluster resources are modified by the operator if the controller is installed there and you can skip these steps. If you chose not to install the controller on your Openshift 4 cluster you will need to perform these steps manually.
 
