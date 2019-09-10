@@ -7,9 +7,11 @@ spec:
   cluster_name: host
   migration_velero: true
   migration_controller: false
+
+  # To install the UI on Openshift 3 alongside the controller, you will need to
+  # set `migration_ui: true`, configure the clusters API endpoint, and uncomment
+  # the `mig_ui_config_namespace` setting seen below
   migration_ui: false
-
-  mig_ui_config_namespace: openshift-migration
-
-  #To install the controller on Openshift 3 you will need to configure the API endpoint:
+  #migration_ui: true
+  #mig_ui_config_namespace: openshift-migration
   #mig_ui_cluster_api_endpoint: https://replace-with-openshift-cluster-hostname:8443/api
