@@ -193,14 +193,14 @@ spec:
         - /usr/local/bin/ao-logs
         - /tmp/ansible-operator/runner
         - stdout
-        image: quay.io/ocpmigrate/mig-operator:stable
+        image: quay.io/ocpmigrate/mig-operator:release-1.0
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /tmp/ansible-operator/runner
           name: runner
           readOnly: true
       - name: operator
-        image: quay.io/ocpmigrate/mig-operator:stable
+        image: quay.io/ocpmigrate/mig-operator:release-1.0
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /tmp/ansible-operator/runner

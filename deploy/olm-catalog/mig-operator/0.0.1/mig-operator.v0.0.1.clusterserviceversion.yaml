@@ -8,7 +8,7 @@ metadata:
     capabilities: Seamless Upgrades
     description: Facilitates migration of workloads from Openshift 3.x to Openshift 4.x
     categories: 'OpenShift Optional'
-    containerImage: quay.io/ocpmigrate/mig-operator:stable
+    containerImage: quay.io/ocpmigrate/mig-operator:release-1.0
     createdAt: 2019-07-25T10:21:00Z
     repository: https://github.com/fusor/mig-operator
     alm-examples: '[{"apiVersion":"migration.openshift.io/v1alpha1","kind":"MigrationController","metadata":{"name":"migration-controller","namespace":"openshift-migration"},"spec":{"cluster_name":"host","migration_velero":true,"migration_controller":true,"migration_ui":true,"olm_managed":true}},{"apiVersion":"velero.io/v1","kind":"Backup","metadata":{"name":"backup","namespace":"openshift-migration"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"BackupStorageLocation","metadata":{"name":"backupstoragelocation","namespace":"openshift-migration"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"DeleteBackupRequest","metadata":{"name":"deletebackuprequest","namespace":"openshift-migration"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"DownloadRequest","metadata":{"name":"downloadrequest","namespace":"openshift-migration"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"PodVolumeBackup","metadata":{"name":"podvolumebackup","namespace":"openshift-migration"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"PodVolumeRestore","metadata":{"name":"podvolumerestore","namespace":"openshift-migration"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"ResticRepository","metadata":{"name":"resticrepository","namespace":"openshift-migration"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"Restore","metadata":{"name":"restore","namespace":"openshift-migration"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"Schedule","metadata":{"name":"schedule","namespace":"openshift-migration"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"ServerStatusRequest","metadata":{"name":"serverstatusrequest","namespace":"openshift-migration"},"spec":{}},{"apiVersion":"velero.io/v1","kind":"VolumeSnapshotLocation","metadata":{"name":"volumesnapshotlocation","namespace":"openshift-migration"},"spec":{}},{"apiVersion":"migration.openshift.io/v1alpha1","kind":"MigCluster","metadata":{"name":"host","namespace":"openshift-migration"},"spec":{}},{"apiVersion":"migration.openshift.io/v1alpha1","kind":"MigPlan","metadata":{"name":"migplan","namespace":"openshift-migration"},"spec":{}},{"apiVersion":"migration.openshift.io/v1alpha1","kind":"MigMigration","metadata":{"name":"migmigration","namespace":"openshift-migration"},"spec":{}},{"apiVersion":"migration.openshift.io/v1alpha1","kind":"MigStorage","metadata":{"name":"migstorage","namespace":"openshift-migration"},"spec":{}}]'
@@ -480,7 +480,7 @@ spec:
               serviceAccount: migration-operator
               containers:
               - name: ansible
-                image: quay.io/ocpmigrate/mig-operator:stable
+                image: quay.io/ocpmigrate/mig-operator:release-1.0
                 command:
                 - /usr/local/bin/ao-logs
                 - /tmp/ansible-operator/runner
@@ -491,7 +491,7 @@ spec:
                   name: runner
                   readOnly: true
               - name: operator
-                image: quay.io/ocpmigrate/mig-operator:stable
+                image: quay.io/ocpmigrate/mig-operator:release-1.0
                 imagePullPolicy: Always
                 volumeMounts:
                 - mountPath: /tmp/ansible-operator/runner
