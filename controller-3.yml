@@ -12,4 +12,4 @@ spec:
   mig_ui_config_namespace: openshift-migration
 
   #To install the controller on Openshift 3 you will need to configure the API endpoint:
-  #mig_ui_cluster_api_endpoint: https://replace-with-openshift-cluster-hostname:8443/api
+  #mig_ui_cluster_api_endpoint: https://replace-with-openshift-cluster-hostname:8443
