@@ -216,6 +216,24 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        - name: REGISTRY
+          value: quay.io
+        - name: PROJECT
+          value: ocpmigrate
+        - name: MIG_CONTROLLER_REPO
+          value: mig-controller
+        - name: MIG_UI_REPO
+          value: mig-ui
+        - name: VELERO_REPO
+          value: velero
+        - name: VELERO_PLUGIN_REPO
+          value: migration-plugin
+        - name: VELERO_RESTIC_RESTORE_HELPER_REPO
+          value: velero-restic-restore-helper
+        - name: MIGRATION_TAG
+          value: stable
+        - name: VELERO_TAG
+          value: stable
       volumes:
         - name: runner
           emptyDir: {}

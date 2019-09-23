@@ -8,7 +8,7 @@ metadata:
     velero.io/plugin-config: ""
     velero.io/restic: RestoreItemAction
 data:
-  image: {{ velero_restic_restore_helper_image }}
+  image: {{ velero_restic_restore_helper_image }}:{{ velero_restic_restore_helper_version }}
 ---
 apiVersion: apps/v1beta1
 kind: Deployment
@@ -30,7 +30,7 @@ spec:
       serviceAccountName: velero
       containers:
         - name: velero
-          image: {{ velero_image }}
+          image: {{ velero_image }}:{{ velero_version }}
           imagePullPolicy: "{{ image_pull_policy }}"
           ports:
             - name: metrics
@@ -62,7 +62,7 @@ spec:
         - name: scratch
           emptyDir: {}
       initContainers:
-        - image: {{ velero_plugin_image }}
+        - image: {{ velero_plugin_image }}:{{ velero_plugin_version }}
           imagePullPolicy: "{{ image_pull_policy }}"
           name: velero-plugin
           resources: {}
@@ -102,7 +102,7 @@ spec:
         - name: velero
           securityContext:
             privileged: true
-          image: {{ velero_image }}
+          image: {{ velero_image }}:{{ velero_version }}
           imagePullPolicy: "{{ image_pull_policy }}"
           command:
             - /velero
