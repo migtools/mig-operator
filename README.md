@@ -110,4 +110,7 @@ oc delete clusterrolebindings migration-operator velero mig-cluster-admin migrat
 oc delete oauthclient migration
 ```
 
+## Downstream test helpers
 
+See [test-helpers](./deploy/test-helpers) for some scripts that help test
+downstream images.
