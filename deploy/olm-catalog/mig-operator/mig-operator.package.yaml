@@ -1,0 +1,9 @@
+packageName: mig-operator
+channels:
+- name: latest
+  currentCSV: mig-operator.latest
+- name: stable
+  currentCSV: mig-operator.stable
+- name: release-v1
+  currentCSV: mig-operator.v1.0.0
+defaultChannel: release-v1

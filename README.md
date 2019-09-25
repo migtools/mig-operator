@@ -6,17 +6,23 @@ This operator will install velero with customized migration plugins, the migrati
 1. Create a openshift-migration namespace
 1. In the left menu select Operator Hub and find `Migration Operator` in the list
 1. Click Install and install it in the mig namespace
+  * There are three channels to select from: latest, stable, and release-v1.
+  * latest roughly corresponds to alpha stability and stable to beta.
+  * Due to a bug in OpenShift 4.1 you will only see two options. As a workaround when creating the MigratationController CR in the last step you can add `snapshot_tag: stable` in the `spec` section to use stable images.
 1. Once installation is complete select `Installed Operators` on the left menu
 1. Create a `MigrationController` CR. The default vales should be acceptable.
 
 ## Operator Installation without OLM
+The same channels are available for use without OLM. Do one of the following to install the desired version:
 
-`oc create -f operator.yml` 
+`oc create -f deploy/non-olm/latest/operator.yml` 
+`oc create -f deploy/non-olm/stable/operator.yml` 
+`oc create -f deploy/non-olm/v1.0.0/operator.yml` 
 
 ## Migration Controller Installation
-'controller-3.yml' and 'controller-4.yml' contain the recommended settings for OCP 3 and 4 respectively.
+`controller-3.yml` and `controller-4.yml` in the `deploy/ocp3-operator/latest`, `stable`, and `v1.0.0` directories contain the recommended settings for OCP 3 and 4 respectively.
 
-Edit `controller.yml` and adjust options if desired.
+Edit `controller-3.yml` or `controller-4.yml` and adjust options if desired.
 
 Recommended settings for Openshift 3 are:
 ```
@@ -34,7 +40,7 @@ Recommended settings for Openshift 4 are:
 
 It is possible to reverse this setup and install the controller and UI pods on Openshift 3, but you will also need to provide the cluster endpoint in `controller-3.yml` via the `mig_ui_cluster_api_endpoint` parameter. Additional setup will also be required on the Openshift 4 cluster if you take this route. See the manual CORS configuration section below for more details. `migration_velero` is required on every cluster that will act as a source or destination for migrated workloads.
 
-Once you've made your configuration choices run `oc create -f controller.yml`.
+Once you've made your configuration choices run oc create against the edited yaml configuration, for example `oc create -f deploy/non-olm/latset/controller-3.yml`.
 
 ## Manual CORS (Cross-Origin Resource Sharing) Configuration
 
