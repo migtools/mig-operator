@@ -534,7 +534,7 @@ spec:
               volumes:
               - name: runner
                 emptyDir: {}
-  maturity: release
+  maturity: stable
   version: 1.0.0
   customresourcedefinitions:
     owned:
