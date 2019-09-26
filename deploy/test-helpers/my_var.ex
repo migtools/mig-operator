@@ -1,6 +1,8 @@
 # vim: set ft=sh:
 DOWNSTREAM_REGISTRY="downstream.registry"
-REPONAME=rhcam
+DOWNSTREAM_REPONAME=rhcam
+# NOTE: TARGET_REPONAME *MUST* BE AN EXISTING NAMESPACE IN THE TARGET CLUSTER
+TARGET_REPONAME=openshift
 IMAGES=(
   "openshift-migration-controller:v1.0-0.6"
   "openshift-migration-operator:v1.0-0.6"
