@@ -36,3 +36,10 @@ to create the namespace.
 1. Install to the `openshift-migration` namespace
 1. When installation completes create a `MigrationController` CR. The default values will install
 the UI, controller, restic, and velero.
+
+## Installing the operator without OLM
+This is primarily intended as a means of installing for OpenShift 3.
+1. `oc create -f ./non-olm/v1.0.0/operator.yml`
+1. `oc create -f ./non-olm/v1.0.0/controller-3.yml`
+
+There is also a `controller-4.yml` but for proper installation testing OLM should be used for OpenShift 4.
