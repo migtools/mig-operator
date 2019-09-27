@@ -8,7 +8,7 @@ This operator will install velero with customized migration plugins, the migrati
 1. Click Install and install it in the mig namespace
   * There are three channels to select from: latest, stable, and release-v1.
   * latest roughly corresponds to alpha stability and stable to beta.
-  * Due to a bug in OpenShift 4.1 you will only see two options. As a workaround when creating the MigratationController CR in the last step you can add `snapshot_tag: stable` in the `spec` section to use stable images.
+  * Due to a bug in OpenShift 4.1 you will only see two options. As a workaround when creating the MigrationController CR in the last step you can add `snapshot_tag: stable` in the `spec` section to use stable images.
 1. Once installation is complete select `Installed Operators` on the left menu
 1. Create a `MigrationController` CR. The default vales should be acceptable.
 
