@@ -1,16 +1,36 @@
 # vim: set ft=sh:
 DOWNSTREAM_REGISTRY="downstream.registry"
-DOWNSTREAM_REPONAME=rhcam
-# NOTE: TARGET_REPONAME *MUST* BE AN EXISTING NAMESPACE IN THE TARGET CLUSTER
-# IN THE CASE OF rhcam, YOU WILL LIKELY NEED TO MANUALLY CREATE THAT ON A NEW
-# CLUSTER
-TARGET_REPONAME=rhcam
+DOWNSTREAM_ORG=""
+DOWNSTREAM_REPO_PREFIX=""
+TARGET_NAMESPACE=rhcam
 IMAGES=(
-  "openshift-migration-controller:v1.0"
-  "openshift-migration-operator:v1.0"
-  "openshift-migration-plugin:v1.0"
-  "openshift-migration-ui:v1.0"
-  "openshift-migration-velero:v1.0"
-  "openshift-migration-velero-restic-restore-helper:v1.0"
-  "openshift-migration-cpma:v1.0"
+  "controller"
+  "operator"
+  "plugin"
+  "ui"
+  "velero"
+  "helper"
+  "cpma"
 )
+declare -A IMG_MAP
+IMG_MAP[controller_repo]="openshift-migration-controller"
+IMG_MAP[controller_ds_tag]="v1.0"
+IMG_MAP[controller_tgt_tag]="v1.0"
+IMG_MAP[operator_repo]="openshift-migration-operator"
+IMG_MAP[operator_ds_tag]="v1.0"
+IMG_MAP[operator_tgt_tag]="v1.0"
+IMG_MAP[plugin_repo]="openshift-migration-plugin"
+IMG_MAP[plugin_ds_tag]="v1.0"
+IMG_MAP[plugin_tgt_tag]="v1.0"
+IMG_MAP[ui_repo]="openshift-migration-ui"
+IMG_MAP[ui_ds_tag]="v1.0"
+IMG_MAP[ui_tgt_tag]="v1.0"
+IMG_MAP[velero_repo]="openshift-migration-velero"
+IMG_MAP[velero_ds_tag]="v1.0"
+IMG_MAP[velero_tgt_tag]="v1.0"
+IMG_MAP[helper_repo]="openshift-migration-velero-restic-restore-helper"
+IMG_MAP[helper_ds_tag]="v1.0"
+IMG_MAP[helper_tgt_tag]="v1.0"
+IMG_MAP[cpma_repo]="openshift-migration-cpma"
+IMG_MAP[cpma_ds_tag]="v1.0"
+IMG_MAP[cpma_tgt_tag]="v1.0"
