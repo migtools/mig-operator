@@ -5,7 +5,7 @@
 1. `oc login` to your target cluster where you are going to mirror your images.
 1. `cp my_var.ex my_var`
 1. Set the downstream registry to the brew registry in `my_var`
-1. TODO: Streamline process for updating image tags for testing specific image releases.
+1. If you need to test a specific downstream image (for example v1.0-7) replace the `IMG_MAP[${img}_ds_tag]` value with the desired image tag to test, otherwise the latest v1.0 tagged builds will be pulled.
 1. Run `expose_cluster_registry.sh` to expose the target cluster's docker registry.
 It will also create and permission a ServiceAccount for you to use to push.
 Ensure that you have added the resulting exposed registry route to your docker
