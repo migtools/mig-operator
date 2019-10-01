@@ -139,13 +139,14 @@
 
   - name: Determine CORS URL
     set_fact:
-      mig_ui_cors_url: "//{{ route.resources[0].spec.host }}"
+      mig_ui_url: "{{ route.resources[0].spec.host }}"
+      mig_ui_cors_url: "(?i)//{{ route.resources[0].spec.host | regex_replace('\\.', '\\.') }}(:|\\z)"
       mig_ui_cors_loopback: "//127.0.0.1(:|$)"
       mig_ui_cors_localhost: "//localhost(:|$)"
 
   - name: Set OAuth redirect url
     set_fact:
-      mig_ui_oauth_redirect_url: "https:{{ mig_ui_cors_url }}/login/callback"
+      mig_ui_oauth_redirect_url: "https://{{ mig_ui_url }}/login/callback"
 
   - name: Check if migration ui oauthclient secret exists already so we don't update it
     k8s_facts:
@@ -218,9 +219,31 @@
         name: "cluster"
       register: kubeapiserver
 
-    - when: kubeapiserver.resources[0].spec.unsupportedConfigOverrides is not defined or
+    - when: kubeapiserver.resources[0].spec.additionalCORSAllowedOrigins is not defined or
+            mig_ui_cors_url not in kubeapiserver.resources[0].spec.additionalCORSAllowedOrigins
+      block:
+      - name: Write kubeapiserver operator definition for modification
+        copy:
+          dest: /tmp/kubeapiserver.yaml
+          content: "{{kubeapiserver.resources[0] | to_nice_yaml }}"
+
+      - name: Add CORS URL to kubeapiserver operator definition
+        yedit:
+          src: /tmp/kubeapiserver.yaml
+          key: spec.additionalCORSAllowedOrigins
+          append: true
+          value: "{{ item }}"
+        with_items: "{{ mig_ui_cors_url }}"
+
+      - name: Update kubeapiserver operator definition on the cluster
+        k8s:
+          state: present
+          definition: "{{ lookup('file', '/tmp/kubeapiserver.yaml') | from_yaml }}"
+
+    - when: deprecated_cors_configuration and (
+            kubeapiserver.resources[0].spec.unsupportedConfigOverrides is not defined or
             kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
-            mig_ui_cors_url not in kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins
+            mig_ui_cors_url not in kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins)
       block:
       - name: Write kubeapiserver operator definition for modification
         copy:
@@ -247,9 +270,10 @@
         name: "cluster"
       register: authentication
 
-    - when: authentication.resources[0].spec.unsupportedConfigOverrides is not defined or
+    - when: deprecated_cors_configuration and (
+            authentication.resources[0].spec.unsupportedConfigOverrides is not defined or
             authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
-            mig_ui_cors_url not in authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins
+            mig_ui_cors_url not in authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins)
       block:
       - name: Write authentication operator definition for modification
         copy:
@@ -276,9 +300,10 @@
         name: "cluster"
       register: authentication
 
-    - when: authentication.resources[0].spec.unsupportedConfigOverrides is not defined or
+    - when: deprecated_cors_configuration and (
+            authentication.resources[0].spec.unsupportedConfigOverrides is not defined or
             authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
-            mig_ui_cors_localhost not in authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins
+            mig_ui_cors_localhost not in authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins)
       block:
       - name: Write authentication operator definition for modification
         copy:
@@ -305,9 +330,10 @@
         name: "cluster"
       register: authentication
 
-    - when: authentication.resources[0].spec.unsupportedConfigOverrides is not defined or
+    - when: deprecated_cors_configuration and (
+            authentication.resources[0].spec.unsupportedConfigOverrides is not defined or
             authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
-            mig_ui_cors_loopback not in authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins
+            mig_ui_cors_loopback not in authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins)
       block:
       - name: Write authentication operator definition for modification
         copy:
