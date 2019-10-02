@@ -10,7 +10,8 @@ This operator will install velero with customized migration plugins, the migrati
   * latest roughly corresponds to alpha stability and stable to beta.
   * Due to a bug in OpenShift 4.1 you will only see two options. As a workaround when creating the MigrationController CR in the last step you can add `snapshot_tag: stable` in the `spec` section to use stable images.
 1. Once installation is complete select `Installed Operators` on the left menu
-1. Create a `MigrationController` CR. The default vales should be acceptable.
+1. Create a `MigrationController` CR. The default vales should be acceptable for 4.2
+1. For 4.1 add `deprecated_cors_configuration: true` under `spec:`
 
 ## Operator Installation without OLM
 The same channels are available for use without OLM. Do one of the following to install the desired version:
@@ -37,6 +38,15 @@ Recommended settings for Openshift 4 are:
   migration_controller: true
   migration_ui: true
 ```
+
+If you are using Openshift 4.1 ensure `deprecated_cors_configuration: true` is uncommented. This option is not required with 4.2+
+```
+  migration_velero: true
+  migration_controller: true
+  migration_ui: true
+  deprecated_cors_configuration: true
+```
+
 
 It is possible to reverse this setup and install the controller and UI pods on Openshift 3, but you will also need to provide the cluster endpoint in `controller-3.yml` via the `mig_ui_cluster_api_endpoint` parameter. Additional setup will also be required on the Openshift 4 cluster if you take this route. See the manual CORS configuration section below for more details. `migration_velero` is required on every cluster that will act as a source or destination for migrated workloads.
 
@@ -74,8 +84,15 @@ $ /usr/local/bin/master-restart controller
 On Openshift 4 cluster resources are modified by the operator if the controller is installed there and you can skip these steps. If you chose not to install the controller on your Openshift 4 cluster you will need to perform these steps manually.
 
 If you haven't already, determine the CORS URL that needs to be added retrieve the route URL
-`oc get -n openshift-migration route/migration -o go-template='{{ .spec.host }}{{ println }}'`
+`oc get -n openshift-migration route/migration -o go-template='(?i}//{{ .spec.host }}(:|\z){{ println }}' | sed 's,\.,\\.,g''`
 
+#### For Openshift 4.2
+`oc edit apiserver cluster` and ensure the following exist:
+spec:
+  additionalCORSAllowedOrigins:
+  - $output-from-previous-command
+
+#### For OpenShift 4.1:
 `oc edit authentication.operator cluster` and ensure the following exist:
 ```
 spec:
@@ -83,7 +100,7 @@ spec:
     corsAllowedOrigins:
     - //localhost(:|$)
     - //127.0.0.1(:|$)
-    - //$output-from-previous-command
+    - $output-from-previous-command
 ```
 
 `oc edit kubeapiserver.operator cluster` and ensure the following exist:
@@ -91,7 +108,7 @@ spec:
 spec:
   unsupportedConfigOverrides:
     corsAllowedOrigins:
-    - //$output-from-previous-command
+    - $output-from-previous-command
 ```
 
 ## Obtaining a remote cluster serviceaccount token

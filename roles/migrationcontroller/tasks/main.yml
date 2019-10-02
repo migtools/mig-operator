@@ -212,33 +212,33 @@
 
   - when: migration_ui and (cluster_configmap.resources|length > 0)
     block:
-    - name: Retrieve kubeapiserver operator definition
+    - name: Retrieve apiserver config definition
       k8s_facts:
-        api_version: "operator.openshift.io/v1"
-        kind: "kubeapiserver"
+        api_version: "config.openshift.io/v1"
+        kind: "apiserver"
         name: "cluster"
-      register: kubeapiserver
+      register: apiserver
 
-    - when: kubeapiserver.resources[0].spec.additionalCORSAllowedOrigins is not defined or
-            mig_ui_cors_url not in kubeapiserver.resources[0].spec.additionalCORSAllowedOrigins
+    - when: apiserver.resources[0].spec.additionalCORSAllowedOrigins is not defined or
+            mig_ui_cors_url not in apiserver.resources[0].spec.additionalCORSAllowedOrigins
       block:
-      - name: Write kubeapiserver operator definition for modification
+      - name: Write apiserver config definition for modification
         copy:
-          dest: /tmp/kubeapiserver.yaml
-          content: "{{kubeapiserver.resources[0] | to_nice_yaml }}"
+          dest: /tmp/apiserver.yaml
+          content: "{{apiserver.resources[0] | to_nice_yaml }}"
 
-      - name: Add CORS URL to kubeapiserver operator definition
+      - name: Add CORS URL to apiserver config definition
         yedit:
-          src: /tmp/kubeapiserver.yaml
+          src: /tmp/apiserver.yaml
           key: spec.additionalCORSAllowedOrigins
           append: true
           value: "{{ item }}"
         with_items: "{{ mig_ui_cors_url }}"
 
-      - name: Update kubeapiserver operator definition on the cluster
+      - name: Update apiserver config definition on the cluster
         k8s:
           state: present
-          definition: "{{ lookup('file', '/tmp/kubeapiserver.yaml') | from_yaml }}"
+          definition: "{{ lookup('file', '/tmp/apiserver.yaml') | from_yaml }}"
 
     - when: deprecated_cors_configuration and (
             kubeapiserver.resources[0].spec.unsupportedConfigOverrides is not defined or
