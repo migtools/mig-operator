@@ -134,6 +134,12 @@ spec:
           verbs:
           - '*'
         - apiGroups:
+          - config.openshift.io
+          resources:
+          - apiservers
+          verbs:
+          - '*'
+        - apiGroups:
           - operator.openshift.io
           resources:
           - kubeapiservers
