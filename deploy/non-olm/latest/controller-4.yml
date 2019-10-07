@@ -8,5 +8,7 @@ spec:
   migration_velero: true
   migration_controller: true
   migration_ui: true
+  restic_timeout: 1h
+
   #Uncomment the following line for OpenShift 4.1
   #deprecated_cors_configuration: true

@@ -26,6 +26,7 @@ olm_managed: false
 registry: "{{ lookup( 'env', 'REGISTRY') }}"
 project: "{{ lookup( 'env', 'PROJECT') }}"
 restic_pv_host_path: /var/lib/kubelet/pods
+restic_timeout: 1h
 ui_state: absent
 velero_aws_secret_name: cloud-credentials
 velero_image: "{{ registry }}/{{ project }}/{{ velero_repo }}"

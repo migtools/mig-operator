@@ -12,6 +12,7 @@ This operator will install velero with customized migration plugins, the migrati
 1. Once installation is complete select `Installed Operators` on the left menu
 1. Create a `MigrationController` CR. The default vales should be acceptable for 4.2
 1. For 4.1 add `deprecated_cors_configuration: true` under `spec:`
+1. The default `restic_timeout` is 1 hour, specified as `1h`. You can increase this if you anticipate doing large backups that will take longer than 1 hour so that your backups will succeed. The downside to increasing this value is that it may delay returning from unanticipated errors in some scenarios. Valid units are s, m, and h, which stand for second, minute, and hour.
 
 ## Operator Installation without OLM
 The same channels are available for use without OLM. Do one of the following to install the desired version:
@@ -47,6 +48,7 @@ If you are using Openshift 4.1 ensure `deprecated_cors_configuration: true` is u
   deprecated_cors_configuration: true
 ```
 
+The default `restic_timeout` is 1 hour, specified as `1h`. You can increase this if you anticipate doing large backups that will take longer than 1 hour so that your backups will succeed. The downside to increasing this value is that it may delay returning from unanticipated errors in some scenarios. Valid units are s, m, and h, which stand for second, minute, and hour.
 
 It is possible to reverse this setup and install the controller and UI pods on Openshift 3, but you will also need to provide the cluster endpoint in `controller-3.yml` via the `mig_ui_cluster_api_endpoint` parameter. Additional setup will also be required on the Openshift 4 cluster if you take this route. See the manual CORS configuration section below for more details. `migration_velero` is required on every cluster that will act as a source or destination for migrated workloads.
 
