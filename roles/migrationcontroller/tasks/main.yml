@@ -240,6 +240,13 @@
           state: present
           definition: "{{ lookup('file', '/tmp/apiserver.yaml') | from_yaml }}"
 
+    - name: Retrieve kubeapiserver operator definition
+      k8s_facts:
+        api_version: "operator.openshift.io/v1"
+        kind: "kubeapiserver"
+        name: "cluster"
+      register: kubeapiserver
+
     - when: deprecated_cors_configuration and (
             kubeapiserver.resources[0].spec.unsupportedConfigOverrides is not defined or
             kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
