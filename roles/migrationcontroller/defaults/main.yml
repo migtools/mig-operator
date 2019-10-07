@@ -15,7 +15,7 @@ mig_svc_account: true
 mig_ui_cluster_api_endpoint: ""
 mig_ui_configmap_data: ""
 mig_ui_configmap_name : mig-ui-config
-mig_ui_config_namespace: openshift-config
+mig_ui_config_namespace: openshift-migration
 mig_ui_image: "{{ registry }}/{{ project }}/{{ mig_ui_repo }}"
 mig_ui_oauth_user_scope: "user:full"
 mig_ui_oauth_redirect_url: ""

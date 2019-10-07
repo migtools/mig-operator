@@ -8,7 +8,6 @@ spec:
   migration_velero: true
   migration_controller: false
   migration_ui: false
-  mig_ui_config_namespace: openshift-migration
   restic_timeout: 1h
 
   #To install the controller on Openshift 3 you will need to configure the API endpoint:
