@@ -39,6 +39,8 @@ spec:
             - /velero
           args:
             - server
+            - --restic-timeout
+            - {{ restic_timeout }}
           volumeMounts:
             - name: {{ velero_aws_secret_name }}
               mountPath: /credentials
