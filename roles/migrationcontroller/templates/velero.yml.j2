@@ -51,6 +51,10 @@ spec:
           env:
             - name: AWS_SHARED_CREDENTIALS_FILE
               value: /credentials/cloud
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /credentials/cloud
+            - name: AZURE_CREDENTIALS_FILE
+              value: /credentials/cloud
             - name: VELERO_NAMESPACE
               value: {{ mig_namespace }}
             - name: VELERO_SCRATCH_DIR
@@ -129,6 +133,10 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
             - name: AWS_SHARED_CREDENTIALS_FILE
+              value: /credentials/cloud
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /credentials/cloud
+            - name: AZURE_CREDENTIALS_FILE
               value: /credentials/cloud
             - name: VELERO_SCRATCH_DIR
               value: /scratch
