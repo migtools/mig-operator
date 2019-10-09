@@ -41,6 +41,10 @@ spec:
             - server
             - --restic-timeout
             - {{ restic_timeout }}
+{% if velero_debug %}
+            - --log-level
+            - debug
+{% endif %}
           volumeMounts:
             - name: {{ velero_aws_secret_name }}
               mountPath: /credentials
