@@ -94,10 +94,10 @@
       definition: "{{ lookup('template', 'velero_supporting.yml.j2') }}"
     when: not olm_managed
 
-  - name: "Set up velero controller"
-    k8s:
-      state: "{{ velero_state }}"
-      definition: "{{ lookup('template', 'velero.yml.j2') }}"
+- name: "Set up velero controller"
+  k8s:
+    state: "{{ velero_state }}"
+    definition: "{{ lookup('template', 'velero.yml.j2') }}"
 
 - name: migration_controller
   block:
@@ -119,27 +119,27 @@
       definition: "{{ lookup('template', 'mig_rbac.yml.j2') }}"
     when: not olm_managed and (migration_controller or migration_ui)
 
-  - name: "Set up mig controller"
-    k8s:
-      state: "{{ controller_state }}"
-      definition: "{{ lookup('template', 'controller.yml.j2') }}"
+- name: "Set up mig controller"
+  k8s:
+    state: "{{ controller_state }}"
+    definition: "{{ lookup('template', 'controller.yml.j2') }}"
+
+- name: Check if mig ui route exists already so we don't update it
+  k8s_facts:
+    api_version: v1
+    kind: Route
+    name: migration
+    namespace: "{{ mig_namespace }}"
+  register: route_status
+
+- name: "Set up mig ui route"
+  k8s:
+    state: "{{ ui_state }}"
+    definition: "{{ lookup('template', 'ui-route.yml.j2') }}"
+  when: (route_status.resources|length) == 0 or ui_state == "absent"
 
 - when: migration_ui
   block:
-  - name: Check if mig ui route exists already so we don't update it
-    k8s_facts:
-      api_version: v1
-      kind: Route
-      name: migration
-      namespace: "{{ mig_namespace }}"
-    register: route_status
-
-  - name: "Set up mig ui route"
-    k8s:
-      state: "{{ ui_state }}"
-      definition: "{{ lookup('template', 'ui-route.yml.j2') }}"
-    when: (route_status.resources|length) == 0
-
   - name: Find generated route
     k8s_facts:
       api_version: "route.openshift.io/v1"
@@ -208,18 +208,13 @@
 
     - set_fact:
         skip_ui_restart: true
-      when: configmap_status_data.get("oauth", {}).get("clientSecret",-1) == -1        
+      when: configmap_status_data.get("oauth", {}).get("clientSecret",-1) == -1
 
     - name: "Take down mig-ui"
       k8s:
         state: "absent"
         definition: "{{ lookup('template', 'ui.yml.j2') }}"
       when: not(configmap_secret == mig_ui_oauth_secret) and not skip_ui_restart
-
-  - name: "Set up mig ui"
-    k8s:
-      state: "{{ ui_state }}"
-      definition: "{{ lookup('template', 'ui.yml.j2') }}"
 
   - when: migration_ui and (cluster_configmap.resources|length > 0)
     block:
@@ -371,6 +366,11 @@
           state: present
           definition: "{{ lookup('file', '/tmp/authentication.yaml') | from_yaml }}"
 
+- name: "Set up mig ui"
+  k8s:
+    state: "{{ ui_state }}"
+    definition: "{{ lookup('template', 'ui.yml.j2') }}"
+
 - when: mig_svc_account
   block:
   - name: "Set up mig svc account for remote connections"
@@ -378,9 +378,79 @@
       state: "present"
       definition: "{{ lookup('template', 'mig_service_account.yml.j2') }}"
     when: not olm_managed
-  
+
 - when: migration_controller or migration_ui
   name: "Set up host MigCluster"
   k8s:
     state: "present"
     definition: "{{ lookup('template', 'mig_host_cluster.yml.j2') }}"
+
+- when: not(migration_controller)
+  block:
+  - name: Find Controller ReplicaSets
+    k8s_facts:
+      kind: ReplicaSet
+      namespace: "{{ mig_namespace }}"
+      label_selectors:
+      - control-plane=controller-manager
+    register: controller_replicasets
+
+  - name: Terminate Controller ReplicaSets
+    k8s:
+      name: "{{ item.metadata.name }}"
+      state: absent
+      kind: ReplicaSet
+      namespace: "{{ mig_namespace }}"
+    with_items: "{{ controller_replicasets.resources }}"
+
+- when: not(migration_ui)
+  block:
+  - name: Find UI ReplicaSets
+    k8s_facts:
+      kind: ReplicaSet
+      namespace: "{{ mig_namespace }}"
+      label_selectors:
+      - service=migration-ui
+    register: ui_replicasets
+
+  - name: Terminate UI ReplicaSets
+    k8s:
+      name: "{{ item.metadata.name }}"
+      state: absent
+      kind: ReplicaSet
+      namespace: "{{ mig_namespace }}"
+    with_items: "{{ ui_replicasets.resources }}"
+
+- when: not(migration_velero)
+  block:
+  - name: Find Velero ReplicaSets
+    k8s_facts:
+      kind: ReplicaSet
+      namespace: "{{ mig_namespace }}"
+      label_selectors:
+      - component=velero
+    register: velero_replicasets
+
+  - name: Terminate Velero ReplicaSets
+    k8s:
+      name: "{{ item.metadata.name }}"
+      state: absent
+      kind: ReplicaSet
+      namespace: "{{ mig_namespace }}"
+    with_items: "{{ velero_replicasets.resources }}"
+
+  - name: Find Restic Pods
+    k8s_facts:
+      kind: Pod
+      namespace: "{{ mig_namespace }}"
+      label_selectors:
+      - name=restic
+    register: restic_pods
+
+  - name: Terminate Restic Pods
+    k8s:
+      name: "{{ item.metadata.name }}"
+      state: absent
+      kind: Pod
+      namespace: "{{ mig_namespace }}"
+    with_items: "{{ restic_pods.resources }}"
