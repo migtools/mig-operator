@@ -193,14 +193,14 @@ spec:
         - /usr/local/bin/ao-logs
         - /tmp/ansible-operator/runner
         - stdout
-        image: image-registry.openshift-image-registry.svc:5000/rhcam/openshift-migration-operator:v1.0
+        image: image-registry.openshift-image-registry.svc:5000/rhcam/openshift-migration-rhel7-operator:v1.0
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /tmp/ansible-operator/runner
           name: runner
           readOnly: true
       - name: operator
-        image: image-registry.openshift-image-registry.svc:5000/rhcam/openshift-migration-operator:v1.0
+        image: image-registry.openshift-image-registry.svc:5000/rhcam/openshift-migration-rhel7-operator:v1.0
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /tmp/ansible-operator/runner
@@ -221,15 +221,15 @@ spec:
         - name: PROJECT
           value: rhcam
         - name: MIG_CONTROLLER_REPO
-          value: openshift-migration-controller
+          value: openshift-migration-controller-rhel8
         - name: MIG_UI_REPO
-          value: openshift-migration-ui
+          value: openshift-migration-ui-rhel8
         - name: VELERO_REPO
-          value: openshift-migration-velero
+          value: openshift-migration-velero-rhel8
         - name: VELERO_PLUGIN_REPO
-          value: openshift-migration-plugin
+          value: openshift-migration-plugin-rhel8
         - name: VELERO_RESTIC_RESTORE_HELPER_REPO
-          value: openshift-migration-velero-restic-restore-helper
+          value: openshift-migration-velero-restic-restore-helper-rhel8
         - name: MIGRATION_TAG
           value: v1.0
         - name: VELERO_TAG
