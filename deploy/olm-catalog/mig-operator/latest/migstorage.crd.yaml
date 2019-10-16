@@ -50,6 +50,8 @@ spec:
                   type: string
                 credsSecretRef:
                   type: object
+                gcpBucket:
+                  type: string
               type: object
             backupStorageProvider:
               type: string
