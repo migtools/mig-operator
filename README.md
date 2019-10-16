@@ -22,7 +22,7 @@ The same channels are available for use without OLM. Do one of the following to 
 `oc create -f deploy/non-olm/v1.0.0/operator.yml` 
 
 ## Migration Controller Installation
-`controller-3.yml` and `controller-4.yml` in the `deploy/ocp3-operator/latest`, `stable`, and `v1.0.0` directories contain the recommended settings for OCP 3 and 4 respectively.
+`controller-3.yml` and `controller-4.yml` in the `deploy/nom-olm/latest`, `stable`, and `v1.0.0` directories contain the recommended settings for OCP 3 and 4 respectively.
 
 Edit `controller-3.yml` or `controller-4.yml` and adjust options if desired.
 
