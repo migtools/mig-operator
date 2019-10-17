@@ -59,13 +59,16 @@ Once you've made your configuration choices run oc create against the edited yam
 ### Openshift 3
 In order to enable the UI to talk to an Openshift 3 cluster (whether local or remote) it is necessary to edit the master-config.yaml and restart the Openshift master nodes. 
 
-To determine the CORS URL that needs to be added retrieve the route URL after installing the controller, run the following command (NOTE: This must be run on the cluster that is serving your web UI):
-`oc get -n openshift-migration route/migration -o go-template='{{ .spec.host }}{{ println }}'`
+To determine the CORS URL that needs to be added retrieve the route URL after installing the controller, run the following command (NOTE: This must be run on the cluster that is serving your web UI):  
+`oc get -n openshift-migration route/migration -o go-template='(?i}//{{ .spec.host }}(:|\z){{ println }}' | sed 's,\.,\\.,g'`
 
-Add the hostname to /etc/origin/master/master-config.yaml under corsAllowedOrigins, for instance:
+Output from this command will look something like this, but will be different for every cluster:  
+`(?i}//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)`
+
+Add the output to /etc/origin/master/master-config.yaml under corsAllowedOrigins, for instance:
 ```
 corsAllowedOrigins:
-- //$output-from-previous-command
+- (?i}//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)
 ```
 
 After making these changes on 3.x you'll need to restart OpenShift components to pick up the changed config values. The process for restarting 3.x control plane components [differs based on the OpenShift version](https://docs.openshift.com/container-platform/3.10/architecture/infrastructure_components/kubernetes_infrastructure.html#control-plane-static-pods).
@@ -85,14 +88,19 @@ $ /usr/local/bin/master-restart controller
 ### Openshift 4
 On Openshift 4 cluster resources are modified by the operator if the controller is installed there and you can skip these steps. If you chose not to install the controller on your Openshift 4 cluster you will need to perform these steps manually.
 
-If you haven't already, determine the CORS URL that needs to be added retrieve the route URL
-`oc get -n openshift-migration route/migration -o go-template='(?i}//{{ .spec.host }}(:|\z){{ println }}' | sed 's,\.,\\.,g''`
+If you haven't already, determine the CORS URL that needs to be added retrieve the route URL:  
+`oc get -n openshift-migration route/migration -o go-template='(?i}//{{ .spec.host }}(:|\z){{ println }}' | sed 's,\.,\\.,g'`
+
+Output from this command will look something like this, but will be different for every cluster:  
+`(?i}//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)`
 
 #### For Openshift 4.2
 `oc edit apiserver cluster` and ensure the following exist:
+```
 spec:
   additionalCORSAllowedOrigins:
-  - $output-from-previous-command
+  - (?i}//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)
+```
 
 #### For OpenShift 4.1:
 `oc edit authentication.operator cluster` and ensure the following exist:
@@ -102,7 +110,7 @@ spec:
     corsAllowedOrigins:
     - //localhost(:|$)
     - //127.0.0.1(:|$)
-    - $output-from-previous-command
+    - (?i}//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)
 ```
 
 `oc edit kubeapiserver.operator cluster` and ensure the following exist:
@@ -110,7 +118,7 @@ spec:
 spec:
   unsupportedConfigOverrides:
     corsAllowedOrigins:
-    - $output-from-previous-command
+    - (?i}//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)
 ```
 
 ## Obtaining a remote cluster serviceaccount token
