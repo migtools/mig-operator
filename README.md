@@ -52,7 +52,7 @@ The default `restic_timeout` is 1 hour, specified as `1h`. You can increase this
 
 It is possible to reverse this setup and install the controller and UI pods on Openshift 3, but you will also need to provide the cluster endpoint in `controller-3.yml` via the `mig_ui_cluster_api_endpoint` parameter. Additional setup will also be required on the Openshift 4 cluster if you take this route. See the manual CORS configuration section below for more details. `migration_velero` is required on every cluster that will act as a source or destination for migrated workloads.
 
-Once you've made your configuration choices run oc create against the edited yaml configuration, for example `oc create -f deploy/non-olm/latset/controller-3.yml`.
+Once you've made your configuration choices run oc create against the edited yaml configuration, for example `oc create -f deploy/non-olm/latest/controller-3.yml`.
 
 ## Manual CORS (Cross-Origin Resource Sharing) Configuration
 
