@@ -28,11 +28,15 @@ spec:
           type: object
         spec:
           properties:
+            keepAnnotations:
+              type: boolean
             migPlanRef:
               type: object
             quiescePods:
               type: boolean
             stage:
+              type: boolean
+            verify:
               type: boolean
           required:
           - stage
