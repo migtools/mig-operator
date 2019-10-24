@@ -20,6 +20,16 @@ spec:
     control-plane: controller-manager
     controller-tools.k8s.io: "1.0"
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: migration-controller
+  namespace: {{ mig_namespace }}
+data:
+  PERSISTENT_VOLUME_LIMIT: "100"
+  POD_LIMIT: "100"
+  NAMESPACE_LIMIT: "10"
+---
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
@@ -51,6 +61,9 @@ spec:
               fieldPath: metadata.namespace
         - name: SECRET_NAME
           value: webhook-server-secret
+        envFrom:
+        - configMapRef:
+            name: migration-controller
         image: {{ mig_controller_image }}:{{ mig_controller_version }}
         imagePullPolicy: "{{ image_pull_policy }}"
         name: manager
