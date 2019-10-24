@@ -7,7 +7,7 @@ rm -rf deploy/olm-catalog/mig-operator/stable deploy/olm-catalog/mig-operator/la
 
 # 1.0.0 Downstream CSV Changes
 sed -i s,quay.io,image-registry.openshift-image-registry.svc:5000,g                              deploy/olm-catalog/mig-operator/v1.0.0/mig-operator.v1.0.0.clusterserviceversion.yaml
-sed -i s,ocpmigrate,rhcam,g                                                                      deploy/olm-catalog/mig-operator/v1.0.0/mig-operator.v1.0.0.clusterserviceversion.yaml
+sed -i s,ocpmigrate,rhcam-1-0,g                                                                  deploy/olm-catalog/mig-operator/v1.0.0/mig-operator.v1.0.0.clusterserviceversion.yaml
 sed -i s,mig-operator:,openshift-migration-rhel7-operator:,g                                     deploy/olm-catalog/mig-operator/v1.0.0/mig-operator.v1.0.0.clusterserviceversion.yaml
 sed -i s,mig-operator:,openshift-migration-rhel7-operator:,g                                     deploy/olm-catalog/mig-operator/v1.0.0/mig-operator.v1.0.0.clusterserviceversion.yaml
 sed -i s,mig-controller,openshift-migration-controller-rhel8,g                                   deploy/olm-catalog/mig-operator/v1.0.0/mig-operator.v1.0.0.clusterserviceversion.yaml
