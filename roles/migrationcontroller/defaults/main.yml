@@ -10,6 +10,9 @@ mig_controller_repo: "{{ lookup( 'env', 'MIG_CONTROLLER_REPO') }}"
 mig_controller_requests_cpu: "100m"
 mig_controller_requests_memory: "350Mi"
 mig_controller_version: "{{ snapshot_tag | default(lookup( 'env', 'MIGRATION_TAG')) }}"
+mig_pv_limit: "100"
+mig_pod_limit: "100"
+mig_namespace_limit: "10"
 mig_namespace: openshift-migration
 mig_svc_account: true
 mig_ui_cluster_api_endpoint: ""

@@ -26,9 +26,9 @@ metadata:
   name: migration-controller
   namespace: {{ mig_namespace }}
 data:
-  PERSISTENT_VOLUME_LIMIT: "100"
-  POD_LIMIT: "100"
-  NAMESPACE_LIMIT: "10"
+  PV_LIMIT: "{{ mig_pv_limit }}"
+  POD_LIMIT: "{{ mig_pod_limit }}"
+  NAMESPACE_LIMIT: "{{ mig_namespace_limit }}"
 ---
 apiVersion: apps/v1beta1
 kind: Deployment
