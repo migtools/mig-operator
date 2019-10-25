@@ -40,7 +40,10 @@ spec:
         control-plane: controller-manager
         controller-tools.k8s.io: "1.0"
       annotations:
-        configHash: "{{ mig_pv_limit | join(mig_pod_limit) | join(mig_namespace_limit) | hash('sha1') }}"
+        configHash: "{{ (mig_pv_limit | string) 
+        | join(mig_pod_limit | string) 
+        | join(mig_namespace_limit | string) 
+        | hash('sha1') }}"
     spec:
       serviceAccountName: migration-controller
       containers:
