@@ -10,5 +10,9 @@ spec:
   migration_ui: true
   restic_timeout: 1h
 
+  mig_pv_limit: 100
+  mig_pod_limit: 100
+  mig_namespace_limit: 10
+
   #Uncomment the following line for OpenShift 4.1
   #deprecated_cors_configuration: true
