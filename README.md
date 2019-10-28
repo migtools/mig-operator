@@ -40,6 +40,20 @@ Recommended settings for Openshift 4 are:
   migration_ui: true
 ```
 
+Default limits allow 10 namespaces, 100 PVs, and 100 Pods to be migrated by a single MigPlan.
+Resource limits can be adjusted by configuring the MigrationController resource responsible for deploying mig-controller.
+```
+  [...]
+  migration_controller: true
+  
+  # This configuration is loaded into mig-controller, and should be set on the
+  # cluster where `migration_controller: true`
+  mig_pv_limit: 100
+  mig_pod_limit: 100
+  mig_namespace_limit: 10
+  [...]
+```
+
 If you are using Openshift 4.1 ensure `deprecated_cors_configuration: true` is uncommented. This option is not required with 4.2+
 ```
   migration_velero: true
