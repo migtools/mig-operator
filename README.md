@@ -40,20 +40,6 @@ Recommended settings for Openshift 4 are:
   migration_ui: true
 ```
 
-Default limits allow 10 namespaces, 100 PVs, and 100 Pods to be migrated by a single MigPlan.
-Resource limits can be adjusted by configuring the MigrationController resource responsible for deploying mig-controller.
-```
-  [...]
-  migration_controller: true
-  
-  # This configuration is loaded into mig-controller, and should be set on the
-  # cluster where `migration_controller: true`
-  mig_pv_limit: 100
-  mig_pod_limit: 100
-  mig_namespace_limit: 10
-  [...]
-```
-
 If you are using Openshift 4.1 ensure `deprecated_cors_configuration: true` is uncommented. This option is not required with 4.2+
 ```
   migration_velero: true
@@ -67,6 +53,28 @@ The default `restic_timeout` is 1 hour, specified as `1h`. You can increase this
 It is possible to reverse this setup and install the controller and UI pods on Openshift 3, but you will also need to provide the cluster endpoint in `controller-3.yml` via the `mig_ui_cluster_api_endpoint` parameter. Additional setup will also be required on the Openshift 4 cluster if you take this route. See the manual CORS configuration section below for more details. `migration_velero` is required on every cluster that will act as a source or destination for migrated workloads.
 
 Once you've made your configuration choices run oc create against the edited yaml configuration, for example `oc create -f deploy/non-olm/latset/controller-3.yml`.
+
+
+### Migration Controller Installation:  Adjusting Limits
+Several limits have been put in place on a per MigPlan basis to serve as guidance when begining to perform migrations at scale.  
+
+The default limits are:
+  - 10 namespaces per MigPlan
+  - 100 Pods per MigPlan
+  - 100 Persistent Volumes per MigPlan
+
+Resource limits can be adjusted by configuring the MigrationController resource responsible for deploying mig-controller.
+```
+  [...]
+  migration_controller: true
+  
+  # This configuration is loaded into mig-controller, and should be set on the
+  # cluster where `migration_controller: true`
+  mig_pv_limit: 100
+  mig_pod_limit: 100
+  mig_namespace_limit: 10
+  [...]
+```
 
 ## Manual CORS (Cross-Origin Resource Sharing) Configuration
 
