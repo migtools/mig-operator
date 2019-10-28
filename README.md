@@ -89,17 +89,17 @@ $ /usr/local/bin/master-restart controller
 On Openshift 4 cluster resources are modified by the operator if the controller is installed there and you can skip these steps. If you chose not to install the controller on your Openshift 4 cluster you will need to perform these steps manually.
 
 If you haven't already, determine the CORS URL that needs to be added retrieve the route URL:  
-`oc get -n openshift-migration route/migration -o go-template='(?i}//{{ .spec.host }}(:|\z){{ println }}' | sed 's,\.,\\.,g'`
+`oc get -n openshift-migration route/migration -o go-template='(?i)//{{ .spec.host }}(:|\z){{ println }}' | sed 's,\.,\\.,g'`
 
 Output from this command will look something like this, but will be different for every cluster:  
-`(?i}//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)`
+`(?i)//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)`
 
 #### For Openshift 4.2
 `oc edit apiserver cluster` and ensure the following exist:
 ```
 spec:
   additionalCORSAllowedOrigins:
-  - (?i}//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)
+  - (?i)//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)
 ```
 
 #### For OpenShift 4.1:
@@ -110,7 +110,7 @@ spec:
     corsAllowedOrigins:
     - //localhost(:|$)
     - //127.0.0.1(:|$)
-    - (?i}//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)
+    - (?i)//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)
 ```
 
 `oc edit kubeapiserver.operator cluster` and ensure the following exist:
@@ -118,7 +118,7 @@ spec:
 spec:
   unsupportedConfigOverrides:
     corsAllowedOrigins:
-    - (?i}//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)
+    - (?i)//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)
 ```
 
 ## Obtaining a remote cluster serviceaccount token
