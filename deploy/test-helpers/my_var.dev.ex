@@ -1,8 +1,12 @@
 # vim: set ft=sh:
+# DEV SETTINGS
+# NOTE: YOU MUST SET THIS REGISTRY LOCATION
 DOWNSTREAM_REGISTRY="downstream.registry"
-DOWNSTREAM_ORG=""
-DOWNSTREAM_REPO_PREFIX=""
-TARGET_NAMESPACE=rhcam
+
+# THESE SETTINGS SHOULD NOT REQUIRE EDITING
+DOWNSTREAM_ORG="rhcam-1-0"
+DOWNSTREAM_REPO_PREFIX="rhcam-"
+TARGET_NAMESPACE="rhcam-1-0"
 IMAGES=(
   "controller"
   "operator"
@@ -10,7 +14,6 @@ IMAGES=(
   "ui"
   "velero"
   "helper"
-  "cpma"
 )
 declare -A IMG_MAP
 IMG_MAP[controller_repo]="openshift-migration-controller"
@@ -37,7 +40,3 @@ IMG_MAP[helper_repo]="openshift-migration-velero-restic-restore-helper"
 IMG_MAP[helper_ds_tag]="v1.0"
 IMG_MAP[helper_tgt_name]="openshift-migration-velero-restic-restore-helper-rhel8"
 IMG_MAP[helper_tgt_tag]="v1.0"
-IMG_MAP[cpma_repo]="openshift-migration-cpma"
-IMG_MAP[cpma_ds_tag]="v1.0"
-IMG_MAP[cpma_tgt_name]="openshift-migration-cpma-rhel8"
-IMG_MAP[cpma_tgt_tag]="v1.0"
