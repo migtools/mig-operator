@@ -3,7 +3,9 @@
 ## Mirroring images to the internal openshift registry
 
 1. `oc login` to your target cluster where you are going to mirror your images.
-1. `cp my_var.ex my_var`
+1. `cp my_var.dev.ex my_var` OR `cp my_var.stage.ex my_var` depending on the environment
+you are pulling your images from. The purpose of these two separate var files is that
+the different environments use different naming conventions for their repos and image names.
 1. Set the downstream registry to the brew registry in `my_var`
 1. If you need to test a specific downstream image (for example v1.0-7) replace the `IMG_MAP[${img}_ds_tag]` value with the desired image tag to test, otherwise the latest v1.0 tagged builds will be pulled.
 1. Run `expose_cluster_registry.sh` to expose the target cluster's docker registry.
