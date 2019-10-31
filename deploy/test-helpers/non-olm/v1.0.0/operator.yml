@@ -193,14 +193,14 @@ spec:
         - /usr/local/bin/ao-logs
         - /tmp/ansible-operator/runner
         - stdout
-        image: image-registry.openshift-image-registry.svc:5000/rhcam/openshift-migration-rhel7-operator:v1.0
+        image: registry.redhat.io/rhcam-1-0/openshift-migration-rhel7-operator:v1.0
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /tmp/ansible-operator/runner
           name: runner
           readOnly: true
       - name: operator
-        image: image-registry.openshift-image-registry.svc:5000/rhcam/openshift-migration-rhel7-operator:v1.0
+        image: registry.redhat.io/rhcam-1-0/openshift-migration-rhel7-operator:v1.0
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /tmp/ansible-operator/runner
@@ -217,9 +217,9 @@ spec:
             fieldRef:
               fieldPath: metadata.namespace
         - name: REGISTRY
-          value: image-registry.openshift-image-registry.svc:5000
+          value: registry.redhat.io
         - name: PROJECT
-          value: rhcam
+          value: rhcam-1-0
         - name: MIG_CONTROLLER_REPO
           value: openshift-migration-controller-rhel8
         - name: MIG_UI_REPO
