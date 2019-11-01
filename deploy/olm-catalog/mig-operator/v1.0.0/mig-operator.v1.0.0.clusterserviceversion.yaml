@@ -6,7 +6,7 @@ metadata:
   namespace: openshift-migration
   annotations:
     capabilities: Seamless Upgrades
-    description: Facilitates migration of workloads from Openshift 3.x to Openshift 4.x
+    description: Facilitates migration of workloads from OpenShift 3.x to OpenShift 4.x
     categories: 'OpenShift Optional'
     containerImage: quay.io/ocpmigrate/mig-operator:release-1.0
     createdAt: 2019-07-25T10:21:00Z
@@ -17,7 +17,7 @@ metadata:
 spec:
   displayName: Migration Operator
   description: |
-    The Migration Operator for Openshift enables installation of the OpenShift application migration tool.
+    The Migration Operator for OpenShift enables installation of the OpenShift application migration tool.
   keywords: ['migration']
 
   maintainers:
