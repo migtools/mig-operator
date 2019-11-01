@@ -103,7 +103,7 @@ $ systemctl restart atomic-openshift-master-controllers
 
 # In OpenShift 3.10-3.11, the control plane runs in 'Static Pods'
 $ /usr/local/bin/master-restart api
-$ /usr/local/bin/master-restart controller
+$ /usr/local/bin/master-restart controllers
 ```
 
 
