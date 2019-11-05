@@ -82,7 +82,7 @@ Resource limits can be adjusted by configuring the MigrationController resource 
 In order to enable the UI to talk to an Openshift 3 cluster (whether local or remote) it is necessary to edit the master-config.yaml and restart the Openshift master nodes. 
 
 To determine the CORS URL that needs to be added retrieve the route URL after installing the controller, run the following command (NOTE: This must be run on the cluster that is serving your web UI):  
-`oc get -n openshift-migration route/migration -o go-template='(?i}//{{ .spec.host }}(:|\z){{ println }}' | sed 's,\.,\\.,g'`
+`oc get -n openshift-migration route/migration -o go-template='(?i)//{{ .spec.host }}(:|\z){{ println }}' | sed 's,\.,\\.,g'`
 
 Output from this command will look something like this, but will be different for every cluster:  
 `(?i}//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)`
