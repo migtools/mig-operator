@@ -62,6 +62,8 @@ spec:
                         type: string
                       action:
                         type: string
+                      copyMethod:
+                        type: string
                       storageClass:
                         type: string
                     type: object
@@ -73,8 +75,13 @@ spec:
                         items:
                           type: string
                         type: array
+                      copyMethods:
+                        items:
+                          type: string
+                        type: array
                     required:
                     - actions
+                    - copyMethods
                     type: object
                 required:
                 - supported
