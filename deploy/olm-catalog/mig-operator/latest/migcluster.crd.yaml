@@ -28,6 +28,8 @@ spec:
           type: object
         spec:
           properties:
+            azureResourceGroup:
+              type: string
             caBundle:
               format: byte
               type: string
