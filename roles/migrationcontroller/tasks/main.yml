@@ -1,456 +1,496 @@
 ---
-
-- set_fact: ui_state="present"
-  when: migration_ui
-
-- set_fact: controller_state="present"
-  when: migration_controller
-
-- set_fact: velero_state="present"
-  when: migration_velero
-
-- name: Get cluster config
-  k8s_facts:
-    api_version: v1
-    kind: Namespace
-    name: openshift-config
-  register: config_namespace_check
-
 - set_fact:
-    mig_ui_config_namespace: openshift-config
-  when: config_namespace_check.resources|length > 0
+    reconciled: false
 
-- name: "Set up namespace for mig resources"
-  k8s:
-    state: "present"
-    definition: "{{ lookup('template', 'mig_namespace.yml.j2') }}"
-  when: migration_ui or migration_controller or migration_velero
+- block:
+  - when: olm_managed
+    block:
+    - k8s:
+        state: "present"
+        definition: "{{ lookup('template', 'migration-controller.yml.j2') }}"
 
-- name: "Set up mig operator namespace"
-  k8s:
-    state: "present"
-    definition: "{{ lookup('template', 'mig_namespace.yml.j2') }}"
-  when: not olm_managed and (migration_ui or migration_controller or migration_velero)
+    - k8s_status:
+        api_version: migration.openshift.io/v1alpha1
+        kind: MigrationController
+        name: "{{ meta.name }}"
+        namespace: "{{ meta.namespace }}"
+        status:
+          phase: Reconciling
 
-#This ConfigMap contains the cluster config on Openshift 4.
-#Looking for it provides a rudimentary way to see what version we're on.
-#It also lets us generate the cluster API endpoint URL on Openshift 4.
-- name: Get cluster config
-  k8s_facts:
-    api_version: v1
-    kind: ConfigMap
-    name: cluster-config-v1
-    namespace: kube-system
-  register: cluster_configmap
+  - set_fact: ui_state="present"
+    when: migration_ui
 
-- when: migration_ui and cluster_configmap.resources|length > 0
-  block:
-  - set_fact:
-      cluster_config_data: "{{ cluster_configmap.resources[0].data | regex_replace('install-config', 'install_config') }}"
+  - set_fact: controller_state="present"
+    when: migration_controller
 
-  - set_fact:
-      cluster_config: "{{ cluster_config_data.install_config | from_yaml }}"
+  - set_fact: velero_state="present"
+    when: migration_velero
 
-  - set_fact:
-      mig_ui_cluster_api_endpoint: "https://api.{{ cluster_config.metadata.name }}.{{ cluster_config.baseDomain }}:6443"
-
-- set_fact:
-    restic_pv_host_path: /var/lib/origin/openshift.local.volumes/pods
-  when: cluster_configmap.resources|length == 0
-
-# This is only here to ease testing with openshift 3 dev environments
-- set_fact:
-    restic_pv_host_path: /tmp/openshift.local.clusterup/openshift.local.volumes/pods
-  when:
-  - cluster_configmap.resources|length == 0
-  - origin_three_dev is defined and origin_three_dev
-
-- when: migration_velero
-  block:
-  - name: Check if cloud-credentials secret exists already so we don't update it
+  - name: Get cluster config
     k8s_facts:
       api_version: v1
-      kind: Secret
-      name: "{{ velero_aws_secret_name }}"
-      namespace: "{{ mig_namespace }}"
-    register: secret_status
+      kind: Namespace
+      name: openshift-config
+    register: config_namespace_check
 
-  - name: "Create empty velero S3 secret"
-    k8s:
-      state: "{{ velero_state }}"
-      definition:
-        apiVersion: v1
-        kind: Secret
-        metadata:
-          name: "{{ velero_aws_secret_name }}"
-          namespace: "{{ mig_namespace }}"
-        data:
-          cloud: ""
-    when: (secret_status.resources|length) == 0
+  - set_fact:
+      mig_ui_config_namespace: openshift-config
+    when: config_namespace_check.resources|length > 0
 
-  - name: "Set up velero supporting resources (CRDS, SA, SCC) when not managed by OLM"
-    k8s:
-      state: "{{ velero_state }}"
-      definition: "{{ lookup('template', 'velero_supporting.yml.j2') }}"
-    when: not olm_managed
-
-- name: "Set up velero controller"
-  k8s:
-    state: "{{ velero_state }}"
-    definition: "{{ lookup('template', 'velero.yml.j2') }}"
-
-- name: migration_controller
-  block:
-
-  - name: "Set up migration CRDs"
+  - name: "Set up namespace for mig resources"
     k8s:
       state: "present"
-      src: "{{ role_path }}/files/{{ item }}"
-    with_items:
-      - "migration_v1alpha1_migcluster.yaml"
-      - "migration_v1alpha1_migmigration.yaml"
-      - "migration_v1alpha1_migplan.yaml"
-      - "migration_v1alpha1_migstorage.yaml"
-    when: not olm_managed and (migration_controller or migration_ui)
+      definition: "{{ lookup('template', 'mig_namespace.yml.j2') }}"
+    when: migration_ui or migration_controller or migration_velero
 
-  - name: "Set up mig controller RBAC"
+  - name: "Set up mig operator namespace"
     k8s:
-      state: "{{ controller_state }}"
-      definition: "{{ lookup('template', 'mig_rbac.yml.j2') }}"
-    when: not olm_managed and (migration_controller or migration_ui)
+      state: "present"
+      definition: "{{ lookup('template', 'mig_namespace.yml.j2') }}"
+    when: not olm_managed and (migration_ui or migration_controller or migration_velero)
 
-- name: "Set up mig controller"
-  k8s:
-    state: "{{ controller_state }}"
-    definition: "{{ lookup('template', 'controller.yml.j2') }}"
-
-- name: Check if mig ui route exists already so we don't update it
-  k8s_facts:
-    api_version: v1
-    kind: Route
-    name: migration
-    namespace: "{{ mig_namespace }}"
-  register: route_status
-
-- name: "Set up mig ui route"
-  k8s:
-    state: "{{ ui_state }}"
-    definition: "{{ lookup('template', 'ui-route.yml.j2') }}"
-  when: (route_status.resources|length) == 0 or ui_state == "absent"
-
-- when: migration_ui
-  block:
-  - name: Find generated route
-    k8s_facts:
-      api_version: "route.openshift.io/v1"
-      kind: "Route"
-      namespace: "{{ mig_namespace }}"
-      name: migration
-    register: route
-
-  - name: Determine CORS URL
-    set_fact:
-      mig_ui_url: "{{ route.resources[0].spec.host }}"
-      mig_ui_cors_url: "(?i)//{{ route.resources[0].spec.host | regex_replace('\\.', '\\.') }}(:|\\z)"
-      mig_ui_cors_loopback: "//127.0.0.1(:|$)"
-      mig_ui_cors_localhost: "//localhost(:|$)"
-
-  - name: Set OAuth redirect url
-    set_fact:
-      mig_ui_oauth_redirect_url: "https://{{ mig_ui_url }}/login/callback"
-
-  - name: Check if migration ui oauthclient secret exists already so we don't update it
-    k8s_facts:
-      api_version: v1
-      kind: OAuthClient
-      name: migration
-      namespace: "{{ mig_namespace }}"
-    register: oauthclient_status
-
-  - name: Generate random secret value for oauth client
-    set_fact:
-      mig_ui_oauth_secret: "{{ 99999999 | random | to_uuid | b64encode }}"
-    when: (oauthclient_status.resources|length) == 0
-
-  - name: Use existing secret value for oauth client
-    set_fact:
-      mig_ui_oauth_secret: "{{ oauthclient_status.resources[0].secret }}"
-    when: (oauthclient_status.resources|length) > 0
-
-  - name: Set up mig ui oauthclient secret
-    k8s:
-      state: "{{ ui_state }}"
-      definition: "{{ lookup('template', 'ui-oauthsecret.yml.j2') }}"
-
-  - name: Check if migration ui configmap exists already so we don't update it
+  #This ConfigMap contains the cluster config on Openshift 4.
+  #Looking for it provides a rudimentary way to see what version we're on.
+  #It also lets us generate the cluster API endpoint URL on Openshift 4.
+  - name: Get cluster config
     k8s_facts:
       api_version: v1
       kind: ConfigMap
-      name: "{{ mig_ui_configmap_name }}"
-      namespace: "{{ mig_namespace }}"
-    register: configmap_status
+      name: cluster-config-v1
+      namespace: kube-system
+    register: cluster_configmap
 
-  - name: Set up mig ui configmap
+  - when: migration_ui and cluster_configmap.resources|length > 0
+    block:
+    - set_fact:
+        cluster_config_data: "{{ cluster_configmap.resources[0].data | regex_replace('install-config', 'install_config') }}"
+
+    - set_fact:
+        cluster_config: "{{ cluster_config_data.install_config | from_yaml }}"
+
+    - set_fact:
+        mig_ui_cluster_api_endpoint: "https://api.{{ cluster_config.metadata.name }}.{{ cluster_config.baseDomain }}:6443"
+
+  - set_fact:
+      restic_pv_host_path: /var/lib/origin/openshift.local.volumes/pods
+    when: cluster_configmap.resources|length == 0
+
+  # This is only here to ease testing with openshift 3 dev environments
+  - set_fact:
+      restic_pv_host_path: /tmp/openshift.local.clusterup/openshift.local.volumes/pods
+    when:
+    - cluster_configmap.resources|length == 0
+    - origin_three_dev is defined and origin_three_dev
+
+  - when: migration_velero
+    block:
+    - name: Check if cloud-credentials secret exists already so we don't update it
+      k8s_facts:
+        api_version: v1
+        kind: Secret
+        name: "{{ velero_aws_secret_name }}"
+        namespace: "{{ mig_namespace }}"
+      register: secret_status
+
+    - name: "Create empty velero S3 secret"
+      k8s:
+        state: "{{ velero_state }}"
+        definition:
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: "{{ velero_aws_secret_name }}"
+            namespace: "{{ mig_namespace }}"
+          data:
+            cloud: ""
+      when: (secret_status.resources|length) == 0
+
+    - name: "Set up velero supporting resources (CRDS, SA, SCC) when not managed by OLM"
+      k8s:
+        state: "{{ velero_state }}"
+        definition: "{{ lookup('template', 'velero_supporting.yml.j2') }}"
+      when: not olm_managed
+
+  - name: "Set up velero controller"
+    k8s:
+      state: "{{ velero_state }}"
+      definition: "{{ lookup('template', 'velero.yml.j2') }}"
+
+  - name: migration_controller
+    block:
+
+    - name: "Set up migration CRDs"
+      k8s:
+        state: "present"
+        src: "{{ role_path }}/files/{{ item }}"
+      with_items:
+        - "migration_v1alpha1_migcluster.yaml"
+        - "migration_v1alpha1_migmigration.yaml"
+        - "migration_v1alpha1_migplan.yaml"
+        - "migration_v1alpha1_migstorage.yaml"
+      when: not olm_managed and (migration_controller or migration_ui)
+
+    - name: "Set up mig controller RBAC"
+      k8s:
+        state: "{{ controller_state }}"
+        definition: "{{ lookup('template', 'mig_rbac.yml.j2') }}"
+      when: not olm_managed and (migration_controller or migration_ui)
+
+  - name: "Set up mig controller"
+    k8s:
+      state: "{{ controller_state }}"
+      definition: "{{ lookup('template', 'controller.yml.j2') }}"
+
+  - name: Check if mig ui route exists already so we don't update it
+    k8s_facts:
+      api_version: v1
+      kind: Route
+      name: migration
+      namespace: "{{ mig_namespace }}"
+    register: route_status
+
+  - name: "Set up mig ui route"
     k8s:
       state: "{{ ui_state }}"
-      definition: "{{ lookup('template', 'ui-configmap.yml.j2') }}"
+      definition: "{{ lookup('template', 'ui-route.yml.j2') }}"
+    when: (route_status.resources|length) == 0 or ui_state == "absent"
 
-  - when: migration_ui and configmap_status.resources|length > 0
+  - when: migration_ui
     block:
-    - set_fact:
-        configmap_status_data: "{{ configmap_status.resources[0].data | regex_replace('migmeta.json', 'migmeta_json') }}"
-    - set_fact:
-        configmap_status_json: "{{ configmap_status_data.migmeta_json }}"
+    - name: Find generated route
+      k8s_facts:
+        api_version: "route.openshift.io/v1"
+        kind: "Route"
+        namespace: "{{ mig_namespace }}"
+        name: migration
+      register: route
 
-    - set_fact:
-        configmap_secret: "{{ configmap_status_json.oauth.clientSecret }}"
-      when: not configmap_status_data.get("oauth", {}).get("clientSecret",-1) == -1
+    - name: Determine CORS URL
+      set_fact:
+        mig_ui_url: "{{ route.resources[0].spec.host }}"
+        mig_ui_cors_url: "(?i)//{{ route.resources[0].spec.host | regex_replace('\\.', '\\.') }}(:|\\z)"
+        mig_ui_cors_loopback: "//127.0.0.1(:|$)"
+        mig_ui_cors_localhost: "//localhost(:|$)"
 
-    - set_fact:
-        skip_ui_restart: true
-      when: configmap_status_data.get("oauth", {}).get("clientSecret",-1) == -1
+    - name: Set OAuth redirect url
+      set_fact:
+        mig_ui_oauth_redirect_url: "https://{{ mig_ui_url }}/login/callback"
 
-    - name: "Take down mig-ui"
+    - name: Check if migration ui oauthclient secret exists already so we don't update it
+      k8s_facts:
+        api_version: v1
+        kind: OAuthClient
+        name: migration
+        namespace: "{{ mig_namespace }}"
+      register: oauthclient_status
+
+    - name: Generate random secret value for oauth client
+      set_fact:
+        mig_ui_oauth_secret: "{{ 99999999 | random | to_uuid | b64encode }}"
+      when: (oauthclient_status.resources|length) == 0
+
+    - name: Use existing secret value for oauth client
+      set_fact:
+        mig_ui_oauth_secret: "{{ oauthclient_status.resources[0].secret }}"
+      when: (oauthclient_status.resources|length) > 0
+
+    - name: Set up mig ui oauthclient secret
       k8s:
-        state: "absent"
-        definition: "{{ lookup('template', 'ui.yml.j2') }}"
-      when: not(configmap_secret == mig_ui_oauth_secret) and not skip_ui_restart
+        state: "{{ ui_state }}"
+        definition: "{{ lookup('template', 'ui-oauthsecret.yml.j2') }}"
 
-  - when: migration_ui and (cluster_configmap.resources|length > 0)
+    - name: Check if migration ui configmap exists already so we don't update it
+      k8s_facts:
+        api_version: v1
+        kind: ConfigMap
+        name: "{{ mig_ui_configmap_name }}"
+        namespace: "{{ mig_namespace }}"
+      register: configmap_status
+
+    - name: Set up mig ui configmap
+      k8s:
+        state: "{{ ui_state }}"
+        definition: "{{ lookup('template', 'ui-configmap.yml.j2') }}"
+
+    - when: migration_ui and configmap_status.resources|length > 0
+      block:
+      - set_fact:
+          configmap_status_data: "{{ configmap_status.resources[0].data | regex_replace('migmeta.json', 'migmeta_json') }}"
+      - set_fact:
+          configmap_status_json: "{{ configmap_status_data.migmeta_json }}"
+
+      - set_fact:
+          configmap_secret: "{{ configmap_status_json.oauth.clientSecret }}"
+        when: not configmap_status_data.get("oauth", {}).get("clientSecret",-1) == -1
+
+      - set_fact:
+          skip_ui_restart: true
+        when: configmap_status_data.get("oauth", {}).get("clientSecret",-1) == -1
+
+      - name: "Take down mig-ui"
+        k8s:
+          state: "absent"
+          definition: "{{ lookup('template', 'ui.yml.j2') }}"
+        when: not(configmap_secret == mig_ui_oauth_secret) and not skip_ui_restart
+
+    - when: migration_ui and (cluster_configmap.resources|length > 0)
+      block:
+      - name: Retrieve apiserver config definition
+        k8s_facts:
+          api_version: "config.openshift.io/v1"
+          kind: "apiserver"
+          name: "cluster"
+        register: apiserver
+
+      - when: apiserver.resources[0].spec.additionalCORSAllowedOrigins is not defined or
+              mig_ui_cors_url not in apiserver.resources[0].spec.additionalCORSAllowedOrigins
+        block:
+        - name: Write apiserver config definition for modification
+          copy:
+            dest: /tmp/apiserver.yaml
+            content: "{{apiserver.resources[0] | to_nice_yaml }}"
+
+        - name: Add CORS URL to apiserver config definition
+          yedit:
+            src: /tmp/apiserver.yaml
+            key: spec.additionalCORSAllowedOrigins
+            append: true
+            value: "{{ item }}"
+          with_items: "{{ mig_ui_cors_url }}"
+
+        - name: Update apiserver config definition on the cluster
+          k8s:
+            state: present
+            definition: "{{ lookup('file', '/tmp/apiserver.yaml') | from_yaml }}"
+
+      - name: Retrieve kubeapiserver operator definition
+        k8s_facts:
+          api_version: "operator.openshift.io/v1"
+          kind: "kubeapiserver"
+          name: "cluster"
+        register: kubeapiserver
+
+      - when: deprecated_cors_configuration and (
+              kubeapiserver.resources[0].spec.unsupportedConfigOverrides is not defined or
+              kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
+              mig_ui_cors_url not in kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins)
+        block:
+        - name: Write kubeapiserver operator definition for modification
+          copy:
+            dest: /tmp/kubeapiserver.yaml
+            content: "{{kubeapiserver.resources[0] | to_nice_yaml }}"
+
+        - name: Add CORS URL to kubeapiserver operator definition
+          yedit:
+            src: /tmp/kubeapiserver.yaml
+            key: spec.unsupportedConfigOverrides.corsAllowedOrigins
+            append: true
+            value: "{{ item }}"
+          with_items: "{{ mig_ui_cors_url }}"
+
+        - name: Update kubeapiserver operator definition on the cluster
+          k8s:
+            state: present
+            definition: "{{ lookup('file', '/tmp/kubeapiserver.yaml') | from_yaml }}"
+
+      - name: Retrieve authentication operator definition
+        k8s_facts:
+          api_version: "operator.openshift.io/v1"
+          kind: "authentication"
+          name: "cluster"
+        register: authentication
+
+      - when: deprecated_cors_configuration and (
+              authentication.resources[0].spec.unsupportedConfigOverrides is not defined or
+              authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
+              mig_ui_cors_url not in authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins)
+        block:
+        - name: Write authentication operator definition for modification
+          copy:
+            dest: /tmp/authentication.yaml
+            content: "{{authentication.resources[0] | to_nice_yaml }}"
+
+        - name: Add CORS URL to authentication operator definition
+          yedit:
+            src: /tmp/authentication.yaml
+            key: spec.unsupportedConfigOverrides.corsAllowedOrigins
+            append: true
+            value: "{{ item }}"
+          with_items: "{{ mig_ui_cors_url }}"
+
+        - name: Update authentication operator definition on the cluster
+          k8s:
+            state: present
+            definition: "{{ lookup('file', '/tmp/authentication.yaml') | from_yaml }}"
+
+      - name: Retrieve authentication operator definition
+        k8s_facts:
+          api_version: "operator.openshift.io/v1"
+          kind: "authentication"
+          name: "cluster"
+        register: authentication
+
+      - when: deprecated_cors_configuration and (
+              authentication.resources[0].spec.unsupportedConfigOverrides is not defined or
+              authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
+              mig_ui_cors_localhost not in authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins)
+        block:
+        - name: Write authentication operator definition for modification
+          copy:
+            dest: /tmp/authentication.yaml
+            content: "{{authentication.resources[0] | to_nice_yaml }}"
+
+        - name: Add CORS URL to authentication operator definition
+          yedit:
+            src: /tmp/authentication.yaml
+            key: spec.unsupportedConfigOverrides.corsAllowedOrigins
+            append: true
+            value: "{{ item }}"
+          with_items: "{{ mig_ui_cors_localhost }}"
+
+        - name: Update authentication operator definition on the cluster
+          k8s:
+            state: present
+            definition: "{{ lookup('file', '/tmp/authentication.yaml') | from_yaml }}"
+
+      - name: Retrieve authentication operator definition
+        k8s_facts:
+          api_version: "operator.openshift.io/v1"
+          kind: "authentication"
+          name: "cluster"
+        register: authentication
+
+      - when: deprecated_cors_configuration and (
+              authentication.resources[0].spec.unsupportedConfigOverrides is not defined or
+              authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
+              mig_ui_cors_loopback not in authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins)
+        block:
+        - name: Write authentication operator definition for modification
+          copy:
+            dest: /tmp/authentication.yaml
+            content: "{{authentication.resources[0] | to_nice_yaml }}"
+
+        - name: Add CORS URL to authentication operator definition
+          yedit:
+            src: /tmp/authentication.yaml
+            key: spec.unsupportedConfigOverrides.corsAllowedOrigins
+            append: true
+            value: "{{ item }}"
+          with_items: "{{ mig_ui_cors_loopback }}"
+
+        - name: Update authentication operator definition on the cluster
+          k8s:
+            state: present
+            definition: "{{ lookup('file', '/tmp/authentication.yaml') | from_yaml }}"
+
+  - name: "Set up mig ui"
+    k8s:
+      state: "{{ ui_state }}"
+      definition: "{{ lookup('template', 'ui.yml.j2') }}"
+
+  - when: mig_svc_account
     block:
-    - name: Retrieve apiserver config definition
-      k8s_facts:
-        api_version: "config.openshift.io/v1"
-        kind: "apiserver"
-        name: "cluster"
-      register: apiserver
+    - name: "Set up mig svc account for remote connections"
+      k8s:
+        state: "present"
+        definition: "{{ lookup('template', 'mig_service_account.yml.j2') }}"
+      when: not olm_managed
 
-    - when: apiserver.resources[0].spec.additionalCORSAllowedOrigins is not defined or
-            mig_ui_cors_url not in apiserver.resources[0].spec.additionalCORSAllowedOrigins
-      block:
-      - name: Write apiserver config definition for modification
-        copy:
-          dest: /tmp/apiserver.yaml
-          content: "{{apiserver.resources[0] | to_nice_yaml }}"
-
-      - name: Add CORS URL to apiserver config definition
-        yedit:
-          src: /tmp/apiserver.yaml
-          key: spec.additionalCORSAllowedOrigins
-          append: true
-          value: "{{ item }}"
-        with_items: "{{ mig_ui_cors_url }}"
-
-      - name: Update apiserver config definition on the cluster
-        k8s:
-          state: present
-          definition: "{{ lookup('file', '/tmp/apiserver.yaml') | from_yaml }}"
-
-    - name: Retrieve kubeapiserver operator definition
-      k8s_facts:
-        api_version: "operator.openshift.io/v1"
-        kind: "kubeapiserver"
-        name: "cluster"
-      register: kubeapiserver
-
-    - when: deprecated_cors_configuration and (
-            kubeapiserver.resources[0].spec.unsupportedConfigOverrides is not defined or
-            kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
-            mig_ui_cors_url not in kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins)
-      block:
-      - name: Write kubeapiserver operator definition for modification
-        copy:
-          dest: /tmp/kubeapiserver.yaml
-          content: "{{kubeapiserver.resources[0] | to_nice_yaml }}"
-
-      - name: Add CORS URL to kubeapiserver operator definition
-        yedit:
-          src: /tmp/kubeapiserver.yaml
-          key: spec.unsupportedConfigOverrides.corsAllowedOrigins
-          append: true
-          value: "{{ item }}"
-        with_items: "{{ mig_ui_cors_url }}"
-
-      - name: Update kubeapiserver operator definition on the cluster
-        k8s:
-          state: present
-          definition: "{{ lookup('file', '/tmp/kubeapiserver.yaml') | from_yaml }}"
-
-    - name: Retrieve authentication operator definition
-      k8s_facts:
-        api_version: "operator.openshift.io/v1"
-        kind: "authentication"
-        name: "cluster"
-      register: authentication
-
-    - when: deprecated_cors_configuration and (
-            authentication.resources[0].spec.unsupportedConfigOverrides is not defined or
-            authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
-            mig_ui_cors_url not in authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins)
-      block:
-      - name: Write authentication operator definition for modification
-        copy:
-          dest: /tmp/authentication.yaml
-          content: "{{authentication.resources[0] | to_nice_yaml }}"
-
-      - name: Add CORS URL to authentication operator definition
-        yedit:
-          src: /tmp/authentication.yaml
-          key: spec.unsupportedConfigOverrides.corsAllowedOrigins
-          append: true
-          value: "{{ item }}"
-        with_items: "{{ mig_ui_cors_url }}"
-
-      - name: Update authentication operator definition on the cluster
-        k8s:
-          state: present
-          definition: "{{ lookup('file', '/tmp/authentication.yaml') | from_yaml }}"
-
-    - name: Retrieve authentication operator definition
-      k8s_facts:
-        api_version: "operator.openshift.io/v1"
-        kind: "authentication"
-        name: "cluster"
-      register: authentication
-
-    - when: deprecated_cors_configuration and (
-            authentication.resources[0].spec.unsupportedConfigOverrides is not defined or
-            authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
-            mig_ui_cors_localhost not in authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins)
-      block:
-      - name: Write authentication operator definition for modification
-        copy:
-          dest: /tmp/authentication.yaml
-          content: "{{authentication.resources[0] | to_nice_yaml }}"
-
-      - name: Add CORS URL to authentication operator definition
-        yedit:
-          src: /tmp/authentication.yaml
-          key: spec.unsupportedConfigOverrides.corsAllowedOrigins
-          append: true
-          value: "{{ item }}"
-        with_items: "{{ mig_ui_cors_localhost }}"
-
-      - name: Update authentication operator definition on the cluster
-        k8s:
-          state: present
-          definition: "{{ lookup('file', '/tmp/authentication.yaml') | from_yaml }}"
-
-    - name: Retrieve authentication operator definition
-      k8s_facts:
-        api_version: "operator.openshift.io/v1"
-        kind: "authentication"
-        name: "cluster"
-      register: authentication
-
-    - when: deprecated_cors_configuration and (
-            authentication.resources[0].spec.unsupportedConfigOverrides is not defined or
-            authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
-            mig_ui_cors_loopback not in authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins)
-      block:
-      - name: Write authentication operator definition for modification
-        copy:
-          dest: /tmp/authentication.yaml
-          content: "{{authentication.resources[0] | to_nice_yaml }}"
-
-      - name: Add CORS URL to authentication operator definition
-        yedit:
-          src: /tmp/authentication.yaml
-          key: spec.unsupportedConfigOverrides.corsAllowedOrigins
-          append: true
-          value: "{{ item }}"
-        with_items: "{{ mig_ui_cors_loopback }}"
-
-      - name: Update authentication operator definition on the cluster
-        k8s:
-          state: present
-          definition: "{{ lookup('file', '/tmp/authentication.yaml') | from_yaml }}"
-
-- name: "Set up mig ui"
-  k8s:
-    state: "{{ ui_state }}"
-    definition: "{{ lookup('template', 'ui.yml.j2') }}"
-
-- when: mig_svc_account
-  block:
-  - name: "Set up mig svc account for remote connections"
+  - when: migration_controller or migration_ui
+    name: "Set up host MigCluster"
     k8s:
       state: "present"
-      definition: "{{ lookup('template', 'mig_service_account.yml.j2') }}"
-    when: not olm_managed
+      definition: "{{ lookup('template', 'mig_host_cluster.yml.j2') }}"
 
-- when: migration_controller or migration_ui
-  name: "Set up host MigCluster"
-  k8s:
-    state: "present"
-    definition: "{{ lookup('template', 'mig_host_cluster.yml.j2') }}"
+  - when: not(migration_controller)
+    block:
+    - name: Find Controller ReplicaSets
+      k8s_facts:
+        kind: ReplicaSet
+        namespace: "{{ mig_namespace }}"
+        label_selectors:
+        - control-plane=controller-manager
+      register: controller_replicasets
 
-- when: not(migration_controller)
-  block:
-  - name: Find Controller ReplicaSets
-    k8s_facts:
-      kind: ReplicaSet
-      namespace: "{{ mig_namespace }}"
-      label_selectors:
-      - control-plane=controller-manager
-    register: controller_replicasets
+    - name: Terminate Controller ReplicaSets
+      k8s:
+        name: "{{ item.metadata.name }}"
+        state: absent
+        kind: ReplicaSet
+        namespace: "{{ mig_namespace }}"
+      with_items: "{{ controller_replicasets.resources }}"
 
-  - name: Terminate Controller ReplicaSets
-    k8s:
-      name: "{{ item.metadata.name }}"
-      state: absent
-      kind: ReplicaSet
-      namespace: "{{ mig_namespace }}"
-    with_items: "{{ controller_replicasets.resources }}"
+  - when: not(migration_ui)
+    block:
+    - name: Find UI ReplicaSets
+      k8s_facts:
+        kind: ReplicaSet
+        namespace: "{{ mig_namespace }}"
+        label_selectors:
+        - service=migration-ui
+      register: ui_replicasets
 
-- when: not(migration_ui)
-  block:
-  - name: Find UI ReplicaSets
-    k8s_facts:
-      kind: ReplicaSet
-      namespace: "{{ mig_namespace }}"
-      label_selectors:
-      - service=migration-ui
-    register: ui_replicasets
+    - name: Terminate UI ReplicaSets
+      k8s:
+        name: "{{ item.metadata.name }}"
+        state: absent
+        kind: ReplicaSet
+        namespace: "{{ mig_namespace }}"
+      with_items: "{{ ui_replicasets.resources }}"
 
-  - name: Terminate UI ReplicaSets
-    k8s:
-      name: "{{ item.metadata.name }}"
-      state: absent
-      kind: ReplicaSet
-      namespace: "{{ mig_namespace }}"
-    with_items: "{{ ui_replicasets.resources }}"
+  - when: not(migration_velero)
+    block:
+    - name: Find Velero ReplicaSets
+      k8s_facts:
+        kind: ReplicaSet
+        namespace: "{{ mig_namespace }}"
+        label_selectors:
+        - component=velero
+      register: velero_replicasets
 
-- when: not(migration_velero)
-  block:
-  - name: Find Velero ReplicaSets
-    k8s_facts:
-      kind: ReplicaSet
-      namespace: "{{ mig_namespace }}"
-      label_selectors:
-      - component=velero
-    register: velero_replicasets
+    - name: Terminate Velero ReplicaSets
+      k8s:
+        name: "{{ item.metadata.name }}"
+        state: absent
+        kind: ReplicaSet
+        namespace: "{{ mig_namespace }}"
+      with_items: "{{ velero_replicasets.resources }}"
 
-  - name: Terminate Velero ReplicaSets
-    k8s:
-      name: "{{ item.metadata.name }}"
-      state: absent
-      kind: ReplicaSet
-      namespace: "{{ mig_namespace }}"
-    with_items: "{{ velero_replicasets.resources }}"
+    - name: Find Restic Pods
+      k8s_facts:
+        kind: Pod
+        namespace: "{{ mig_namespace }}"
+        label_selectors:
+        - name=restic
+      register: restic_pods
 
-  - name: Find Restic Pods
-    k8s_facts:
-      kind: Pod
-      namespace: "{{ mig_namespace }}"
-      label_selectors:
-      - name=restic
-    register: restic_pods
+    - name: Terminate Restic Pods
+      k8s:
+        name: "{{ item.metadata.name }}"
+        state: absent
+        kind: Pod
+        namespace: "{{ mig_namespace }}"
+      with_items: "{{ restic_pods.resources }}"
 
-  - name: Terminate Restic Pods
-    k8s:
-      name: "{{ item.metadata.name }}"
-      state: absent
-      kind: Pod
-      namespace: "{{ mig_namespace }}"
-    with_items: "{{ restic_pods.resources }}"
+  - set_fact:
+      reconciled: true
+
+  always:
+  - k8s_status:
+      api_version: migration.openshift.io/v1alpha1
+      kind: MigrationController
+      name: "{{ meta.name }}"
+      namespace: "{{ meta.namespace }}"
+      status:
+        phase: Reconciled
+    when: olm_managed and reconciled
+
+  - k8s_status:
+      api_version: migration.openshift.io/v1alpha1
+      kind: MigrationController
+      name: "{{ meta.name }}"
+      namespace: "{{ meta.namespace }}"
+      status:
+        phase: Failed
+    when: olm_managed and not(reconciled)
+
