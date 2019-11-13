@@ -19,7 +19,7 @@ V1_0_IMG_MAP[velero_repo]="openshift-migration-velero"
 V1_0_IMG_MAP[helper_repo]="openshift-migration-velero-restic-restore-helper"
 
 #Remove latest and stable as options
-sed -i 3,6d deploy/olm-catalog/mig-operator/mig-operator.package.yaml
+sed -i 3,4d deploy/olm-catalog/mig-operator/mig-operator.package.yaml
 sed -i s,mig-operator,cam-operator,g deploy/olm-catalog/mig-operator/mig-operator.package.yaml
 rm -rf deploy/olm-catalog/mig-operator/stable deploy/olm-catalog/mig-operator/latest
 
