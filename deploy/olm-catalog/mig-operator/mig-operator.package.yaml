@@ -5,5 +5,5 @@ channels:
 - name: stable
   currentCSV: mig-operator.stable
 - name: release-v1
-  currentCSV: mig-operator.v1.0.0
+  currentCSV: mig-operator.v1.0.1
 defaultChannel: release-v1
