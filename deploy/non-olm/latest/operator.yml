@@ -230,9 +230,15 @@ spec:
           value: migration-plugin
         - name: VELERO_RESTIC_RESTORE_HELPER_REPO
           value: velero-restic-restore-helper
-        - name: MIGRATION_TAG
-          value: latest
         - name: VELERO_TAG
+          value: latest
+        - name: VELERO_RESTIC_RESTORE_HELPER_TAG
+          value: latest
+        - name: VELERO_PLUGIN_TAG
+          value: latest
+        - name: MIG_UI_TAG
+          value: latest
+        - name: MIG_CONTROLLER_TAG
           value: latest
       volumes:
         - name: runner
