@@ -6,9 +6,8 @@ This operator will install velero with customized migration plugins, the migrati
 1. Create a openshift-migration namespace
 1. In the left menu select Operator Hub and find `Migration Operator` in the list
 1. Click Install and install it in the mig namespace
-  * There are three channels to select from: latest, stable, and release-v1.
-  * latest roughly corresponds to alpha stability and stable to beta.
-  * Due to a bug in OpenShift 4.1 you will only see two options. As a workaround when creating the MigrationController CR in the last step you can add `snapshot_tag: stable` in the `spec` section to use stable images.
+  * There are two channels to select from: latest and release-v1.
+  * latest roughly corresponds to beta.
 1. Once installation is complete select `Installed Operators` on the left menu
 1. Create a `MigrationController` CR. The default vales should be acceptable for 4.2
 1. For 4.1 add `deprecated_cors_configuration: true` under `spec:`
@@ -18,11 +17,10 @@ This operator will install velero with customized migration plugins, the migrati
 The same channels are available for use without OLM. Do one of the following to install the desired version:
 
 `oc create -f deploy/non-olm/latest/operator.yml` 
-`oc create -f deploy/non-olm/stable/operator.yml` 
 `oc create -f deploy/non-olm/v1.0.0/operator.yml` 
 
 ## Migration Controller Installation
-`controller-3.yml` and `controller-4.yml` in the `deploy/nom-olm/latest`, `stable`, and `v1.0.0` directories contain the recommended settings for OCP 3 and 4 respectively.
+`controller-3.yml` and `controller-4.yml` in the `deploy/nom-olm/latest` and `v1.0.0` directories contain the recommended settings for OCP 3 and 4 respectively.
 
 Edit `controller-3.yml` or `controller-4.yml` and adjust options if desired.
 
