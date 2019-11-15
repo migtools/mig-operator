@@ -64,14 +64,14 @@ spec:
               properties:
                 awsRegion:
                   type: string
-                awsSnapshotCreationTimeout:
-                  type: string
                 azureApiTimeout:
                   type: string
                 azureResourceGroup:
                   type: string
                 credsSecretRef:
                   type: object
+                snapshotCreationTimeout:
+                  type: string
               type: object
             volumeSnapshotProvider:
               type: string
