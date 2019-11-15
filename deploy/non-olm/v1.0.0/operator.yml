@@ -234,14 +234,6 @@ spec:
           value: release-1.0
         - name: VELERO_TAG
           value: fusor-1.1
-        - name: VELERO_RESTIC_RESTORE_HELPER_TAG
-          value: fusor-1.1
-        - name: VELERO_PLUGIN_TAG
-          value: release-1.0
-        - name: MIG_UI_TAG
-          value: release-1.0
-        - name: MIG_CONTROLLER_TAG
-          value: release-1.0
       volumes:
         - name: runner
           emptyDir: {}
