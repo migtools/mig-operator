@@ -17,10 +17,10 @@ This operator will install velero with customized migration plugins, the migrati
 The same channels are available for use without OLM. Do one of the following to install the desired version:
 
 `oc create -f deploy/non-olm/latest/operator.yml` 
-`oc create -f deploy/non-olm/v1.0.0/operator.yml` 
+`oc create -f deploy/non-olm/v1.0/operator.yml` 
 
 ## Migration Controller Installation
-`controller-3.yml` and `controller-4.yml` in the `deploy/nom-olm/latest` and `v1.0.0` directories contain the recommended settings for OCP 3 and 4 respectively.
+`controller-3.yml` and `controller-4.yml` in the `deploy/nom-olm/latest` and `v1.0` directories contain the recommended settings for OCP 3 and 4 respectively.
 
 Edit `controller-3.yml` or `controller-4.yml` and adjust options if desired.
 
