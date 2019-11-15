@@ -48,9 +48,14 @@ spec:
                   type: string
                 azureStorageAccount:
                   type: string
+                azureStorageContainer:
+                  type: string
                 credsSecretRef:
                   type: object
                 gcpBucket:
+                  type: string
+                s3CustomCABundle:
+                  format: byte
                   type: string
               type: object
             backupStorageProvider:
