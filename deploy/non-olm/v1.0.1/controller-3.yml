@@ -4,6 +4,7 @@ metadata:
   name: migration-controller
   namespace: openshift-migration
 spec:
+  azure_resource_group: ''
   cluster_name: host
   migration_velero: true
   migration_controller: false

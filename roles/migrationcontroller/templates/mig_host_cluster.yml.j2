@@ -5,4 +5,7 @@ metadata:
   name: "{{ cluster_name }}"
   namespace: "{{ mig_namespace }}"
 spec:
+{% if azure_resource_group != '' %}
+  azureResourceGroup: "{{ azure_resource_group }}"
+{% endif %}
   isHostCluster: true
