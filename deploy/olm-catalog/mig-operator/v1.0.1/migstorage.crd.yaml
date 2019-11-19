@@ -70,6 +70,8 @@ spec:
                   type: string
                 credsSecretRef:
                   type: object
+                snapshotCreationTimeout:
+                  type: string
               type: object
             volumeSnapshotProvider:
               type: string
