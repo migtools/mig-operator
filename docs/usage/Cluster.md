@@ -1,0 +1,25 @@
+## Adding a cluster to the CAM web console
+You can add a source cluster to the CAM web console.
+
+### Prerequisites
+* Cross-origin resource sharing must be configured on the source cluster.
+
+### Procedure
+1. Log in to the source cluster.
+1. Obtain the service account token:
+```
+$ oc sa get-token mig -n openshift-migration
+eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJtaWciLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlY3JldC5uYW1lIjoibWlnLXRva2VuLWs4dDJyIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6Im1pZyIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6ImE1YjFiYWMwLWMxYmYtMTFlOS05Y2NiLTAyOWRmODYwYjMwOCIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDptaWc6bWlnIn0.xqeeAINK7UXpdRqAtOj70qhBJPeMwmgLomV9iFxr5RoqUgKchZRG2J2rkqmPm6vr7K-cm7ibD1IBpdQJCcVDuoHYsFgV4mp9vgOfn9osSDp2TGikwNz4Az95e81xnjVUmzh-NjDsEpw71DH92iHV_xt2sTwtzftS49LpPW2LjrV0evtNBP_t_RfskdArt5VSv25eORl7zScqfe1CiMkcVbf2UqACQjo3LbkpfN26HAioO2oH0ECPiRzT0Xyh-KwFutJLS9Xgghyw-LD9kPKcE_xbbJ9Y4Rqajh7WdPYuB0Jd9DPVrslmzK-F6cgHHYoZEv0SvLQi-PO0rpDrcjOEQQ
+```
+1. Log in to the CAM web console.
+1. In the **Clusters** section, click **Add cluster**.
+1. Fill in the following fields:
+    * **Cluster name**: May contain lower-case letters (a-z) and numbers (0-9). Must not contain spaces or international characters.
+    * **Url**: URL of the cluster’s API server, for example, https://<master1.example.com>:8443.
+    * **Service account token**: String that you obtained from the source cluster.
+1. Click **Add cluster**.
+
+The cluster appears in the Clusters section.
+
+---
+[Home](./README.md)
