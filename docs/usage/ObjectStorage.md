@@ -1,10 +1,29 @@
 ## Object Storage Setup
 
-CAM components use S3 object storage as temporary scratch space when performing migrations.  This storage can be any object storage that presents an `S3 like` interface.  Currently, we have tested AWS S3, Noobaa, and Minio.  
+CAM components use object storage as temporary scratch space when performing migrations. This document covers the process of setting up compatible Object Storage to use with CAM on the provider of your choice. The Object Storage credentials obtained from this document are needed for *configuring CAM Replication Repositories*.
 
-### Object Storage Setup with NooBaa
 
-NooBaa can run on an OpenShift cluster to provide an S3 compatible store for migration scratch space. We recommend loading NooBaa onto the destination cluster.
+### Supported Providers
+
+
+- **S3 Bucket** *(Any storage medium presenting an `S3 like` interface)*
+- **GCP Storage Bucket**
+- **Azure Storage Container**
+
+If you wish to use S3-compatible storage, we have tested AWS S3, NooBaa, and Minio successfully. Using NooBaa or Minio enables migrations when Cloud Provider connectivity isn't possible, or if self-hosting is desired for other reasons.
+
+GCP Storage Buckets and Azure Storage Containers have also been tested successfully. We recommend provisioning Object Storage on the same Cloud Provider where OpenShift clusters are running to avoid additional data costs and increase access speeds.
+
+
+## S3 Object Storage
+
+This section covers setup of S3 Object Storage on these providers:
+ - NooBaa S3 
+ - AWS S3
+
+### S3 Object Storage Setup with NooBaa
+
+NooBaa can run on an OpenShift cluster to provide an S3 compatible store for migration scratch space. We recommend loading NooBaa onto the destination cluster. NooBaa is especially useful when clusters don't have network connectivity to AWS S3.
 
 1. Download the noobaa v1.1.0 CLI from https://github.com/noobaa-operator/releases. 
 2. Ensure you have available PVs with capacities of 10 Gi, 50Gi. The NooBaa installer will create PVCs to consume these PVs.
@@ -203,6 +222,151 @@ aws s3api create-bucket \
           }
      }
     ```
+
+
+## GCP Object Storage
+
+This section covers setup of Object Storage with [*GCP Storage Buckets*](https://cloud.google.com/storage/docs/creating-buckets).
+
+
+## Azure Object Storage
+
+This section covers setup of Object Storage with [*Azure Storage Containers*](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blobs-introduction).
+
+Execute all steps below and then use the final command to dump all necessary credentials to a *credentials blob* for CAM to use.
+
+### Create Azure Resource Group + Storage Account
+
+All resources on Azure *must* exist inside a *Resource Group*. 
+
+```bash
+# Set Azure Resource Group name
+AZURE_RESOURCE_GROUP=Velero_Backups
+
+# Use the Azure CLI to create the Resource Group in your desired region
+az group create -n $AZURE_RESOURCE_GROUP --location CentralUS
+```
+
+Blob Storage resources on Azure *must* exist inside a *Storage Account*.
+
+```bash
+# Set Azure Storage Account Name
+AZURE_STORAGE_ACCOUNT_ID=velerobackups
+
+# Create Azure Storage Account
+az storage account create \
+     --name $AZURE_STORAGE_ACCOUNT_ID \
+     --resource-group $AZURE_RESOURCE_GROUP \
+     --sku Standard_GRS \
+     --encryption-services blob \
+     --https-only true \
+     --kind BlobStorage \
+     --access-tier Hot
+```
+
+### Create Azure Blob Storage Container
+
+The *Blob Storage Container* will be used as a shared location for migration data between clusters.
+
+```bash
+# Set Azure Blob Storage Container name
+BLOB_CONTAINER=velero
+
+# Create Azure Blob Storage Container
+az storage container create -n $BLOB_CONTAINER --public-access off --account-name $AZURE_STORAGE_ACCOUNT_ID
+```
+
+### Create Azure Service Principal
+
+We want to grant CAM components the ability to access the Azure Blob Storage we've just created via a *Service Principal* credential set.
+
+```bash
+# Create Service Principal for CAM to act as
+AZURE_SUBSCRIPTION_ID=`az account list --query '[?isDefault].id' -o tsv`
+AZURE_TENANT_ID=`az account list --query '[?isDefault].tenantId' -o tsv`
+AZURE_CLIENT_SECRET=`az ad sp create-for-rbac --name "velero" --role "Contributor" --query 'password' -o tsv`
+AZURE_CLIENT_ID=`az ad sp list --display-name "velero" --query '[0].appId' -o tsv`
+```
+
+### Dump Azure Credentials
+
+Dump secret credentials to file that we'll feed into an *Azure Credentials* OpenShift Secret.
+
+```bash
+cat << EOF  > ./credentials-velero
+AZURE_SUBSCRIPTION_ID=${AZURE_SUBSCRIPTION_ID}
+AZURE_TENANT_ID=${AZURE_TENANT_ID}
+AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+AZURE_RESOURCE_GROUP=${AZURE_RESOURCE_GROUP}
+AZURE_CLOUD_NAME=AzurePublicCloud
+EOF
+```
+
+### Creating a Replication Repository from CAM UI
+
+Keep track of the `credentials-velero` file you've just created, and refer to *ReplicationRepository.md*.
+
+### Creating a Replication Repository from OpenShift CLI
+
+If you'd prefer to create your Replication Repository from the OpenShift CLI, follow the directions below.
+
+```bash
+# Load b64 encoded contents of credentials into migstorage-azure-creds secret
+
+cat << EOF  > ./mig-storage-creds-azure.yaml
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: openshift-migration
+  name: migstorage-azure-creds
+type: Opaque
+data:
+  azure-credentials: $(base64 credentials-velero -w 0)
+
+EOF
+
+oc create -f mig-storage-creds-azure.yaml
+```
+
+```bash
+# Create migstorage configured against Azure Blob Storage
+
+cat << EOF  > ./mig-storage-azure.yaml
+---
+apiVersion: migration.openshift.io/v1alpha1
+kind: MigStorage
+metadata:
+  labels:
+    controller-tools.k8s.io: "1.0"
+  name: migstorage-sample
+  namespace: openshift-migration
+spec:
+  backupStorageProvider: azure
+  volumeSnapshotProvider: azure
+
+  backupStorageConfig:
+    azureStorageAccount: ${AZURE_STORAGE_ACCOUNT_ID}
+    azureStorageContainer: ${BLOB_CONTAINER}
+    azureResourceGroup: ${AZURE_RESOURCE_GROUP}
+
+    credsSecretRef:
+      namespace: openshift-migration
+      name: migstorage-azure-creds
+
+  volumeSnapshotConfig:
+    azureResourceGroup: ${AZURE_RESOURCE_GROUP}
+    azureApiTimeout: 30s
+    credsSecretRef:
+      namespace: openshift-migration
+      name: migstorage-creds
+
+EOF
+
+oc create -f mig-storage-azure.yaml
+```
+
 
 ---
 [Home](./README.md)
