@@ -17,6 +17,10 @@ eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiw
     * **Cluster name**: May contain lower-case letters (a-z) and numbers (0-9). Must not contain spaces or international characters.
     * **Url**: URL of the cluster’s API server, for example, https://<master1.example.com>:8443.
     * **Service account token**: String that you obtained from the source cluster.
+1. (**Optional**) If you are adding a cluster which is hosted on Microsoft Azure, under **Is this an azure cluster?** check the box **Azure cluster**
+    * Fill in the correct **Azure resource group**
+    * ![Azure Cluster](./screenshots/cluster/azure.png)
+
 1. Click **Add cluster**.
 
 The cluster appears in the Clusters section.
