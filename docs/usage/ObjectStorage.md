@@ -223,11 +223,131 @@ aws s3api create-bucket \
      }
     ```
 
+---
 
 ## GCP Object Storage
 
 This section covers setup of Object Storage with [*GCP Storage Buckets*](https://cloud.google.com/storage/docs/creating-buckets).
 
+### Create GCP Storage Bucket
+
+```bash
+# Set name of GCP Bucket
+BUCKET=<BUCKET_NAME_HERE>
+
+# Use the gsutil CLI to create the Storage Bucket
+gsutil mb gs://$BUCKET/
+```
+
+### Create a GCP Service Account for Velero to assume
+
+```bash
+# Set PROJECT_ID var to the currently active project
+PROJECT_ID=$(gcloud config get-value project)
+
+# Create a GCP Service Account
+gcloud iam service-accounts create velero \
+    --display-name "Velero Storage"
+
+# Set SERVICE_ACCOUNT_EMAIL to the email associated with the new Service Account
+SERVICE_ACCOUNT_EMAIL=$(gcloud iam service-accounts list \
+  --filter="displayName:Velero Storage" \
+  --format 'value(email)')
+
+
+# Grant necessary permissions to the new Service Account with the gsutil CLI
+ROLE_PERMISSIONS=(
+    compute.disks.get
+    compute.disks.create
+    compute.disks.createSnapshot
+    compute.snapshots.get
+    compute.snapshots.create
+    compute.snapshots.useReadOnly
+    compute.snapshots.delete
+    compute.zones.get
+)
+
+gcloud iam roles create velero.server \
+    --project $PROJECT_ID \
+    --title "Velero Server" \
+    --permissions "$(IFS=","; echo "${ROLE_PERMISSIONS[*]}")"    
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+    --member serviceAccount:$SERVICE_ACCOUNT_EMAIL \
+    --role projects/$PROJECT_ID/roles/velero.server
+
+gsutil iam ch serviceAccount:$SERVICE_ACCOUNT_EMAIL:objectAdmin gs://${BUCKET}
+```
+
+### Dump GCP Service Account credentials
+
+```bash
+# Dump Service Account credentials to `credentials-velero` in the current directory
+gcloud iam service-accounts keys create credentials-velero \
+    --iam-account $SERVICE_ACCOUNT_EMAIL
+```
+
+### Creating a GCP Replication Repository from CAM UI
+
+Keep track of the `credentials-velero` file you've just created, and refer to *ReplicationRepository.md*.
+
+### Creating a GCP Replication Repository from OpenShift CLI
+
+If you'd prefer to create your Replication Repository from the OpenShift CLI, follow the directions below.
+
+```bash
+# Load b64 encoded contents of credentials into migstorage-gcp-creds secret
+
+cat << EOF  > ./mig-storage-creds-gcp.yaml
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: openshift-migration
+  name: migstorage-gcp-creds
+type: Opaque
+data:
+  gcp-credentials: $(base64 credentials-velero -w 0)
+
+EOF
+
+oc create -f mig-storage-creds-gcp.yaml
+```
+
+```bash
+# Create migstorage configured against GCP Storage Bucket
+
+cat << EOF  > ./mig-storage-gcp.yaml
+---
+apiVersion: migration.openshift.io/v1alpha1
+kind: MigStorage
+metadata:
+  labels:
+    controller-tools.k8s.io: "1.0"
+  name: migstorage-sample
+  namespace: openshift-migration
+spec:
+  backupStorageProvider: gcp
+  volumeSnapshotProvider: gcp
+
+  backupStorageConfig:
+    gcpBucket: ${BUCKET}
+
+    credsSecretRef:
+      namespace: openshift-migration
+      name: migstorage-gcp-creds
+
+  volumeSnapshotConfig:
+    credsSecretRef:
+      namespace: openshift-migration
+      name: migstorage-gcp-creds
+
+EOF
+
+oc create -f mig-storage-gcp.yaml
+```
+
+---
 
 ## Azure Object Storage
 
@@ -290,7 +410,7 @@ AZURE_CLIENT_ID=`az ad sp list --display-name "velero" --query '[0].appId' -o ts
 
 ### Dump Azure Credentials
 
-Dump secret credentials to file that we'll feed into an *Azure Credentials* OpenShift Secret.
+Dump secret credentials `credentials-velero`. We'll this into an *Azure Credentials* OpenShift Secret in the next.
 
 ```bash
 cat << EOF  > ./credentials-velero
@@ -303,11 +423,11 @@ AZURE_CLOUD_NAME=AzurePublicCloud
 EOF
 ```
 
-### Creating a Replication Repository from CAM UI
+### Creating an Azure Replication Repository from CAM UI
 
 Keep track of the `credentials-velero` file you've just created, and refer to *ReplicationRepository.md*.
 
-### Creating a Replication Repository from OpenShift CLI
+### Creating an Azure Replication Repository from OpenShift CLI
 
 If you'd prefer to create your Replication Repository from the OpenShift CLI, follow the directions below.
 
@@ -360,7 +480,7 @@ spec:
     azureApiTimeout: 30s
     credsSecretRef:
       namespace: openshift-migration
-      name: migstorage-creds
+      name: migstorage-azure-creds
 
 EOF
 
