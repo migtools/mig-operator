@@ -1,12 +1,12 @@
 ## Object Storage Setup
 
-CAM components use object storage as temporary scratch space when performing migrations. This document covers the process of setting up compatible Object Storage to use with CAM on the provider of your choice. The Object Storage credentials obtained from this document are needed for *configuring CAM Replication Repositories*.
+CAM components use object storage as temporary scratch space when performing migrations. This document covers the process of setting up compatible Object Storage to use with CAM on a cloud provider of your choice. The Object Storage credentials obtained from this document are needed for *configuring CAM Replication Repositories*.
 
 
 ### Supported Providers
 
 
-- **S3 Bucket** *(Any storage medium presenting an `S3 like` interface)*
+- **S3 Bucket** *(Any storage medium that exposes an `S3 compatible` interface)*
 - **GCP Storage Bucket**
 - **Azure Storage Container**
 
@@ -23,7 +23,7 @@ This section covers setup of S3 Object Storage on these providers:
 
 ### S3 Object Storage Setup with NooBaa
 
-NooBaa can run on an OpenShift cluster to provide an S3 compatible store for migration scratch space. We recommend loading NooBaa onto the destination cluster. NooBaa is especially useful when clusters don't have network connectivity to AWS S3.
+NooBaa can run on an OpenShift cluster to provide an S3 compatible endpoint for migration scratch space. We recommend loading NooBaa onto the destination cluster. NooBaa is especially useful when clusters don't have network connectivity to AWS S3.
 
 1. Download the noobaa v1.1.0 CLI from https://github.com/noobaa-operator/releases. 
 2. Ensure you have available PVs with capacities of 10 Gi, 50Gi. The NooBaa installer will create PVCs to consume these PVs.
