@@ -14,6 +14,22 @@ daemon's insecure registries and reloaded your docker daemon.
 1. Run `mirror_downstream_mig_images.sh` to mirror the images. This script will also create the
 rhcam and openshift-migration namespaces and allow pulling rhcam images from openshift-migration.
 
+## Disabling the default OperatorHub
+
+In order to be sure you are testing the newest images and using the most
+recently published operator metadata, you should disable the cluster's
+OperatorHub sources that come turned on by default. This can be done by
+running:
+
+`oc edit operatorhub cluster`
+
+Then edit the `spec` to read:
+
+```
+spec:
+  disableAllDefaultSources: true
+```
+
 ## Configuring the Operator Source
 1. `cp marketplace-secret.operatorsource.yml.template marketplace-secret.operatorsource.yml`
 1. Replace `${QUAY_TOKEN}` with your Quay token in `marketplace-secret.operatorsource.yml`
