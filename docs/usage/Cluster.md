@@ -18,7 +18,23 @@ eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiw
     * **Url**: URL of the cluster’s API server, for example, https://<master1.example.com>:8443.
     * **Service account token**: String that you obtained from the source cluster.
 1. (**Optional**) If you are adding a cluster which is hosted on Microsoft Azure, under **Is this an azure cluster?** check the box **Azure cluster**
-    * Fill in the correct **Azure resource group**
+    * Fill in the correct **Azure resource group**. When an OpenShift Cluster is created on Microsoft Azure, an Azure Resource Group is created to contain all resources associated with the cluster. You can display all resource groups with `az group list` from the Azure CLI. ResourceGroups associated with OpenShift clusters will be tagged like so, where `sample-rg-name` is the value the user would extract and supply to the UI:
+```
+{
+   "id": "/subscriptions/...//resourceGroups/sample-rg-name",
+    "location": "centralus",
+    "name": "...",
+    "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": {
+    "kubernetes.io_cluster.sample-ld57c": "owned",
+    "openshift_creationDate": "2019-10-25T23:28:57.988208+00:00"
+  },
+  "type": "Microsoft.Resources/resourceGroups"
+},
+```
+This information is also available from the [Azure Portal](https://portal.azure.com) in the **Resource groups** blade.
     * ![Azure Cluster](./screenshots/cluster/azure.png)
 
 1. Click **Add cluster**.
