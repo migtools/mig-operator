@@ -14,11 +14,12 @@ eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiw
 1. Log in to the CAM web console.
 1. In the **Clusters** section, click **Add cluster**.
 1. Fill in the following fields:
-  * **Cluster name**: May contain lower-case letters (a-z) and numbers (0-9). Must not contain spaces or international characters.
-  * **Url**: URL of the cluster’s API server, for example, https://<master1.example.com>:8443.
-  * **Service account token**: String that you obtained from the source cluster.
+    * **Cluster name**: May contain lower-case letters (a-z) and numbers (0-9). Must not contain spaces or international characters.
+    * **Url**: URL of the cluster’s API server, for example, https://<master1.example.com>:8443.
+    * **Service account token**: String that you obtained from the source cluster.
 1. Click **Add cluster**.
-    The cluster appears in the Clusters section.
+
+The cluster appears in the Clusters section.
 
 ---
 [Home](./README.md)
