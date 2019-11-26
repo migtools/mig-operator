@@ -289,7 +289,7 @@ gcloud iam service-accounts keys create credentials-velero \
 
 ### Creating a GCP Replication Repository from CAM UI
 
-Keep track of the `credentials-velero` file you've just created, and refer to *ReplicationRepository.md*.
+Keep track of the `credentials-velero` file you've just created, and refer to [ReplicationRepository.md](./ReplicationRepository.md).
 
 ### Creating a GCP Replication Repository from OpenShift CLI
 
@@ -425,7 +425,7 @@ EOF
 
 ### Creating an Azure Replication Repository from CAM UI
 
-Keep track of the `credentials-velero` file you've just created, and refer to *ReplicationRepository.md*.
+Keep track of the `credentials-velero` file you've just created, and refer to [ReplicationRepository.md](./ReplicationRepository.md)..
 
 ### Creating an Azure Replication Repository from OpenShift CLI
 

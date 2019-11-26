@@ -26,18 +26,18 @@ After clicking the "Add" Replication Repository button in the CAM UI, you'll fir
 For AWS, the following configuration options are exposed:
 
 - **Replication repository name**
-  - *Todo: description*
+  - Name for this replication repository in the CAM UI
 - **S3 bucket name**
-  - *Todo: description*
+  - Name of the S3 bucket available at the S3 endpoint provided that should be used for storage
 - **S3 bucket region**
-  - *Todo: description*
+  - Region of S3 bucket, if applicable. Required for AWS S3. Self-hosted S3 may not have a region
 - **S3 endpoint**
-  - *Todo: description*
+  - Custom S3 endpoint. Required for non AWS S3 stores
 - **S3 provider access key**
-  - *Todo: description*
+  - Access Key credential for authenticating access to S3 bucket 
 - **S3 provider secret access key**
-  - *Todo: description*
-  - Refer to ObjectStorage.md for details on obtaining this value.
+  - Secret Key credential for authenticating access to S3 bucket
+  - Refer to [ObjectStorage.md](./ObjectStorage.md) for details on obtaining this value
 
 ## GCP Configuration
 
@@ -46,12 +46,12 @@ For AWS, the following configuration options are exposed:
 For GCP, the following configuration options are exposed:
 
 - **Repository name**
-  - *Todo: description*
+  - Name for this replication repository in the CAM UI
 - **GCP bucket name**
-  - *Todo: description*
+  - Name of GCP bucket that should be used for storage
 - **GCP credential JSON blob**
-  - *Todo: description*
-  - Refer to ObjectStorage.md for details on obtaining this value.
+  - JSON blob for authenticating access to GCP bucket
+  - Refer to [ObjectStorage.md](./ObjectStorage.md) for details on obtaining this value
 
 ## Azure Configuration
 
@@ -60,11 +60,11 @@ For GCP, the following configuration options are exposed:
 For Azure, the following configuration options are exposed:
 
 - **Repository name**
-  - *Todo: description*
+  - Name for this replication repository in the CAM UI
 - **Azure resource group**
-  - *Todo: description*
+  - Resource Group of Azure Blob Storage Container to be used
 - **Azure storage account name**
-  - *Todo: description*
+  - Storage Account name containing Azure Blob Storage Container
 - **Azure credentials - INI file contents**
-  - *Todo: description*
-  - Refer to ObjectStorage.md for details on obtaining this value.
+  - INI blob for authenticating access to Azure Blob Storage Container
+  - Refer to [ObjectStorage.md](./ObjectStorage.md) for details on obtaining this value
