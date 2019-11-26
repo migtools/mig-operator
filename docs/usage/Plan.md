@@ -22,6 +22,9 @@ The CAM web console must contain the following:
 1. Click **Next**.
 1. Select a **Storage class** for the PVs.
     * You can change the storage class during migration, for example, from Red Hat Gluster Storage or NFS storage to Red Hat Ceph Storage.
+1. (**Optional**) Select **snapshot** or **filesystem** for the PVs
+    * Select **snapshot** only if you have read the [snapshot documentation](./Snapshot.md)
+    * ![Snapshot Selection](./screenshots/plan/snapshot.png)
 1. Click **Next**.
 1. Click **Close**.
 
