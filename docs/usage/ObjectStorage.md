@@ -25,7 +25,7 @@ This section covers setup of S3 Object Storage on these providers:
 
 NooBaa can run on an OpenShift cluster to provide an S3 compatible endpoint for migration scratch space. We recommend loading NooBaa onto the destination cluster. NooBaa is especially useful when clusters don't have network connectivity to AWS S3.
 
-1. Download the noobaa v1.1.0 CLI from https://github.com/noobaa-operator/releases. 
+1. Download the noobaa v1.1.0 CLI from https://github.com/noobaa/noobaa-operator/releases. 
 2. Ensure you have available PVs with capacities of 10 Gi, 50Gi. The NooBaa installer will create PVCs to consume these PVs.
 ```
 # NooBaa PV usage requirements
