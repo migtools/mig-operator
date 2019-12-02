@@ -8,7 +8,7 @@ The CAM web console must contain the following:
 * Source cluster
 * Target cluster, which is added automatically during the CAM tool installation
 * Both source and target cluster must be running on the same cloud provider and in the same region
-  * For Azure clusters, ensure that the Resource Group is unique to each cluster. The cluster should have been provisioned into a unique resource group. For more information see step #4 [here](https://github.com/fusor/mig-operator/blob/master/docs/usage/Cluster.md#procedure)
+  * For each Azure cluster, provide the unique Resource Group that the cluster was provisioned into. For more information see  [Cluster.md](https://github.com/fusor/mig-operator/blob/master/docs/usage/Cluster.md#procedure)
 * Replication repository
   * S3
     * [Configure the S3 Replication Repository](https://github.com/fusor/mig-operator/blob/master/docs/usage/ObjectStorage.md#s3-object-storage)
