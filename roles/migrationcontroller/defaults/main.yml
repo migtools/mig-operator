@@ -46,11 +46,12 @@ velero_restic_restore_helper_version: "{{ snapshot_tag | default(lookup( 'env', 
 velero_state: absent
 
 # MCG integration
+noobaa: true
 noobaa_expected_crds:
   - noobaas.noobaa.io
   - bucketclasses.noobaa.io
   - backingstores.noobaa.io
 noobaa_admin_secret: noobaa-admin
 noobaa_system_namespace: "{{ mig_namespace }}" 
-noobaa_mig_bucket_name: cam-storage
+noobaa_mig_bucket_name: mig-storage
 noobaa_s3_endpoint_proto: http
