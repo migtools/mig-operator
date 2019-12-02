@@ -33,6 +33,8 @@ restic_pv_host_path: /var/lib/kubelet/pods
 restic_timeout: 1h
 ui_state: absent
 velero_aws_secret_name: cloud-credentials
+velero_gcp_secret_name: gcp-cloud-credentials
+velero_azure_secret_name: azure-cloud-credentials
 velero_debug: false
 velero_image: "{{ registry }}/{{ project }}/{{ velero_repo }}"
 velero_repo: "{{ lookup( 'env', 'VELERO_REPO') }}"
