@@ -494,5 +494,5 @@
         phase: Failed
     when: olm_managed and not(reconciled)
 
-- when: migration_controller
+- when: migration_controller|bool and noobaa|bool
   import_tasks: mcg.yml
