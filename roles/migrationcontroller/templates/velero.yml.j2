@@ -48,6 +48,10 @@ spec:
           volumeMounts:
             - name: {{ velero_aws_secret_name }}
               mountPath: /credentials
+            - name: {{ velero_gcp_secret_name }}
+              mountPath: /credentials-gcp
+            - name: {{ velero_azure_secret_name }}
+              mountPath: /credentials-azure
             - name: plugins
               mountPath: /plugins
             - name: scratch
@@ -56,9 +60,9 @@ spec:
             - name: AWS_SHARED_CREDENTIALS_FILE
               value: /credentials/cloud
             - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: /credentials/cloud
+              value: /credentials-gcp/cloud
             - name: AZURE_CREDENTIALS_FILE
-              value: /credentials/cloud
+              value: /credentials-azure/cloud
             - name: VELERO_NAMESPACE
               value: {{ mig_namespace }}
             - name: VELERO_SCRATCH_DIR
@@ -67,6 +71,12 @@ spec:
         - name: {{ velero_aws_secret_name }}
           secret:
             secretName: {{ velero_aws_secret_name }}
+        - name: {{ velero_gcp_secret_name }}
+          secret:
+            secretName: {{ velero_gcp_secret_name }}
+        - name: {{ velero_azure_secret_name }}
+          secret:
+            secretName: {{ velero_azure_secret_name }}
         - name: plugins
           emptyDir: {}
         - name: scratch
@@ -103,6 +113,12 @@ spec:
         - name: {{ velero_aws_secret_name }}
           secret:
             secretName: {{ velero_aws_secret_name }}
+        - name: {{ velero_gcp_secret_name }}
+          secret:
+            secretName: {{ velero_gcp_secret_name }}
+        - name: {{ velero_azure_secret_name }}
+          secret:
+            secretName: {{ velero_azure_secret_name }}
         - name: host-pods
           hostPath:
             path: {{ restic_pv_host_path }}
@@ -122,6 +138,10 @@ spec:
           volumeMounts:
             - name: {{ velero_aws_secret_name }}
               mountPath: /credentials
+            - name: {{ velero_gcp_secret_name }}
+              mountPath: /credentials-gcp
+            - name: {{ velero_azure_secret_name }}
+              mountPath: /credentials-azure
             - name: host-pods
               mountPath: /host_pods
               mountPropagation: HostToContainer
@@ -139,9 +159,9 @@ spec:
             - name: AWS_SHARED_CREDENTIALS_FILE
               value: /credentials/cloud
             - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: /credentials/cloud
+              value: /credentials-gcp/cloud
             - name: AZURE_CREDENTIALS_FILE
-              value: /credentials/cloud
+              value: /credentials-azure/cloud
             - name: VELERO_SCRATCH_DIR
               value: /scratch
 
