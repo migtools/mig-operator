@@ -127,7 +127,7 @@
       when: noobaa_s3_endpoint_proto == 'https'
   
   # NooBaa Bucket + migstorage creation
-  - when: noobaa_system_ready|bool and migration_controller|bool
+  - when: noobaa_system_ready|bool
     environment:
       AWS_ACCESS_KEY_ID: "{{ noobaa_s3_access_key_id }}"
       AWS_SECRET_ACCESS_KEY: "{{ noobaa_s3_secret_access_key }}"
@@ -149,3 +149,4 @@
         definition: "{{ lookup('template', 'mig_storage.yml.j2') }}"
       vars:
         noobaa_s3_url: "{{ noobaa_s3_endpoint_proto }}://{{ noobaa_endpoint }}/"
+      when: migration_controller|bool
