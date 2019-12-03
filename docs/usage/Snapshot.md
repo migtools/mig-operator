@@ -7,13 +7,17 @@ configuration information required for snapshot support.
 The user has the ability to select **snapshot** or **filesystem** as the **Copy
 Method** of a selected Persistent Volume.
 
-**snapshot** uses the cloud-provider native snapshot API to take snapshots of
-the Persistent Volume. This only works for cloud provider Persistent Volumes
-and it is required that both the source and target clusters are in the same
-region. Please see the **Prerequisites** section below for more information.
+**Snapshot** Copy 
+ - Uses cloud-provider native snapshot API to snapshot the underlying PV disk
+ - Fast and robust, but requires a compatible OpenShift cluster pair
+   - Requires PVs provisioned by public cloud-providers (AWS, GCP, Azure)
+   - Requires source and target clusters on the same cloud-provider + region
+ - See the **Prerequisites** section below for more information
 
-**filesystem** uses Restic to take a copy of the filesystem and is completely
-independent of the type of Persistent Volume being copied.
+**Filesystem** Copy 
+ - Uses Restic to take a copy of the PV filesystem
+ - Works independently of the backing storage type for PV being copied
+
 
 **snapshot** will generally provide the user with a faster copy, but is more
 restrictive so be sure to read the below to find out if **snapshot** is right
