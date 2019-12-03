@@ -46,7 +46,7 @@ velero_restic_restore_helper_version: "{{ snapshot_tag | default(lookup( 'env', 
 velero_state: absent
 
 # MCG integration
-noobaa: true
+noobaa: false
 noobaa_expected_crds:
   - noobaas.noobaa.io
   - bucketclasses.noobaa.io
