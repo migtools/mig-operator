@@ -31,7 +31,7 @@ metadata:
               "mig_pv_limit": "100",
               "mig_pod_limit": "100",
               "mig_namespace_limit": "10",
-              "noobaa": false
+              "noobaa": true
             }
         },
         {
