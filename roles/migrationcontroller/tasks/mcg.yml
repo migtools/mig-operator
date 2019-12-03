@@ -1,101 +1,149 @@
-- name: Checking if NooBaa CRDs exist
-  k8s_facts:
-    api_version: "apiextensions.k8s.io/v1beta1"
-    kind: CustomResourceDefinition
-    name: "{{ item }}"
-  loop: "{{ noobaa_expected_crds }}"
-  register: noobaa_found_crds
-
-- set_fact: 
-    noobaa_crds_found: "{{ noobaa_found_crds.results|length == noobaa_expected_crds|length }}"
-
-# Discover existing NooBaa System or create new 
-- when: noobaa_crds_found|bool
-  block: 
-  - name: Discover existing NooBaa system
-    k8s_facts: 
-      api_version: "noobaa.io/v1alpha1"
-      kind: NooBaa
-    register: noobaa_system
-
-  - set_fact:
-      noobaa_system_found: "{{ noobaa_system.resources|length > 0 }}"
-
-  - set_fact:
-      noobaa_system_namespace: "{{ mig_namespace if not noobaa_system_found else noobaa_system.resources[0].metadata.namespace }}"
-
-  - name: Creating a new NooBaa system
-    when: not noobaa_system_found|bool
-    k8s:
-     state: present
-     definition: "{{ lookup('template', 'noobaa_system.yml.j2') }}"
-
-# discover routes and secrets
-- block:
-  - name: Discovering NooBaa S3 endpoint
-    k8s_facts:
-      api_version: v1
-      kind: Service
-      name: s3
-      namespace: "{{ noobaa_system_namespace }}"
-    register: noobaa_s3_endpoint
-    retries: 10
-    delay: 3
-    until: noobaa_s3_endpoint.resources is defined and 
-           noobaa_s3_endpoint.resources[0] is defined and 
-           noobaa_s3_endpoint.resources[0].status.loadBalancer is defined and
-           noobaa_s3_endpoint.resources[0].status.loadBalancer.ingress is defined
-
-  - set_fact:
-      noobaa_endpoint: "{{ noobaa_s3_endpoint.resources[0].status.loadBalancer.ingress[0].hostname }}"
-
-  - name: Discovering NooBaa S3 Credentials
-    k8s_facts:
-      api_version: v1
-      kind: Secret
-      name: "{{ noobaa_admin_secret }}"
-      namespace: "{{ noobaa_system_namespace }}"
-    register: noobaa_admin_secret
-    retries: 20
-    delay: 3
-    until: noobaa_admin_secret.resources|length > 0
-
-  - set_fact:
-      noobaa_s3_access_key_id: "{{ noobaa_admin_secret.resources[0].data.AWS_ACCESS_KEY_ID | b64decode }}"
-      noobaa_s3_secret_access_key: "{{ noobaa_admin_secret.resources[0].data.AWS_SECRET_ACCESS_KEY | b64decode }}"
-
-  - name: Discovering NooBaa CA Bundle
-    shell: "{{ item }}"
-    loop:
-    - openssl s_client -showcerts -verify 5 -connect {{ noobaa_endpoint }}:443 < /dev/null | awk '/BEGIN/,/END/{ if(/BEGIN/){a++}; out="cert"a".crt"; print >out}' && for cert in *.crt; do newname=$(openssl x509 -noout -subject -in $cert | sed -n 's/^.*CN=\(.*\)$/\1/; s/[ ,.*]/_/g; s/__/_/g; s/^_//g;p').pem; mv $cert $newname; done;
-    - cat *.pem
-    - rm *.pem
-    register: noobaa_ca_bundle_raw
-    when: noobaa_s3_endpoint_proto == 'https'
-
-  - set_fact:
-      noobaa_ca_bundle: "{{ noobaa_ca_bundle_raw.results[1].stdout }}"
-    when: noobaa_s3_endpoint_proto == 'https'
-
-# NooBaa Bucket + migstorage creation
-- environment:
-    AWS_ACCESS_KEY_ID: "{{ noobaa_s3_access_key_id }}"
-    AWS_SECRET_ACCESS_KEY: "{{ noobaa_s3_secret_access_key }}"
+- when: not noobaa|bool
   block:
-  - name: Creating bucket for migstorage
-    aws_s3: 
-      bucket: "{{ noobaa_mig_bucket_name }}"
-      mode: create
-      s3_url: "{{ noobaa_s3_endpoint_proto }}://{{ noobaa_endpoint }}/"
-      validate_certs: false
-    register: bucket_status
-    retries: 20
-    delay: 3
-    until: not bucket_status.failed 
-
-  - name: Creating NooBaa backed migstorage 
+  - name: Deleting NooBaa migstorage
     k8s:
-      state: present
+      state: absent
       definition: "{{ lookup('template', 'mig_storage.yml.j2') }}"
     vars:
-      noobaa_s3_url: "{{ noobaa_s3_endpoint_proto }}://{{ noobaa_endpoint }}/"
+      noobaa_s3_url: ""
+  
+  - name: Discovering NooBaa Systems owned by Migration Operator
+    k8s_facts:
+      api_version: "noobaa.io/v1alpha1"
+      namespace: "{{ mig_namespace }}"
+      kind: NooBaa
+      label_selectors:
+      - app=openshift-migration-noobaa
+    register: mig_noobaa_system
+  
+  - name: Deleting NooBaa Systems owned by Migration Operator
+    k8s:
+      api_version: "noobaa.io/v1alpha1"
+      name: "{{ item.metadata.name }}"
+      state: absent
+      kind: NooBaa
+      namespace: "{{ mig_namespace }}"
+    loop: "{{ mig_noobaa_system.resources }}"
+
+- when: noobaa|bool
+  block:
+  - name: Checking if NooBaa CRDs exist
+    k8s_facts:
+      api_version: "apiextensions.k8s.io/v1beta1"
+      kind: CustomResourceDefinition
+      name: "{{ item }}"
+    loop: "{{ noobaa_expected_crds }}"
+    register: noobaa_found_crds
+  
+  - set_fact: 
+      noobaa_crds_found: "{{ noobaa_found_crds.results|length >= noobaa_expected_crds|length }}"
+  
+  # Discover existing NooBaa System or create new 
+  - when: noobaa_crds_found|bool
+    block: 
+    - name: Discover existing NooBaa system
+      k8s_facts: 
+        api_version: "noobaa.io/v1alpha1"
+        kind: NooBaa
+      register: noobaa_system
+  
+    - set_fact:
+        noobaa_system_found: "{{ noobaa_system.resources|length > 0 }}"
+  
+    - set_fact:
+        noobaa_system_namespace: "{{ mig_namespace if not noobaa_system_found else noobaa_system.resources[0].metadata.namespace }}"
+  
+    - name: Creating a new NooBaa system
+      when: not noobaa_system_found|bool
+      k8s:
+        state: present
+        definition: "{{ lookup('template', 'noobaa_system.yml.j2') }}"
+    
+    - name: Waiting for NooBaa system to become ready
+      k8s_facts: 
+        api_version: "noobaa.io/v1alpha1"
+        kind: NooBaa
+        namespace: "{{ noobaa_system_namespace }}"
+      register: noobaa_system_status
+      retries: 20
+      until: noobaa_system_status.resources|length > 0 and
+             noobaa_system_status.resources[0].status is defined and
+             noobaa_system_status.resources[0].status.phase == 'Ready' 
+      ignore_errors: true
+  
+    - set_fact: 
+        noobaa_system_ready: "{{ False if noobaa_system_status.resources|length == 0 or 
+                            noobaa_system_status.resources[0].status is not defined or
+                            noobaa_system_status.resources[0].status.phase != 'Ready' else True }}"
+  
+  # discover routes and secrets
+  - when: noobaa_system_ready|bool
+    block:
+    - name: Discovering NooBaa S3 endpoint
+      k8s_facts:
+        api_version: v1
+        kind: Service
+        name: s3
+        namespace: "{{ noobaa_system_namespace }}"
+      register: noobaa_s3_endpoint
+      retries: 10
+      delay: 3
+      until: noobaa_s3_endpoint.resources is defined and 
+             noobaa_s3_endpoint.resources[0] is defined and 
+             noobaa_s3_endpoint.resources[0].status.loadBalancer is defined and
+             noobaa_s3_endpoint.resources[0].status.loadBalancer.ingress is defined
+  
+    - set_fact:
+        noobaa_endpoint: "{{ noobaa_s3_endpoint.resources[0].status.loadBalancer.ingress[0].hostname }}"
+  
+    - name: Discovering NooBaa S3 Credentials
+      k8s_facts:
+        api_version: v1
+        kind: Secret
+        name: "{{ noobaa_admin_secret }}"
+        namespace: "{{ noobaa_system_namespace }}"
+      register: noobaa_admin_secret
+      retries: 20
+      delay: 3
+      until: noobaa_admin_secret.resources|length > 0
+  
+    - set_fact:
+        noobaa_s3_access_key_id: "{{ noobaa_admin_secret.resources[0].data.AWS_ACCESS_KEY_ID | b64decode }}"
+        noobaa_s3_secret_access_key: "{{ noobaa_admin_secret.resources[0].data.AWS_SECRET_ACCESS_KEY | b64decode }}"
+  
+    - name: Discovering NooBaa CA Bundle
+      shell: "{{ item }}"
+      loop:
+      - openssl s_client -showcerts -verify 5 -connect {{ noobaa_endpoint }}:443 < /dev/null | awk '/BEGIN/,/END/{ if(/BEGIN/){a++}; out="cert"a".crt"; print >out}' && for cert in *.crt; do newname=$(openssl x509 -noout -subject -in $cert | sed -n 's/^.*CN=\(.*\)$/\1/; s/[ ,.*]/_/g; s/__/_/g; s/^_//g;p').pem; mv $cert $newname; done;
+      - cat *.pem
+      - rm *.pem
+      register: noobaa_ca_bundle_raw
+      when: noobaa_s3_endpoint_proto == 'https'
+  
+    - set_fact:
+        noobaa_ca_bundle: "{{ noobaa_ca_bundle_raw.results[1].stdout }}"
+      when: noobaa_s3_endpoint_proto == 'https'
+  
+  # NooBaa Bucket + migstorage creation
+  - when: noobaa_system_ready|bool and migration_controller|bool
+    environment:
+      AWS_ACCESS_KEY_ID: "{{ noobaa_s3_access_key_id }}"
+      AWS_SECRET_ACCESS_KEY: "{{ noobaa_s3_secret_access_key }}"
+    block:
+    - name: Creating bucket for migstorage
+      aws_s3: 
+        bucket: "{{ noobaa_mig_bucket_name }}"
+        mode: create
+        s3_url: "{{ noobaa_s3_endpoint_proto }}://{{ noobaa_endpoint }}/"
+        validate_certs: false
+      register: bucket_status
+      retries: 20
+      delay: 3
+      until: not bucket_status.failed 
+  
+    - name: Creating NooBaa backed migstorage 
+      k8s:
+        state: present
+        definition: "{{ lookup('template', 'mig_storage.yml.j2') }}"
+      vars:
+        noobaa_s3_url: "{{ noobaa_s3_endpoint_proto }}://{{ noobaa_endpoint }}/"
