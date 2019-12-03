@@ -9,11 +9,14 @@
         state: "present"
         definition: "{{ lookup('template', 'migration-controller.yml.j2') }}"
 
-    - k8s_status:
+    - name: Clean conditions and set Reconciling state
+      k8s_status:
         api_version: migration.openshift.io/v1alpha1
         kind: MigrationController
         name: "{{ meta.name }}"
         namespace: "{{ meta.namespace }}"
+        force: true
+        conditions: []
         status:
           phase: Reconciling
 
@@ -284,8 +287,9 @@
           name: "cluster"
         register: apiserver
 
-      - when: apiserver.resources[0].spec.additionalCORSAllowedOrigins is not defined or
-              mig_ui_cors_url not in apiserver.resources[0].spec.additionalCORSAllowedOrigins
+      - when: not deprecated_cors_configuration and (
+              apiserver.resources[0].spec.additionalCORSAllowedOrigins is not defined or
+              mig_ui_cors_url not in apiserver.resources[0].spec.additionalCORSAllowedOrigins)
         block:
         - name: Write apiserver config definition for modification
           copy:
@@ -334,6 +338,38 @@
           k8s:
             state: present
             definition: "{{ lookup('file', '/tmp/kubeapiserver.yaml') | from_yaml }}"
+
+      - name: Assert kubeapiserver setup matches the deprecated_cors_configuration setting
+        k8s_status:
+          api_version: migration.openshift.io/v1alpha1
+          kind: MigrationController
+          name: "{{ meta.name }}"
+          namespace: "{{ meta.namespace }}"
+          conditions:
+            - type: Critical
+              status: True
+              reason: "DepricatedCorsMisConfigured"
+              message: "Unexpected CORS configuration for apiserver"
+        when: olm_managed and
+              deprecated_cors_configuration and
+              apiserver.resources[0].spec.additionalCORSAllowedOrigins is defined and
+              mig_ui_cors_url in apiserver.resources[0].spec.additionalCORSAllowedOrigins
+
+      - name: Assert apiserver setup matches the deprecated_cors_configuration setting
+        k8s_status:
+          api_version: migration.openshift.io/v1alpha1
+          kind: MigrationController
+          name: "{{ meta.name }}"
+          namespace: "{{ meta.namespace }}"
+          conditions:
+            - type: Critical
+              status: True
+              reason: "CorsMisConfigured"
+              message: "Unexpected CORS configuration for kubeapiserver"
+        when: olm_managed and
+              not deprecated_cors_configuration and
+              kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is defined and
+              mig_ui_cors_url in kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins
 
       - name: Retrieve authentication operator definition
         k8s_facts:
@@ -444,7 +480,7 @@
       state: "present"
       definition: "{{ lookup('template', 'mig_host_cluster.yml.j2') }}"
 
-  - when: not(migration_controller)
+  - when: not migration_controller
     block:
     - name: Find Controller ReplicaSets
       k8s_facts:
@@ -462,7 +498,7 @@
         namespace: "{{ mig_namespace }}"
       with_items: "{{ controller_replicasets.resources }}"
 
-  - when: not(migration_ui)
+  - when: not migration_ui
     block:
     - name: Find UI ReplicaSets
       k8s_facts:
@@ -480,7 +516,7 @@
         namespace: "{{ mig_namespace }}"
       with_items: "{{ ui_replicasets.resources }}"
 
-  - when: not(migration_velero)
+  - when: not migration_velero
     block:
     - name: Find Velero ReplicaSets
       k8s_facts:
@@ -534,6 +570,28 @@
       namespace: "{{ meta.namespace }}"
       status:
         phase: Failed
-    when: olm_managed and not(reconciled)
+    when: olm_managed and not reconciled
+
+  - name: Retrieve migrationController status
+    k8s_facts:
+      api_version: migration.openshift.io/v1alpha1
+      kind: MigrationController
+      namespace: "{{ mig_namespace }}"
+    register: controller
+
+  - when: olm_managed and
+          controller.resources is defined and
+          controller.resources[0].status.conditions is defined
+    block:
+    - k8s_status:
+        api_version: migration.openshift.io/v1alpha1
+        kind: MigrationController
+        name: "{{ meta.name }}"
+        namespace: "{{ meta.namespace }}"
+        status:
+          phase: Failed
+      when: item.type == 'Critical'
+      with_items: "{{ controller.resources[0].status.conditions }}"
+
 
 - import_tasks: mcg.yml
