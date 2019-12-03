@@ -536,3 +536,4 @@
         phase: Failed
     when: olm_managed and not(reconciled)
 
+- import_tasks: mcg.yml
