@@ -68,6 +68,7 @@
         namespace: "{{ noobaa_system_namespace }}"
       register: noobaa_system_status
       retries: 20
+      delay: 3
       until: noobaa_system_status.resources|length > 0 and
              noobaa_system_status.resources[0].status is defined and
              noobaa_system_status.resources[0].status.phase == 'Ready' 
