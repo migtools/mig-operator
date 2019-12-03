@@ -19,10 +19,6 @@ Method** of a selected Persistent Volume.
  - Works independently of the backing storage type for PV being copied
 
 
-**snapshot** will generally provide the user with a faster copy, but is more
-restrictive so be sure to read the below to find out if **snapshot** is right
-for your migration plan.
-
 ### Prerequisites
 The CAM web console must contain the following:
 * Source cluster
