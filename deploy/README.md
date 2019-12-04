@@ -12,7 +12,7 @@ spec:
   [...]
 ```
 3. Get [auth token](https://github.com/operator-framework/operator-courier#authentication) from quay.io
-4. Use [operator-courier](https://github.com/operator-framework/operator-courier) to push the packaged CSV as an 'app' to your quay.io org. 
+4. Use [operator-courier](https://github.com/operator-framework/operator-courier) to push the packaged CSV as an 'app' to your quay.io org.
 ```
 # Before doing this, ensure the quay.io org you're pushing to doesn't have any existing 'repo' or 'app' by the same name.
 # Visit https://quay.io/application/ and check to see if the 'app' you're trying to push already exists.
@@ -23,7 +23,7 @@ operator-courier --verbose push ./deploy/olm-catalog/mig-operator/0.0.1/ your-qu
 # After a successful push, visit https://quay.io/application/your-quay-org/mig-operator?tab=settings and set the app to public
 ```
 
-5. On an OpenShift 4 cluster, create the mig-operator OperatorSource. 
+5. On an OpenShift 4 cluster, create the mig-operator OperatorSource.
 ```
 oc create -f mig-operator-source.yaml
 ```

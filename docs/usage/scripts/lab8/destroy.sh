@@ -11,4 +11,4 @@ for i in $(seq 1 $x); do
 	oc delete project "$ns_prefix""$i"
 done
 
-echo "Done..." 
+echo "Done..."
