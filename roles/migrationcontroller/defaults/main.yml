@@ -18,7 +18,7 @@ mig_namespace: openshift-migration
 mig_svc_account: true
 mig_ui_cluster_api_endpoint: ""
 mig_ui_configmap_data: ""
-mig_ui_configmap_name : mig-ui-config
+mig_ui_configmap_name: mig-ui-config
 mig_ui_config_namespace: openshift-migration
 mig_ui_image: "{{ registry }}/{{ project }}/{{ mig_ui_repo }}"
 mig_ui_oauth_user_scope: "user:full"
@@ -46,3 +46,14 @@ velero_restic_restore_helper_image: "{{ registry }}/{{ project }}/{{ velero_rest
 velero_restic_restore_helper_repo: "{{ lookup( 'env', 'VELERO_RESTIC_RESTORE_HELPER_REPO') }}"
 velero_restic_restore_helper_version: "{{ snapshot_tag | default(lookup( 'env', 'VELERO_RESTIC_RESTORE_HELPER_TAG')) }}"
 velero_state: absent
+
+# MCG integration
+noobaa: false
+noobaa_expected_crds:
+  - noobaas.noobaa.io
+  - bucketclasses.noobaa.io
+  - backingstores.noobaa.io
+noobaa_admin_secret: noobaa-admin
+noobaa_system_namespace: "{{ mig_namespace }}" 
+noobaa_mig_bucket_name: mig-storage
+noobaa_s3_endpoint_proto: http

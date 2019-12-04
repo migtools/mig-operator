@@ -30,7 +30,8 @@ metadata:
               "restic_timeout": "1h",
               "mig_pv_limit": "100",
               "mig_pod_limit": "100",
-              "mig_namespace_limit": "10"
+              "mig_namespace_limit": "10",
+              "noobaa": true
             }
         },
         {
@@ -228,6 +229,18 @@ spec:
           verbs:
           - '*'
         - apiGroups:
+          - noobaa.io
+          resources:
+          - noobaas
+          verbs:
+          - "*"
+        - apiGroups:
+          - apiextensions.k8s.io
+          resources:
+          - customresourcedefinitions
+          verbs:
+          - "*"
+        - apiGroups:
           - ""
           resources:
           - pods
@@ -283,8 +296,22 @@ spec:
           resources:
           - configmaps
           - namespaces
+          - secrets
+          - services
           verbs:
           - '*'
+        - apiGroups:
+          - noobaa.io
+          resources:
+          - noobaas
+          verbs:
+          - "*"
+        - apiGroups:
+          - apiextensions.k8s.io
+          resources:
+          - customresourcedefinitions
+          verbs:
+          - "*"
         - apiGroups:
           - oauth.openshift.io
           resources:
@@ -707,6 +734,12 @@ spec:
   maturity: stable
   version: 1.0.1
   customresourcedefinitions:
+    required:
+    - name: noobaas.noobaa.io
+      version: v1alpha1
+      kind: NooBaa
+      displayName: NooBaa
+      description: NooBaa System
     owned:
     - name: backupstoragelocations.velero.io
       version: v1
