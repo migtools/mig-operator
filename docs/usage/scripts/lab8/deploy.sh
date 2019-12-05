@@ -21,4 +21,3 @@ echo "Finding routes..."
 for i in $(seq 1 $x); do
 	oc get route hello-openshift -n "$ns_prefix""$i" -o go-template='{{ .spec.host }}{{ println }}'
 done
- 

@@ -2,15 +2,15 @@
 
 Part of the Migration workflow in the CAM UI is creation of a *Replication Repository*. Configuring a Replication Repository gives CAM the information it needs to enable:
 
-- *Object Storage* for temporary migration artifacts 
+- *Object Storage* for temporary migration artifacts
   - S3 Bucket
   - GCP Bucket
   - Azure Blob Storage
 
-- *Disk Snapshot* to take advantage of the *snapshot* functionality offered by Cloud Provider Storage providers 
-  - EBS Volume 
-  - GCP Volume 
-  - Azure Disk 
+- *Disk Snapshot* to take advantage of the *snapshot* functionality offered by Cloud Provider Storage providers
+  - EBS Volume
+  - GCP Volume
+  - Azure Disk
 
 
 ## Replication Repository - Configurations per Cloud Provider
@@ -34,7 +34,7 @@ For AWS, the following configuration options are exposed:
 - **S3 endpoint**
   - Custom S3 endpoint. Required for non AWS S3 stores
 - **S3 provider access key**
-  - Access Key credential for authenticating access to S3 bucket 
+  - Access Key credential for authenticating access to S3 bucket
 - **S3 provider secret access key**
   - Secret Key credential for authenticating access to S3 bucket
   - Refer to [ObjectStorage.md](./ObjectStorage.md) for details on obtaining this value

@@ -3,6 +3,22 @@ To use cloud-provider snapshots with CAM, it is important to ensure that all of
 the necessary preconditions are met. This document contains provider-specific
 configuration information required for snapshot support.
 
+## Snapshot vs Filesystem Copy
+The user has the ability to select **snapshot** or **filesystem** as the **Copy
+Method** of a selected Persistent Volume.
+
+**Snapshot** Copy 
+ - Uses cloud-provider native snapshot API to snapshot the underlying PV disk
+ - Fast and robust, but requires a compatible OpenShift cluster pair
+   - Requires PVs provisioned by public cloud-providers (AWS, GCP, Azure)
+   - Requires source and target clusters on the same cloud-provider + region
+ - See the **Prerequisites** section below for more information
+
+**Filesystem** Copy 
+ - Uses Restic to take a copy of the PV filesystem
+ - Works independently of the backing storage type for PV being copied
+
+
 ### Prerequisites
 The CAM web console must contain the following:
 * Source cluster

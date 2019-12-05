@@ -18,19 +18,19 @@ GCP Storage Buckets and Azure Storage Containers have also been tested successfu
 ## S3 Object Storage
 
 This section covers setup of S3 Object Storage on these providers:
- - NooBaa S3 
+ - NooBaa S3
  - AWS S3
 
 ### S3 Object Storage Setup with NooBaa
 
 NooBaa can run on an OpenShift cluster to provide an S3 compatible endpoint for migration scratch space. We recommend loading NooBaa onto the destination cluster. NooBaa is especially useful when clusters don't have network connectivity to AWS S3.
 
-1. Download the noobaa v1.1.0 CLI from https://github.com/noobaa/noobaa-operator/releases. 
+1. Download the noobaa v1.1.0 CLI from https://github.com/noobaa/noobaa-operator/releases.
 2. Ensure you have available PVs with capacities of 10 Gi, 50Gi. The NooBaa installer will create PVCs to consume these PVs.
 ```
 # NooBaa PV usage requirements
-NAME                          CAPACITY   ACCESS MODES                           
-logdir-noobaa-core-0          10Gi       RWO                                    
+NAME                          CAPACITY   ACCESS MODES
+logdir-noobaa-core-0          10Gi       RWO
 mongo-datadir-noobaa-core-0   50Gi       RWO,RWX
 ```
 
@@ -39,12 +39,12 @@ mongo-datadir-noobaa-core-0   50Gi       RWO,RWX
 $ noobaa install --namespace noobaa
 
 [...]
-INFO[0002] System Status:                               
-INFO[0003] ✅ Exists: NooBaa "noobaa"                    
-INFO[0003] ✅ System Phase is "Ready"                    
+INFO[0002] System Status:
+INFO[0003] ✅ Exists: NooBaa "noobaa"
+INFO[0003] ✅ System Phase is "Ready"
 [...]
-INFO[0003] AWS_ACCESS_KEY_ID: ygeJ5GzAwbBJiSukw8Lv      
-INFO[0003] AWS_SECRET_ACCESS_KEY: so2C5X/ttRhiX00DZrOnv0MxV0r5VlOkYmptTU91 
+INFO[0003] AWS_ACCESS_KEY_ID: ygeJ5GzAwbBJiSukw8Lv
+INFO[0003] AWS_SECRET_ACCESS_KEY: so2C5X/ttRhiX00DZrOnv0MxV0r5VlOkYmptTU91
 ```
 
 4. Expose the NooBaa S3 service to hosts outside the cluster. This is necessary so that both the _source_ and _destination_ cluster will be able to connect to S3 scratch space.
@@ -270,7 +270,7 @@ ROLE_PERMISSIONS=(
 gcloud iam roles create velero.server \
     --project $PROJECT_ID \
     --title "Velero Server" \
-    --permissions "$(IFS=","; echo "${ROLE_PERMISSIONS[*]}")"    
+    --permissions "$(IFS=","; echo "${ROLE_PERMISSIONS[*]}")"
 
 gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member serviceAccount:$SERVICE_ACCOUNT_EMAIL \
@@ -357,7 +357,7 @@ Execute all steps below and then use the final command to dump all necessary cre
 
 ### Create Azure Resource Group + Storage Account
 
-All resources on Azure *must* exist inside a *Resource Group*. 
+All resources on Azure *must* exist inside a *Resource Group*.
 
 ```bash
 # Set Azure Resource Group name
