@@ -75,8 +75,8 @@ sed -i 's,value: velero,value: openshift-migration-velero-rhel8@sha256,g'       
 sed -i 's,value: migration-plugin,value: openshift-migration-plugin-rhel8@sha256,g'                                   deploy/olm-catalog/mig-operator/v1.0.1/mig-operator.v1.0.1.clusterserviceversion.yaml
 sed -i s,mig-operator\.,cam-operator.,g                                                                               deploy/olm-catalog/mig-operator/v1.0.1/mig-operator.v1.0.1.clusterserviceversion.yaml
 sed -i 's,: mig-operator,: cam-operator,g'                                                                            deploy/olm-catalog/mig-operator/v1.0.1/mig-operator.v1.0.1.clusterserviceversion.yaml
-sed -i 's/displayName: Migration Operator/displayName: Cluster Application Migration Operator/g'                      deploy/olm-catalog/mig-operator/v1.0.0/mig-operator.v1.0.0.clusterserviceversion.yaml
-sed -i 's/The Migration Operator/The Cluster Application Migration Operator/g'                                        deploy/olm-catalog/mig-operator/v1.0.0/mig-operator.v1.0.0.clusterserviceversion.yaml
+sed -i 's/displayName: Migration Operator/displayName: Cluster Application Migration Operator/g'                      deploy/olm-catalog/mig-operator/v1.0.1/mig-operator.v1.0.1.clusterserviceversion.yaml
+sed -i 's/The Migration Operator/The Cluster Application Migration Operator/g'                                        deploy/olm-catalog/mig-operator/v1.0.1/mig-operator.v1.0.1.clusterserviceversion.yaml
 sed -i "/MIG_CONTROLLER_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_0_IMG_MAP[controller_sha]}/"                          deploy/olm-catalog/mig-operator/v1.0.1/mig-operator.v1.0.1.clusterserviceversion.yaml
 sed -i "/MIG_UI_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_0_IMG_MAP[ui_sha]}/"                                          deploy/olm-catalog/mig-operator/v1.0.1/mig-operator.v1.0.1.clusterserviceversion.yaml
 sed -i "/VELERO_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_0_IMG_MAP[plugin_sha]}/"                               deploy/olm-catalog/mig-operator/v1.0.1/mig-operator.v1.0.1.clusterserviceversion.yaml
