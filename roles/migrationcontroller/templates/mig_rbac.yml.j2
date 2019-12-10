@@ -166,26 +166,6 @@ rules:
 - apiGroups:
   - migration.openshift.io
   resources:
-  - migstages
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - migration.openshift.io
-  resources:
-  - migstages/status
-  verbs:
-  - get
-  - update
-  - patch
-- apiGroups:
-  - migration.openshift.io
-  resources:
   - migstorages
   verbs:
   - get
