@@ -1,2 +1,6 @@
 ---
-# handlers file for migration
+- name: restart velero
+  include: restart_velero.yml
+
+- name: restart restic
+  include: restart_restic.yml
