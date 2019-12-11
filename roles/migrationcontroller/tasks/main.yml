@@ -40,18 +40,6 @@
       mig_ui_config_namespace: openshift-config
     when: config_namespace_check.resources|length > 0
 
-  - name: "Set up namespace for mig resources"
-    k8s:
-      state: "present"
-      definition: "{{ lookup('template', 'mig_namespace.yml.j2') }}"
-    when: migration_ui or migration_controller or migration_velero
-
-  - name: "Set up mig operator namespace"
-    k8s:
-      state: "present"
-      definition: "{{ lookup('template', 'mig_namespace.yml.j2') }}"
-    when: not olm_managed and (migration_ui or migration_controller or migration_velero)
-
   #This ConfigMap contains the cluster config on Openshift 4.
   #Looking for it provides a rudimentary way to see what version we're on.
   #It also lets us generate the cluster API endpoint URL on Openshift 4.
