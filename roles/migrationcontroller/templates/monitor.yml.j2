@@ -27,7 +27,7 @@ metadata:
   namespace: {{ mig_namespace }}
 spec:
   selector:
-    app: mig-controller
+    control-plane: controller-manager
   clusterIP: None
   ports:
   - name: metrics
