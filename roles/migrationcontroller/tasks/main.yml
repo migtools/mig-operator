@@ -177,11 +177,11 @@
       state: "{{ controller_state }}"
       definition: "{{ lookup('template', 'controller.yml.j2') }}"
 
-  - name: "Set up mig controller monitoring config when managed by OLM"
+  - name: "Set up mig controller monitoring config, ignoring failure on 3.x"
     k8s:
       state: "{{ controller_state }}"
       definition: "{{ lookup('template', 'monitor.yml.j2') }}"
-    when: olm_managed
+    ignore_errors: true
 
   - name: Check if mig ui route exists already so we don't update it
     k8s_facts:
