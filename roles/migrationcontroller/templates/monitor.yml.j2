@@ -4,7 +4,7 @@ kind: ServiceMonitor
 metadata:
   labels:
     app: mig-controller
-  name: monitor-mig-controller
+  name: mig-controller
   namespace: {{ mig_namespace }}
 spec:
   endpoints:
@@ -23,7 +23,7 @@ kind: Service
 metadata:
   labels:
     app: mig-controller
-  name: monitor-mig-controller
+  name: mig-controller-metrics
   namespace: {{ mig_namespace }}
 spec:
   selector:
