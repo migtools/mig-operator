@@ -261,7 +261,7 @@
 
       - when: not deprecated_cors_configuration and (
               apiserver.resources[0].spec.additionalCORSAllowedOrigins is not defined or
-              (cors_origins | difference(apiserver.resources[0].spec.additionalCORSAllowedOrigins))|length > 0)
+              (cors_origins | difference(apiserver.resources[0].spec.additionalCORSAllowedOrigins|default([])))|length > 0)
         block:
         - name: Write apiserver config definition for modification
           copy:
@@ -274,7 +274,7 @@
             key: spec.additionalCORSAllowedOrigins
             append: true
             value: "{{ item }}"
-          with_items: "{{ cors_origins | difference(apiserver.resources[0].spec.additionalCORSAllowedOrigins) }}"
+          with_items: "{{ cors_origins | difference(apiserver.resources[0].spec.additionalCORSAllowedOrigins|default([])) }}"
 
         - name: Update apiserver config definition on the cluster
           k8s:
@@ -291,7 +291,7 @@
       - when: deprecated_cors_configuration and (
               kubeapiserver.resources[0].spec.unsupportedConfigOverrides is not defined or
               kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
-              (cors_origins | difference(kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins))|length > 0)
+              (cors_origins | difference(kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins|default([])))|length > 0)
         block:
         - name: Write kubeapiserver operator definition for modification
           copy:
@@ -304,7 +304,7 @@
             key: spec.unsupportedConfigOverrides.corsAllowedOrigins
             append: true
             value: "{{ item }}"
-          with_items: "{{ cors_origins | difference(kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins) }}"
+          with_items: "{{ cors_origins | difference(kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins|default([])) }}"
 
         - name: Update kubeapiserver operator definition on the cluster
           k8s:
@@ -353,7 +353,7 @@
       - when: deprecated_cors_configuration and (
               authentication.resources[0].spec.unsupportedConfigOverrides is not defined or
               authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
-              (cors_origins | difference(authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins))|length > 0)
+              (cors_origins | difference(authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins|default([])))|length > 0)
         block:
         - name: Write authentication operator definition for modification
           copy:
@@ -366,7 +366,7 @@
             key: spec.unsupportedConfigOverrides.corsAllowedOrigins
             append: true
             value: "{{ item }}"
-          with_items: "{{ cors_origins | difference(authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins) }}"
+          with_items: "{{ cors_origins | difference(authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins|default([])) }}"
 
         - name: Update authentication operator definition on the cluster
           k8s:
@@ -396,7 +396,7 @@
   - when: migration_ui and (discovery_route.resources|length) > 0
     block:
     - set_fact:
-        discovery_api_url: "{{discovery_route.resources[0].spec.host}}"
+        discovery_api_url: "https://{{discovery_route.resources[0].spec.host}}"
 
     - name: Check if migration ui configmap exists already so we don't update it
       k8s_facts:

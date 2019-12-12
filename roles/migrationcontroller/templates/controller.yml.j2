@@ -63,6 +63,9 @@ spec:
   to:
     kind: Service
     name: discovery
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
 ---
 apiVersion: apps/v1beta1
 kind: Deployment
