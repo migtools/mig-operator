@@ -177,7 +177,7 @@
       state: "{{ controller_state }}"
       definition: "{{ lookup('template', 'controller.yml.j2') }}"
 
-  - name: "Set up mig controller monitoring config, ignoring failure on 3.x"
+  - name: "Set up mig controller monitoring config, ignoring failure on <3.11"
     k8s:
       state: "{{ controller_state }}"
       definition: "{{ lookup('template', 'monitor.yml.j2') }}"
