@@ -40,6 +40,12 @@
       mig_ui_config_namespace: openshift-config
     when: config_namespace_check.resources|length > 0
 
+  - name: "Set up mig operator namespace"
+    k8s:
+      state: "present"
+      definition: "{{ lookup('template', 'mig_manager_namespace.yml.j2') }}"
+    when: not olm_managed and (migration_ui or migration_controller or migration_velero)
+
   #This ConfigMap contains the cluster config on Openshift 4.
   #Looking for it provides a rudimentary way to see what version we're on.
   #It also lets us generate the cluster API endpoint URL on Openshift 4.
@@ -223,6 +229,11 @@
           - "{{ mig_ui_cors_loopback }}"
           - "{{ mig_ui_cors_localhost }}"
 
+    - name: "Set up discovery service and route"
+      k8s:
+        state: present
+        definition: "{{ lookup('template', 'discovery.yml.j2') }}"
+
     - name: Set OAuth redirect url
       set_fact:
         mig_ui_oauth_redirect_url: "https://{{ mig_ui_url }}/login/callback"
@@ -373,13 +384,6 @@
             state: present
             definition: "{{ lookup('file', '/tmp/authentication.yaml') | from_yaml }}"
 
-  - name: Set cors_origins for local development only
-    set_fact:
-      cors_origins:
-      - "{{ mig_ui_cors_loopback }}"
-      - "{{ mig_ui_cors_localhost }}"
-    when: not migration_ui
-
   - name: "Set up mig controller"
     k8s:
       state: "{{ controller_state }}"
@@ -392,6 +396,7 @@
       name: discovery
       namespace: "{{ mig_namespace }}"
     register: discovery_route
+    when: migration_ui
 
   - when: migration_ui and (discovery_route.resources|length) > 0
     block:
