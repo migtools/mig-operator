@@ -97,7 +97,12 @@
              noobaa_s3_endpoint.resources[0].status.loadBalancer.ingress is defined
 
     - set_fact:
+        noobaa_endpoint: "{{ noobaa_s3_endpoint.resources[0].status.loadBalancer.ingress[0].ip }}"
+      when: noobaa_s3_endpoint.resources[0].status.loadBalancer.ingress[0].ip is defined
+
+    - set_fact:
         noobaa_endpoint: "{{ noobaa_s3_endpoint.resources[0].status.loadBalancer.ingress[0].hostname }}"
+      when: noobaa_s3_endpoint.resources[0].status.loadBalancer.ingress[0].hostname is defined
 
     - name: Discovering NooBaa S3 Credentials
       k8s_facts:
