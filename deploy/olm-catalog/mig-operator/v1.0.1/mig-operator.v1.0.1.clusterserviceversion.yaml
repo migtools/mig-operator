@@ -31,7 +31,6 @@ metadata:
               "mig_pv_limit": "100",
               "mig_pod_limit": "100",
               "mig_namespace_limit": "10",
-              "noobaa": true
             }
         },
         {
@@ -714,12 +713,6 @@ spec:
   maturity: stable
   version: 1.0.1
   customresourcedefinitions:
-    required:
-    - name: noobaas.noobaa.io
-      version: v1alpha1
-      kind: NooBaa
-      displayName: NooBaa
-      description: NooBaa System
     owned:
     - name: backupstoragelocations.velero.io
       version: v1
