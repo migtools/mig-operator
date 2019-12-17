@@ -230,11 +230,23 @@ spec:
           value: migration-plugin
         - name: VELERO_RESTIC_RESTORE_HELPER_REPO
           value: velero-restic-restore-helper
+        - name: VELERO_AWS_PLUGIN_REPO
+          value: velero-plugin-for-aws
+        - name: VELERO_GCP_PLUGIN_REPO
+          value: velero-plugin-for-gcp
+        - name: VELERO_AZURE_PLUGIN_REPO
+          value: velero-plugin-for-microsoft-azure
         - name: VELERO_TAG
           value: latest
         - name: VELERO_RESTIC_RESTORE_HELPER_TAG
           value: latest
         - name: VELERO_PLUGIN_TAG
+          value: latest
+        - name: VELERO_AWS_PLUGIN_TAG
+          value: latest
+        - name: VELERO_GCP_PLUGIN_TAG
+          value: latest
+        - name: VELERO_AZURE_PLUGIN_TAG
           value: latest
         - name: MIG_UI_TAG
           value: latest

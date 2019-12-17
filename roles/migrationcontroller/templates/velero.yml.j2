@@ -91,6 +91,33 @@ spec:
           volumeMounts:
           - mountPath: /target
             name: plugins
+        - image: {{ velero_aws_plugin_image }}:{{ velero_aws_plugin_version }}
+          imagePullPolicy: "{{ image_pull_policy }}"
+          name: velero-plugin-for-aws
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /target
+            name: plugins
+        - image: {{ velero_gcp_plugin_image }}:{{ velero_gcp_plugin_version }}
+          imagePullPolicy: "{{ image_pull_policy }}"
+          name: velero-plugin-for-gcp
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /target
+            name: plugins
+        - image: {{ velero_azure_plugin_image }}:{{ velero_azure_plugin_version }}
+          imagePullPolicy: "{{ image_pull_policy }}"
+          name: velero-plugin-for-microsoft-azure
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /target
+            name: plugins
 ---
 apiVersion: extensions/v1beta1
 kind: DaemonSet
