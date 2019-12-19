@@ -39,6 +39,7 @@ apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   labels:
+    app: migration
     control-plane: controller-manager
     controller-tools.k8s.io: "1.0"
   name: migration-controller
@@ -46,12 +47,14 @@ metadata:
 spec:
   selector:
     matchLabels:
+      app: migration
       control-plane: controller-manager
       controller-tools.k8s.io: "1.0"
   serviceName: controller-manager-service
   template:
     metadata:
       labels:
+        app: migration
         control-plane: controller-manager
         controller-tools.k8s.io: "1.0"
       annotations:

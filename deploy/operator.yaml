@@ -5,15 +5,15 @@ metadata:
   name: migration-operator
   namespace: openshift-migration
   labels:
-    app: migration-operator
+    app: migration
 spec:
   selector:
     matchLabels:
-      app: migration-operator
+      app: migration
   template:
     metadata:
       labels:
-        app: migration-operator
+        app: migration
     spec:
       serviceAccountName: migration-operator
       containers:

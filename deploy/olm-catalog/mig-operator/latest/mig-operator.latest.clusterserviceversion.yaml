@@ -664,11 +664,11 @@ spec:
           replicas: 1
           selector:
             matchLabels:
-              app: migration-operator
+              app: migration
           template:
             metadata:
               labels:
-                app: migration-operator
+                app: migration
             spec:
               serviceAccount: migration-operator
               containers:
