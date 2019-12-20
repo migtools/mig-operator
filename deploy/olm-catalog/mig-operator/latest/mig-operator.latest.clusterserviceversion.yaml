@@ -30,7 +30,7 @@ metadata:
               "restic_timeout": "1h",
               "mig_pv_limit": "100",
               "mig_pod_limit": "100",
-              "mig_namespace_limit": "10",
+              "mig_namespace_limit": "10"
             }
         },
         {
