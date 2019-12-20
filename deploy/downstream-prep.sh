@@ -30,7 +30,7 @@ if [ -d deploy/olm-catalog/mig-operator/v1.1.0 ]; then
   V1_1_IMG_MAP[helper_repo]="openshift-migration-velero-restic-restore-helper"
   V1_1_IMG_MAP[gcpplugin_repo]="openshift-migration-velero-plugin-for-gcp"
   V1_1_IMG_MAP[awsplugin_repo]="openshift-migration-velero-plugin-for-aws"
-  V1_1_IMG_MAP[azurrelugin_repo]="openshift-migration-velero-plugin-for-microsoft-azure"
+  V1_1_IMG_MAP[azureplugin_repo]="openshift-migration-velero-plugin-for-microsoft-azure"
 
   #Get latest 1.1 images
   for i in ${V1_1_IMAGES[@]}; do
