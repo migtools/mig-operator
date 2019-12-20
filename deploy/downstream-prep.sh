@@ -30,7 +30,7 @@ if [ -d deploy/olm-catalog/mig-operator/v1.1.0 ]; then
   V1_1_IMG_MAP[helper_repo]="openshift-migration-velero-restic-restore-helper"
   V1_1_IMG_MAP[gcpplugin_repo]="openshift-migration-velero-plugin-for-gcp"
   V1_1_IMG_MAP[awsplugin_repo]="openshift-migration-velero-plugin-for-aws"
-  V1_1_IMG_MAP[azuerplugin_repo]="openshift-migration-velero-plugin-for-microsoft-azure"
+  V1_1_IMG_MAP[azurrelugin_repo]="openshift-migration-velero-plugin-for-microsoft-azure"
 
   #Get latest 1.1 images
   for i in ${V1_1_IMAGES[@]}; do
@@ -66,7 +66,7 @@ if [ -d deploy/olm-catalog/mig-operator/v1.1.0 ]; then
   sed -i "/VELERO_RESTIC_RESTORE_HELPER_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_1_IMG_MAP[helper_sha]}/"                          deploy/olm-catalog/mig-operator/v1.1.0/mig-operator.v1.1.0.clusterserviceversion.yaml
   sed -i "/VELERO_GCP_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_1_IMG_MAP[gcpplugin_sha]}/"                                  deploy/olm-catalog/mig-operator/v1.1.0/mig-operator.v1.1.0.clusterserviceversion.yaml
   sed -i "/VELERO_AWS_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_1_IMG_MAP[awsplugin_sha]}/"                                  deploy/olm-catalog/mig-operator/v1.1.0/mig-operator.v1.1.0.clusterserviceversion.yaml
-  sed -i "/VELERO_AZURE_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_1_IMG_MAP[azuerplugin_sha]}/"                              deploy/olm-catalog/mig-operator/v1.1.0/mig-operator.v1.1.0.clusterserviceversion.yaml
+  sed -i "/VELERO_AZURE_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_1_IMG_MAP[azureplugin_sha]}/"                              deploy/olm-catalog/mig-operator/v1.1.0/mig-operator.v1.1.0.clusterserviceversion.yaml
 
   # Make 1.1.0 Downstream non-OLM changes
   sed -i s,quay.io,registry.redhat.io,g                                                                                           deploy/non-olm/v1.1.0/operator.yml
