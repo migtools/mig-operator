@@ -1,0 +1,69 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    app: mig-controller
+  name: mig-controller
+  namespace: {{ mig_namespace }}
+spec:
+  endpoints:
+  - interval: 30s
+    port: metrics
+  jobLabel: app
+  namespaceSelector:
+    matchNames:
+    - {{ mig_namespace }}
+  selector:
+    matchLabels:
+      app: mig-controller
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mig-controller
+  name: mig-controller-metrics
+  namespace: {{ mig_namespace }}
+spec:
+  selector:
+    control-plane: controller-manager
+  clusterIP: None
+  ports:
+  - name: metrics
+    port: 2112
+    protocol: TCP
+    targetPort: 2112
+  sessionAffinity: None
+  type: ClusterIP
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: prometheus-k8s
+  namespace: openshift-migration
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - services
+  - endpoints
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: prometheus-k8s
+  namespace: openshift-migration
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: prometheus-k8s
+subjects:
+- kind: ServiceAccount
+  name: prometheus-k8s
+  namespace: openshift-monitoring
