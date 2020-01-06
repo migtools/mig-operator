@@ -221,6 +221,14 @@ spec:
       - serviceAccountName: migration-operator
         rules:
         - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - roles
+          verbs:
+          - list
+          - get
+          - create
+        - apiGroups:
           - route.openshift.io
           resources:
           - routes
