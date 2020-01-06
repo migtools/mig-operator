@@ -270,6 +270,7 @@ spec:
           resources:
           - servicemonitors
           verbs:
+          - list
           - get
           - create
         - apiGroups:
