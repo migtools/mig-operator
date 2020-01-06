@@ -291,6 +291,14 @@ spec:
       - serviceAccountName: migration-operator
         rules:
         - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - roles
+          verbs:
+          - list
+          - get
+          - create
+        - apiGroups:
           - ""
           resources:
           - configmaps
