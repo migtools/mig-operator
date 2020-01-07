@@ -488,6 +488,12 @@ spec:
         - apiGroups:
           - ""
           resources:
+          - pods/log
+          verbs:
+          - '*'
+        - apiGroups:
+          - ""
+          resources:
           - persistentvolumes
           verbs:
           - get
