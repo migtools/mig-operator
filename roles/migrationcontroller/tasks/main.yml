@@ -180,8 +180,11 @@
   - name: "Set up mig controller monitoring config, ignoring failure on <3.11"
     k8s:
       state: "{{ controller_state }}"
-      definition: "{{ lookup('template', 'monitor.yml.j2') }}"
-    ignore_errors: true
+      definition: "{{ lookup('template', item.name) | from_yaml }}"
+    when: item.apply | default(True)
+    loop:
+    - name: monitor.yml.j2
+      apply: "{{ True if 'monitoring.coreos.com' in lookup('k8s', cluster_info='api_groups') else False }}"
 
   - name: Check if mig ui route exists already so we don't update it
     k8s_facts:
