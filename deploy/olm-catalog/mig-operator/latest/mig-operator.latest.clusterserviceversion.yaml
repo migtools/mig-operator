@@ -224,10 +224,15 @@ spec:
           - rbac.authorization.k8s.io
           resources:
           - roles
+          - rolebindings
           verbs:
           - list
           - get
           - create
+          - delete
+          - patch
+          - update
+          - watch
         - apiGroups:
           - route.openshift.io
           resources:
@@ -284,6 +289,7 @@ spec:
           - delete
           - update
           - patch
+          - watch
         - apiGroups:
           - apps
           resourceNames:
