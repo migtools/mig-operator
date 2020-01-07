@@ -273,6 +273,7 @@ spec:
           - list
           - get
           - create
+          - delete
           - update
           - patch
         - apiGroups:
