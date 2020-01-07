@@ -221,6 +221,19 @@ spec:
       - serviceAccountName: migration-operator
         rules:
         - apiGroups:
+          - rbac.authorization.k8s.io
+          resources:
+          - roles
+          - rolebindings
+          verbs:
+          - list
+          - get
+          - create
+          - delete
+          - patch
+          - update
+          - watch
+        - apiGroups:
           - route.openshift.io
           resources:
           - routes
@@ -276,6 +289,7 @@ spec:
           - delete
           - update
           - patch
+          - watch
         - apiGroups:
           - apps
           resourceNames:
@@ -293,14 +307,6 @@ spec:
       clusterPermissions:
       - serviceAccountName: migration-operator
         rules:
-        - apiGroups:
-          - rbac.authorization.k8s.io
-          resources:
-          - roles
-          verbs:
-          - list
-          - get
-          - create
         - apiGroups:
           - ""
           resources:
