@@ -3,6 +3,7 @@ azure_resource_group: ""
 configmap_secret: ""
 controller_state: absent
 deprecated_cors_configuration: false
+cors_origins: []
 image_pull_policy: Always
 mig_controller_image: "{{ registry }}/{{ project }}/{{ mig_controller_repo }}"
 mig_controller_limits_cpu: "100m"
