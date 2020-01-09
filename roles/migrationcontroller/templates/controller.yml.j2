@@ -23,17 +23,23 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  labels:
+    control-plane: controller-manager
+    controller-tools.k8s.io: "1.0"
   name: migration-controller
   namespace: {{ mig_namespace }}
 data:
   PV_LIMIT: "{{ mig_pv_limit }}"
   POD_LIMIT: "{{ mig_pod_limit }}"
   NAMESPACE_LIMIT: "{{ mig_namespace_limit }}"
+  CORS_ALLOWED_ORIGINS: {{ cors_origins | join(' ') }}
+  WORKING_DIR: {{ discovery_volume_path }}
 ---
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   labels:
+    app: migration
     control-plane: controller-manager
     controller-tools.k8s.io: "1.0"
   name: migration-controller
@@ -41,12 +47,14 @@ metadata:
 spec:
   selector:
     matchLabels:
+      app: migration
       control-plane: controller-manager
       controller-tools.k8s.io: "1.0"
   serviceName: controller-manager-service
   template:
     metadata:
       labels:
+        app: migration
         control-plane: controller-manager
         controller-tools.k8s.io: "1.0"
       annotations:
@@ -87,9 +95,13 @@ spec:
         - mountPath: /tmp/cert
           name: cert
           readOnly: true
+        - mountPath: {{ discovery_volume_path }}
+          name: discovery
       terminationGracePeriodSeconds: 10
       volumes:
       - name: cert
         secret:
           defaultMode: 420
           secretName: webhook-server-secret
+      - name: discovery
+        emptyDir: {}

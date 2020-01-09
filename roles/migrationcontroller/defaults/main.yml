@@ -3,6 +3,7 @@ azure_resource_group: ""
 configmap_secret: ""
 controller_state: absent
 deprecated_cors_configuration: false
+cors_origins: []
 image_pull_policy: Always
 mig_controller_image: "{{ registry }}/{{ project }}/{{ mig_controller_repo }}"
 mig_controller_limits_cpu: "100m"
@@ -11,6 +12,7 @@ mig_controller_repo: "{{ lookup( 'env', 'MIG_CONTROLLER_REPO') }}"
 mig_controller_requests_cpu: "100m"
 mig_controller_requests_memory: "350Mi"
 mig_controller_version: "{{ snapshot_tag | default(lookup( 'env', 'MIG_CONTROLLER_TAG')) }}"
+discovery_volume_path: "/var/cache/discovery"
 mig_pv_limit: "100"
 mig_pod_limit: "100"
 mig_namespace_limit: "10"
