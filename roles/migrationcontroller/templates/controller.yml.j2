@@ -72,6 +72,8 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        - name: ROLE
+          value: cam
         - name: SECRET_NAME
           value: webhook-server-secret
         envFrom:
@@ -79,7 +81,39 @@ spec:
             name: migration-controller
         image: {{ mig_controller_image }}:{{ mig_controller_version }}
         imagePullPolicy: "{{ image_pull_policy }}"
-        name: manager
+        name: controller
+        ports:
+        - containerPort: 9876
+          name: webhook-server
+          protocol: TCP
+        resources:
+          limits:
+            cpu: {{ mig_controller_limits_cpu }}
+            memory: {{ mig_controller_limits_memory }}
+          requests:
+            cpu: {{ mig_controller_requests_cpu }}
+            memory: {{ mig_controller_requests_memory }}
+        volumeMounts:
+        - mountPath: /tmp/cert
+          name: cert
+          readOnly: true
+      - command:
+        - /manager
+        env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: ROLE
+          value: discovery
+        - name: SECRET_NAME
+          value: webhook-server-secret
+        envFrom:
+        - configMapRef:
+            name: migration-controller
+        image: {{ mig_controller_image }}:{{ mig_controller_version }}
+        imagePullPolicy: "{{ image_pull_policy }}"
+        name: discovery
         ports:
         - containerPort: 9876
           name: webhook-server
