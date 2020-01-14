@@ -115,7 +115,8 @@ spec:
         imagePullPolicy: "{{ image_pull_policy }}"
         name: discovery
         ports:
-        - containerPort: 9876
+        - name: api
+          containerPort: 8080
           name: webhook-server
           protocol: TCP
         resources:
@@ -126,9 +127,6 @@ spec:
             cpu: {{ mig_controller_requests_cpu }}
             memory: {{ mig_controller_requests_memory }}
         volumeMounts:
-        - mountPath: /tmp/cert
-          name: cert
-          readOnly: true
         - mountPath: {{ discovery_volume_path }}
           name: discovery
       terminationGracePeriodSeconds: 10
