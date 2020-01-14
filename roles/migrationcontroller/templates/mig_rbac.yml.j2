@@ -108,7 +108,12 @@ rules:
   - create
   - update
   - patch
-  - delete
+- apiGroups:
+  - ""
+  resources:
+  - pods/log
+  verbs:
+  - '*'
 - apiGroups:
   - ""
   resources:
