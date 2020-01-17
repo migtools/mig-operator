@@ -12,3 +12,4 @@ This guide will provide you with hands-on exposure to the new OpenShift Migratio
 [Section 6 - Migration at Scale via API (optional)](./6.md)<br>
 [Section 7 - Additional Links](./7.md)<br>
 [Section 8 - Mirroring Images for Restricted Network Installs](./8.md)<br>
+[Section 9 - Manual Rollback Procedure](./9.md)<br>
