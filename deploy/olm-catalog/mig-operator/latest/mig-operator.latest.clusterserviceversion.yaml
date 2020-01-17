@@ -172,6 +172,23 @@ metadata:
     certified: "false"
     support: Red Hat
 spec:
+  relatedImages:
+  - name: controller
+    image: quay.io/ocpmigrate/mig-controller:latest
+  - name: ui
+    image: quay.io/ocpmigrate/mig-ui:latest
+  - name: velero
+    image: quay.io/ocpmigrate/velero:latest
+  - name: velero_restic_restore_helper
+    image: quay.io/ocpmigrate/velero-restic-restore-helper:latest
+  - name: migration_plugin
+    image: quay.io/ocpmigrate/migration-plugin:latest
+  - name: aws_plugin
+    image: quay.io/ocpmigrate/velero-plugin-for-aws:latest
+  - name: azure_plugin
+    image: quay.io/ocpmigrate/velero-plugin-for-microsoft-azure:latest
+  - name: gcp_plugin
+    image: quay.io/ocpmigrate/velero-plugin-for-gcp:latest
   displayName: Migration Operator
   description: |
     The Migration Operator for OpenShift enables installation of the OpenShift application migration tool.
