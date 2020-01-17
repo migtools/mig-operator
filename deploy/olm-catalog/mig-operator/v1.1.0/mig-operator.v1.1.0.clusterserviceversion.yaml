@@ -8,7 +8,7 @@ metadata:
     capabilities: Seamless Upgrades
     description: Facilitates migration of workloads from OpenShift 3.x to OpenShift 4.x
     categories: 'OpenShift Optional'
-    containerImage: quay.io/ocpmigrate/mig-operator:latest
+    containerImage: quay.io/ocpmigrate/mig-operator:release-1.1
     createdAt: 2019-07-25T10:21:00Z
     repository: https://github.com/fusor/mig-operator
     alm-examples: |-
@@ -679,7 +679,7 @@ spec:
               serviceAccount: migration-operator
               containers:
               - name: ansible
-                image: quay.io/ocpmigrate/mig-operator:latest
+                image: quay.io/ocpmigrate/mig-operator:release-1.1
                 command:
                 - /usr/local/bin/ao-logs
                 - /tmp/ansible-operator/runner
@@ -690,7 +690,7 @@ spec:
                   name: runner
                   readOnly: true
               - name: operator
-                image: quay.io/ocpmigrate/mig-operator:latest
+                image: quay.io/ocpmigrate/mig-operator:release-1.1
                 imagePullPolicy: Always
                 volumeMounts:
                 - mountPath: /tmp/ansible-operator/runner
@@ -713,35 +713,35 @@ spec:
                 - name: MIG_CONTROLLER_REPO
                   value: mig-controller
                 - name: MIG_CONTROLLER_TAG
-                  value: latest
+                  value: release-1.1
                 - name: MIG_UI_REPO
                   value: mig-ui
                 - name: MIG_UI_TAG
-                  value: latest
+                  value: release-1.1
                 - name: VELERO_REPO
                   value: velero
                 - name: VELERO_TAG
-                  value: latest
+                  value: fusor-1.2
                 - name: VELERO_PLUGIN_REPO
                   value: migration-plugin
                 - name: VELERO_PLUGIN_TAG
-                  value: latest
+                  value: release-1.1
                 - name: VELERO_AWS_PLUGIN_REPO
                   value: velero-plugin-for-aws
                 - name: VELERO_AWS_PLUGIN_TAG
-                  value: latest
+                  value: fusor-1.0
                 - name: VELERO_GCP_PLUGIN_REPO
                   value: velero-plugin-for-gcp
                 - name: VELERO_GCP_PLUGIN_TAG
-                  value: latest
+                  value: fusor-1.0
                 - name: VELERO_AZURE_PLUGIN_REPO
                   value: velero-plugin-for-microsoft-azure
                 - name: VELERO_AZURE_PLUGIN_TAG
-                  value: latest
+                  value: fusor-1.0
                 - name: VELERO_RESTIC_RESTORE_HELPER_REPO
                   value: velero-restic-restore-helper
                 - name: VELERO_RESTIC_RESTORE_HELPER_TAG
-                  value: latest
+                  value: fusor-1.2
               volumes:
               - name: runner
                 emptyDir: {}

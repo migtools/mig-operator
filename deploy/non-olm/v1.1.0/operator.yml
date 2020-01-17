@@ -193,14 +193,14 @@ spec:
         - /usr/local/bin/ao-logs
         - /tmp/ansible-operator/runner
         - stdout
-        image: quay.io/ocpmigrate/mig-operator:latest
+        image: quay.io/ocpmigrate/mig-operator:release-1.1
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /tmp/ansible-operator/runner
           name: runner
           readOnly: true
       - name: operator
-        image: quay.io/ocpmigrate/mig-operator:latest
+        image: quay.io/ocpmigrate/mig-operator:release-1.1
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /tmp/ansible-operator/runner
@@ -237,21 +237,21 @@ spec:
         - name: VELERO_AZURE_PLUGIN_REPO
           value: velero-plugin-for-microsoft-azure
         - name: VELERO_TAG
-          value: latest
+          value: fusor-1.2
         - name: VELERO_RESTIC_RESTORE_HELPER_TAG
-          value: latest
+          value: fusor-1.2
         - name: VELERO_PLUGIN_TAG
-          value: latest
+          value: release-1.1
         - name: VELERO_AWS_PLUGIN_TAG
-          value: latest
+          value: fusor-1.0
         - name: VELERO_GCP_PLUGIN_TAG
-          value: latest
+          value: fusor-1.0
         - name: VELERO_AZURE_PLUGIN_TAG
-          value: latest
+          value: fusor-1.0
         - name: MIG_UI_TAG
-          value: latest
+          value: release-1.1
         - name: MIG_CONTROLLER_TAG
-          value: latest
+          value: release-1.1
       volumes:
         - name: runner
           emptyDir: {}
