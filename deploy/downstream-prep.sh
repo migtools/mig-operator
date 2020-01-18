@@ -89,7 +89,7 @@ if [ -d deploy/olm-catalog/mig-operator/v1.1.0 ]; then
   export V1_1_0_YAML=deploy/non-olm/v1.1.0/operator.yml
   sed -i s,quay.io,registry.redhat.io,g                                                                                           ${V1_1_0_YAML}
   sed -i s,ocpmigrate,rhcam-1-1,g                                                                                                 ${V1_1_0_YAML}
-  sed -i s,mig-operator:latest,openshift-migration-rhel7-operator:v1.1,g                                                          ${V1_1_0_YAML}
+  sed -i s,mig-operator:release-1.1,openshift-migration-rhel7-operator:v1.1,g                                                          ${V1_1_0_YAML}
   sed -i s,mig-controller,openshift-migration-controller-rhel8@sha256,g                                                           ${V1_1_0_YAML}
   sed -i s,mig-ui,openshift-migration-ui-rhel8@sha256,g                                                                           ${V1_1_0_YAML}
   sed -i 's,value: velero-restic-restore-helper,value: openshift-migration-velero-restic-restore-helper-rhel8@sha256,g'           ${V1_1_0_YAML}
