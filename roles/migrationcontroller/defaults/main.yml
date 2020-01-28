@@ -68,3 +68,7 @@ noobaa_admin_secret: noobaa-admin
 noobaa_system_namespace: "{{ mig_namespace }}"
 noobaa_mig_bucket_name: mig-storage
 noobaa_s3_endpoint_proto: http
+noobaa_system_core_cpu: 0.5
+noobaa_system_core_mem: 500Mi
+noobaa_system_db_cpu: 0.5
+noobaa_system_db_mem: 1Gi
