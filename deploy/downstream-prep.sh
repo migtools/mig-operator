@@ -6,6 +6,7 @@ if grep -q latest deploy/olm-catalog/mig-operator/mig-operator.package.yaml; the
 fi
 sed -i s,mig-operator,cam-operator,g deploy/olm-catalog/mig-operator/mig-operator.package.yaml
 rm -rf deploy/olm-catalog/mig-operator/stable deploy/olm-catalog/mig-operator/latest
+rm -rf deploy/olm-catalog/mig-operator/stable deploy/olm-catalog/mig-operator/v1.0.0
 
 if [ -d deploy/olm-catalog/mig-operator/v1.1.0 ]; then
   #Declare v1.1 image information
@@ -89,7 +90,7 @@ if [ -d deploy/olm-catalog/mig-operator/v1.1.0 ]; then
   export V1_1_0_YAML=deploy/non-olm/v1.1.0/operator.yml
   sed -i s,quay.io,registry.redhat.io,g                                                                                           ${V1_1_0_YAML}
   sed -i s,ocpmigrate,rhcam-1-1,g                                                                                                 ${V1_1_0_YAML}
-  sed -i s,mig-operator:release-1.1,openshift-migration-rhel7-operator:v1.1,g                                                          ${V1_1_0_YAML}
+  sed -i s,mig-operator:release-1.1,openshift-migration-rhel7-operator:v1.1,g                                                     ${V1_1_0_YAML}
   sed -i s,mig-controller,openshift-migration-controller-rhel8@sha256,g                                                           ${V1_1_0_YAML}
   sed -i s,mig-ui,openshift-migration-ui-rhel8@sha256,g                                                                           ${V1_1_0_YAML}
   sed -i 's,value: velero-restic-restore-helper,value: openshift-migration-velero-restic-restore-helper-rhel8@sha256,g'           ${V1_1_0_YAML}
@@ -108,7 +109,7 @@ if [ -d deploy/olm-catalog/mig-operator/v1.1.0 ]; then
   sed -i "/VELERO_AZURE_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_1_IMG_MAP[azureplugin_sha]}/"                              ${V1_1_0_YAML}
 fi
 
-if [ -d deploy/olm-catalog/mig-operator/v1.0.0 ]; then
+if [ -d deploy/olm-catalog/mig-operator/v1.0.1 ]; then
   #Declare v1.0 image information
   V1_0_IMAGES=(
     "controller"
@@ -137,56 +138,36 @@ if [ -d deploy/olm-catalog/mig-operator/v1.0.0 ]; then
     V1_0_IMG_MAP[${i}_sha]=$(oc image mirror --dry-run=true registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_0_IMG_MAP[${i}_repo]}:v1.0=quay.io/ocpmigrate/rhcam-${V1_0_IMG_MAP[${i}_repo]}:v1.0 2>&1 | grep -A1 manifests | grep sha256 | awk -F'[: ]' '{ print $8 }')
   done
 
-  # Make 1.0.0 Downstream CSV Changes
-  export V1_0_0_CSV=deploy/olm-catalog/mig-operator/v1.0.0/mig-operator.v1.0.0.clusterserviceversion.yaml
-  sed -i s,quay.io,image-registry.openshift-image-registry.svc:5000,g                                                   ${V1_0_0_CSV}
-  sed -i s,ocpmigrate,rhcam,g                                                                                           ${V1_0_0_CSV}
-  sed -i s,mig-operator:,openshift-migration-rhel7-operator:,g                                                          ${V1_0_0_CSV}
-  sed -i s,mig-controller,openshift-migration-controller-rhel8,g                                                        ${V1_0_0_CSV}
-  sed -i s,mig-ui,openshift-migration-ui-rhel8,g                                                                        ${V1_0_0_CSV}
-  sed -i 's,value: velero-restic-restore-helper,value: openshift-migration-velero-restic-restore-helper-rhel8,g'        ${V1_0_0_CSV}
-  sed -i 's,value: velero,value: openshift-migration-velero-rhel8,g'                                                    ${V1_0_0_CSV}
-  sed -i 's,value: migration-plugin,value: openshift-migration-plugin-rhel8,g'                                          ${V1_0_0_CSV}
-  sed -i s,release-1.0,v1.0,g                                                                                           ${V1_0_0_CSV}
-  sed -i s,fusor-1.1,v1.0,g                                                                                             ${V1_0_0_CSV}
-  sed -i s,mig-operator\.,cam-operator.,g                                                                               ${V1_0_0_CSV}
-  sed -i 's,: mig-operator,: cam-operator,g'                                                                            ${V1_0_0_CSV}
-  sed -i 's/displayName: Migration Operator/displayName: Cluster Application Migration Operator/g'                      ${V1_0_0_CSV}
-  sed -i 's/The Migration Operator/The Cluster Application Migration Operator/g'                                        ${V1_0_0_CSV}
-
-  # Make 1.0.0 Downstream non-OLM changes
-  export V1_0_0_YAML=deploy/non-olm/v1.0.0/operator.yml
-  sed -i s,quay.io,registry.redhat.io,g                                                                                 ${V1_0_0_YAML}
-  sed -i s,ocpmigrate,rhcam-1-0,g                                                                                       ${V1_0_0_YAML}
-  sed -i s,mig-operator:,openshift-migration-rhel7-operator:,g                                                          ${V1_0_0_YAML}
-  sed -i s,mig-controller,openshift-migration-controller-rhel8,g                                                        ${V1_0_0_YAML}
-  sed -i s,mig-ui,openshift-migration-ui-rhel8,g                                                                        ${V1_0_0_YAML}
-  sed -i 's,value: velero-restic-restore-helper,value: openshift-migration-velero-restic-restore-helper-rhel8,g'        ${V1_0_0_YAML}
-  sed -i 's,value: velero,value: openshift-migration-velero-rhel8,g'                                                    ${V1_0_0_YAML}
-  sed -i 's,value: migration-plugin,value: openshift-migration-plugin-rhel8,g'                                          ${V1_0_0_YAML}
-  sed -i s,release-1.0,v1.0,g                                                                                           ${V1_0_0_YAML}
-  sed -i s,fusor-1.1,v1.0,g                                                                                             ${V1_0_0_YAML}
-
   # Make 1.0.1 Downstream CSV Changes
   export V1_0_1_CSV=deploy/olm-catalog/mig-operator/v1.0.1/mig-operator.v1.0.1.clusterserviceversion.yaml
-  sed -i s,quay.io,image-registry.openshift-image-registry.svc:5000,g                                                   ${V1_0_1_CSV}
-  sed -i s,ocpmigrate,rhcam-1-0,g                                                                                       ${V1_0_1_CSV}
-  sed -i "s,mig-operator:.*,openshift-migration-rhel7-operator@sha256:${V1_0_IMG_MAP[operator_sha]},g"                  ${V1_0_1_CSV}
-  sed -i "s,rhel7-operator@sha256:.*,rhel7-operator@sha256:${V1_0_IMG_MAP[operator_sha]},g"                             ${V1_0_1_CSV}
-  sed -i s,mig-controller,openshift-migration-controller-rhel8@sha256,g                                                 ${V1_0_1_CSV}
-  sed -i s,mig-ui,openshift-migration-ui-rhel8@sha256,g                                                                 ${V1_0_1_CSV}
-  sed -i 's,value: velero-restic-restore-helper,value: openshift-migration-velero-restic-restore-helper-rhel8@sha256,g' ${V1_0_1_CSV}
-  sed -i 's,value: velero,value: openshift-migration-velero-rhel8@sha256,g'                                             ${V1_0_1_CSV}
-  sed -i 's,value: migration-plugin,value: openshift-migration-plugin-rhel8@sha256,g'                                   ${V1_0_1_CSV}
-  sed -i s,mig-operator\.,cam-operator.,g                                                                               ${V1_0_1_CSV}
-  sed -i 's,: mig-operator,: cam-operator,g'                                                                            ${V1_0_1_CSV}
-  sed -i 's/displayName: Migration Operator/displayName: Cluster Application Migration Operator/g'                      ${V1_0_1_CSV}
-  sed -i 's/The Migration Operator/The Cluster Application Migration Operator/g'                                        ${V1_0_1_CSV}
-  sed -i "/MIG_CONTROLLER_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_0_IMG_MAP[controller_sha]}/"                          ${V1_0_1_CSV}
-  sed -i "/MIG_UI_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_0_IMG_MAP[ui_sha]}/"                                          ${V1_0_1_CSV}
-  sed -i "/VELERO_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_0_IMG_MAP[plugin_sha]}/"                               ${V1_0_1_CSV}
-  sed -i "/VELERO_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_0_IMG_MAP[velero_sha]}/"                                      ${V1_0_1_CSV}
-  sed -i "/VELERO_RESTIC_RESTORE_HELPER_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_0_IMG_MAP[helper_sha]}/"                ${V1_0_1_CSV}
+  sed -i s,quay.io,image-registry.openshift-image-registry.svc:5000,g                                                                      ${V1_0_1_CSV}
+  sed -i s,ocpmigrate,rhcam-1-0,g                                                                                                          ${V1_0_1_CSV}
+  sed -i "s,mig-operator:.*,openshift-migration-rhel7-operator@sha256:${V1_0_IMG_MAP[operator_sha]},g"                                     ${V1_0_1_CSV}
+  sed -i "s,/mig-controller:.*,/openshift-migration-controller-rhel8@sha256:${V1_0_IMG_MAP[controller_sha]},g"                             ${V1_0_1_CSV}
+  sed -i "s,/mig-ui:.*,/openshift-migration-ui-rhel8@sha256:${V1_0_IMG_MAP[ui_sha]},g"                                                     ${V1_0_1_CSV}
+  sed -i "s,/velero:.*,/openshift-migration-velero-rhel8@sha256:${V1_0_IMG_MAP[velero_sha]},g"                                             ${V1_0_1_CSV}
+  sed -i "s,/velero-restic-restore-helper:.*,/openshift-migration-velero-restic-restore-helper-rhel8@sha256:${V1_0_IMG_MAP[helper_sha]},g" ${V1_0_1_CSV}
+  sed -i "s,/migration-plugin:.*,/openshift-migration-plugin-rhel8@sha256:${V1_0_IMG_MAP[plugin_sha]},g"                                   ${V1_0_1_CSV}
+  sed -i "s,rhel7-operator@sha256:.*,rhel7-operator@sha256:${V1_0_IMG_MAP[operator_sha]},g"                                                ${V1_0_1_CSV}
+  sed -i "s,controller-rhel8@sha256:.*,controller-rhel8@sha256:${V1_0_IMG_MAP[controller_sha]},g"                                          ${V1_0_1_CSV}
+  sed -i "s,ui-rhel8@sha256:.*,ui-rhel8@sha256:${V1_0_IMG_MAP[ui_sha]},g"                                                                  ${V1_0_1_CSV}
+  sed -i "s,velero-rhel8@sha256:.*,velero-rhel8@sha256:${V1_0_IMG_MAP[velero_sha]},g"                                                      ${V1_0_1_CSV}
+  sed -i "s,velero-restic-restore-helper-rhel8@sha256:.*,velero-restic-restore-helper-rhel8@sha256:${V1_0_IMG_MAP[helper_sha]},g"          ${V1_0_1_CSV}
+  sed -i "s,plugin-rhel8@sha256:.*,plugin-rhel8@sha256:${V1_0_IMG_MAP[plugin_sha]},g"                                                      ${V1_0_1_CSV}
+  sed -i s,mig-controller,openshift-migration-controller-rhel8@sha256,g                                                                    ${V1_0_1_CSV}
+  sed -i s,mig-ui,openshift-migration-ui-rhel8@sha256,g                                                                                    ${V1_0_1_CSV}
+  sed -i 's,value: velero-restic-restore-helper,value: openshift-migration-velero-restic-restore-helper-rhel8@sha256,g'                    ${V1_0_1_CSV}
+  sed -i 's,value: velero,value: openshift-migration-velero-rhel8@sha256,g'                                                                ${V1_0_1_CSV}
+  sed -i 's,value: migration-plugin,value: openshift-migration-plugin-rhel8@sha256,g'                                                      ${V1_0_1_CSV}
+  sed -i s,mig-operator\.,cam-operator.,g                                                                                                  ${V1_0_1_CSV}
+  sed -i 's,: mig-operator,: cam-operator,g'                                                                                               ${V1_0_1_CSV}
+  sed -i 's/displayName: Migration Operator/displayName: Cluster Application Migration Operator/g'                                         ${V1_0_1_CSV}
+  sed -i 's/The Migration Operator/The Cluster Application Migration Operator/g'                                                           ${V1_0_1_CSV}
+  sed -i "/MIG_CONTROLLER_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_0_IMG_MAP[controller_sha]}/"                                             ${V1_0_1_CSV}
+  sed -i "/MIG_UI_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_0_IMG_MAP[ui_sha]}/"                                                             ${V1_0_1_CSV}
+  sed -i "/VELERO_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_0_IMG_MAP[plugin_sha]}/"                                                  ${V1_0_1_CSV}
+  sed -i "/VELERO_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_0_IMG_MAP[velero_sha]}/"                                                         ${V1_0_1_CSV}
+  sed -i "/VELERO_RESTIC_RESTORE_HELPER_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_0_IMG_MAP[helper_sha]}/"                                   ${V1_0_1_CSV}
 
   # Make 1.0.1 Downstream non-OLM changes
   export V1_0_1_YAML=deploy/non-olm/v1.0.1/operator.yml
