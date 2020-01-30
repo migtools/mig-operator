@@ -172,6 +172,17 @@ metadata:
     certified: "false"
     support: Red Hat
 spec:
+  relatedImages:
+  - name: controller
+    image: quay.io/ocpmigrate/mig-controller:release-1.0
+  - name: ui
+    image: quay.io/ocpmigrate/mig-ui:release-1.0
+  - name: velero
+    image: quay.io/ocpmigrate/velero:fusor-1.1
+  - name: velero_restic_restore_helper
+    image: quay.io/ocpmigrate/velero-restic-restore-helper:fusor-1.1
+  - name: migration_plugin
+    image: quay.io/ocpmigrate/migration-plugin:release-1.0
   replaces: mig-operator.v1.0.0
   displayName: Migration Operator
   description: |
