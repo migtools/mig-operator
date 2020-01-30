@@ -19,6 +19,7 @@ if [ -d deploy/olm-catalog/mig-operator/v1.1.0 ]; then
     "gcpplugin"
     "awsplugin"
     "azureplugin"
+    "registry"
   )
 
  declare -A V1_1_IMG_MAP
@@ -31,6 +32,7 @@ if [ -d deploy/olm-catalog/mig-operator/v1.1.0 ]; then
   V1_1_IMG_MAP[gcpplugin_repo]="openshift-migration-velero-plugin-for-gcp"
   V1_1_IMG_MAP[awsplugin_repo]="openshift-migration-velero-plugin-for-aws"
   V1_1_IMG_MAP[azureplugin_repo]="openshift-migration-velero-plugin-for-microsoft-azure"
+  V1_1_IMG_MAP[registry_repo]="openshift-migration-registry"
 
   #Get latest 1.1 images
   for i in ${V1_1_IMAGES[@]}; do
@@ -55,15 +57,17 @@ if [ -d deploy/olm-catalog/mig-operator/v1.1.0 ]; then
   sed -i "s,/velero-plugin-for-aws:.*,/openshift-migration-velero-plugin-for-aws-rhel8@sha256:${V1_1_IMG_MAP[awsplugin_sha]},g"                           ${V1_1_0_CSV}
   sed -i "s,/velero-plugin-for-microsoft-azure:.*,/openshift-migration-velero-plugin-for-microsoft-azure-rhel8@sha256:${V1_1_IMG_MAP[azureplugin_sha]},g" ${V1_1_0_CSV}
   sed -i "s,/velero-plugin-for-gcp:.*,/openshift-migration-velero-plugin-for-gcp-rhel8@sha256:${V1_1_IMG_MAP[gcpplugin_sha]},g"                           ${V1_1_0_CSV}
+  sed -i "s,/registry:.*,/openshift-migration-registry-rhel8@sha256:${V1_1_IMG_MAP[registry_sha]},g"                                                      ${V1_1_0_CSV}
   sed -i "s,rhel7-operator@sha256:.*,rhel7-operator@sha256:${V1_1_IMG_MAP[operator_sha]},g"                                                               ${V1_1_0_CSV}
   sed -i "s,controller-rhel8@sha256:.*,controller-rhel8@sha256:${V1_1_IMG_MAP[controller_sha]},g"                                                         ${V1_1_0_CSV}
   sed -i "s,ui-rhel8@sha256:.*,ui-rhel8@sha256:${V1_1_IMG_MAP[ui_sha]},g"                                                                                 ${V1_1_0_CSV}
   sed -i "s,velero-rhel8@sha256:.*,velero-rhel8@sha256:${V1_1_IMG_MAP[velero_sha]},g"                                                                     ${V1_1_0_CSV}
   sed -i "s,velero-restic-restore-helper-rhel8@sha256:.*,velero-restic-restore-helper-rhel8@sha256:${V1_1_IMG_MAP[helper_sha]},g"                         ${V1_1_0_CSV}
   sed -i "s,plugin-rhel8@sha256:.*,plugin-rhel8@sha256:${V1_1_IMG_MAP[plugin_sha]},g"                                                                     ${V1_1_0_CSV}
-  sed -i "s,/aws-rhel8@sha256:.*,aws-rhel8@sha256:${V1_1_IMG_MAP[awsplugin_sha]},g"                                                                       ${V1_1_0_CSV}
-  sed -i "s,/azure-rhel8@sha256:.*,azure-rhel8@sha256:${V1_1_IMG_MAP[azureplugin_sha]},g"                                                                 ${V1_1_0_CSV}
-  sed -i "s,/gcp-rhel8@sha256:.*,gcp-rhel8@sha256:${V1_1_IMG_MAP[gcpplugin_sha]},g"                                                                       ${V1_1_0_CSV}
+  sed -i "s,aws-rhel8@sha256:.*,aws-rhel8@sha256:${V1_1_IMG_MAP[awsplugin_sha]},g"                                                                        ${V1_1_0_CSV}
+  sed -i "s,azure-rhel8@sha256:.*,azure-rhel8@sha256:${V1_1_IMG_MAP[azureplugin_sha]},g"                                                                  ${V1_1_0_CSV}
+  sed -i "s,gcp-rhel8@sha256:.*,gcp-rhel8@sha256:${V1_1_IMG_MAP[gcpplugin_sha]},g"                                                                        ${V1_1_0_CSV}
+  sed -i "s,registry-rhel8@sha256:.*,registry-rhel8@sha256:${V1_1_IMG_MAP[registry_sha]},g"                                                               ${V1_1_0_CSV}
   sed -i s,mig-controller,openshift-migration-controller-rhel8@sha256,g                                                                                   ${V1_1_0_CSV}
   sed -i s,mig-ui,openshift-migration-ui-rhel8@sha256,g                                                                                                   ${V1_1_0_CSV}
   sed -i 's,value: velero-restic-restore-helper,value: openshift-migration-velero-restic-restore-helper-rhel8@sha256,g'                                   ${V1_1_0_CSV}
@@ -72,6 +76,7 @@ if [ -d deploy/olm-catalog/mig-operator/v1.1.0 ]; then
   sed -i 's,value: velero-plugin-for-microsoft-azure,value: openshift-migration-velero-plugin-for-microsoft-azure-rhel8@sha256,g'                         ${V1_1_0_CSV}
   sed -i 's,value: velero,value: openshift-migration-velero-rhel8@sha256,g'                                                                               ${V1_1_0_CSV}
   sed -i 's,value: migration-plugin,value: openshift-migration-plugin-rhel8@sha256,g'                                                                     ${V1_1_0_CSV}
+  sed -i 's,value: registry$,value: openshift-migration-registry-rhel8@sha256,g'                                                                          ${V1_1_0_CSV}
   sed -i s,mig-operator\.,cam-operator.,g                                                                                                                 ${V1_1_0_CSV}
   sed -i 's,: mig-operator,: cam-operator,g'                                                                                                              ${V1_1_0_CSV}
   sed -i 's/displayName: Migration Operator/displayName: Cluster Application Migration Operator/g'                                                        ${V1_1_0_CSV}
@@ -84,12 +89,23 @@ if [ -d deploy/olm-catalog/mig-operator/v1.1.0 ]; then
   sed -i "/VELERO_GCP_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_1_IMG_MAP[gcpplugin_sha]}/"                                                          ${V1_1_0_CSV}
   sed -i "/VELERO_AWS_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_1_IMG_MAP[awsplugin_sha]}/"                                                          ${V1_1_0_CSV}
   sed -i "/VELERO_AZURE_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_1_IMG_MAP[azureplugin_sha]}/"                                                      ${V1_1_0_CSV}
+  sed -i "/MIGRATION_REGISTRY_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_1_IMG_MAP[registry_sha]}/"                                                          ${V1_1_0_CSV}
 
   # Make 1.1.0 Downstream non-OLM changes
   export V1_1_0_YAML=deploy/non-olm/v1.1.0/operator.yml
   sed -i s,quay.io,registry.redhat.io,g                                                                                           ${V1_1_0_YAML}
   sed -i s,ocpmigrate,rhcam-1-1,g                                                                                                 ${V1_1_0_YAML}
   sed -i s,mig-operator:release-1.1,openshift-migration-rhel7-operator:v1.1,g                                                     ${V1_1_0_YAML}
+  sed -i "s,rhel7-operator@sha256:.*,rhel7-operator@sha256:${V1_1_IMG_MAP[operator_sha]},g"                                       ${V1_1_0_YAML}
+  sed -i "s,controller-rhel8@sha256:.*,controller-rhel8@sha256:${V1_1_IMG_MAP[controller_sha]},g"                                 ${V1_1_0_YAML}
+  sed -i "s,ui-rhel8@sha256:.*,ui-rhel8@sha256:${V1_1_IMG_MAP[ui_sha]},g"                                                         ${V1_1_0_YAML}
+  sed -i "s,velero-rhel8@sha256:.*,velero-rhel8@sha256:${V1_1_IMG_MAP[velero_sha]},g"                                             ${V1_1_0_YAML}
+  sed -i "s,velero-restic-restore-helper-rhel8@sha256:.*,velero-restic-restore-helper-rhel8@sha256:${V1_1_IMG_MAP[helper_sha]},g" ${V1_1_0_YAML}
+  sed -i "s,plugin-rhel8@sha256:.*,plugin-rhel8@sha256:${V1_1_IMG_MAP[plugin_sha]},g"                                             ${V1_1_0_YAML}
+  sed -i "s,aws-rhel8@sha256:.*,aws-rhel8@sha256:${V1_1_IMG_MAP[awsplugin_sha]},g"                                                ${V1_1_0_YAML}
+  sed -i "s,azure-rhel8@sha256:.*,azure-rhel8@sha256:${V1_1_IMG_MAP[azureplugin_sha]},g"                                          ${V1_1_0_YAML}
+  sed -i "s,gcp-rhel8@sha256:.*,gcp-rhel8@sha256:${V1_1_IMG_MAP[gcpplugin_sha]},g"                                                ${V1_1_0_YAML}
+  sed -i "s,registry-rhel8@sha256:.*,registry-rhel8@sha256:${V1_1_IMG_MAP[registry_sha]},g"                                       ${V1_1_0_YAML}
   sed -i s,mig-controller,openshift-migration-controller-rhel8@sha256,g                                                           ${V1_1_0_YAML}
   sed -i s,mig-ui,openshift-migration-ui-rhel8@sha256,g                                                                           ${V1_1_0_YAML}
   sed -i 's,value: velero-restic-restore-helper,value: openshift-migration-velero-restic-restore-helper-rhel8@sha256,g'           ${V1_1_0_YAML}
@@ -98,6 +114,7 @@ if [ -d deploy/olm-catalog/mig-operator/v1.1.0 ]; then
   sed -i 's,value: velero-plugin-for-microsoft-azure,value: openshift-migration-velero-plugin-for-microsoft-azure-rhel8@sha256,g' ${V1_1_0_YAML}
   sed -i 's,value: velero,value: openshift-migration-velero-rhel8@sha256,g'                                                       ${V1_1_0_YAML}
   sed -i 's,value: migration-plugin,value: openshift-migration-plugin-rhel8@sha256,g'                                             ${V1_1_0_YAML}
+  sed -i 's,value: registry$,value: openshift-migration-registry-rhel8@sha256,g'                                                  ${V1_1_0_YAML}
   sed -i "/MIG_CONTROLLER_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_1_IMG_MAP[controller_sha]}/"                                    ${V1_1_0_YAML}
   sed -i "/MIG_UI_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_1_IMG_MAP[ui_sha]}/"                                                    ${V1_1_0_YAML}
   sed -i "/VELERO_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_1_IMG_MAP[plugin_sha]}/"                                         ${V1_1_0_YAML}
@@ -106,6 +123,7 @@ if [ -d deploy/olm-catalog/mig-operator/v1.1.0 ]; then
   sed -i "/VELERO_GCP_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_1_IMG_MAP[gcpplugin_sha]}/"                                  ${V1_1_0_YAML}
   sed -i "/VELERO_AWS_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_1_IMG_MAP[awsplugin_sha]}/"                                  ${V1_1_0_YAML}
   sed -i "/VELERO_AZURE_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_1_IMG_MAP[azureplugin_sha]}/"                              ${V1_1_0_YAML}
+  sed -i "/MIGRATION_REGISTRY_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_1_IMG_MAP[registry_sha]}/"                                  ${V1_1_0_YAML}
 fi
 
 if [ -d deploy/olm-catalog/mig-operator/v1.0.0 ]; then
