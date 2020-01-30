@@ -189,6 +189,8 @@ spec:
     image: quay.io/ocpmigrate/velero-plugin-for-microsoft-azure:latest
   - name: gcp_plugin
     image: quay.io/ocpmigrate/velero-plugin-for-gcp:latest
+  - name: registry
+    image: quay.io/ocpmigrate/registry:latest
   displayName: Migration Operator
   description: |
     The Migration Operator for OpenShift enables installation of the OpenShift application migration tool.
@@ -734,6 +736,10 @@ spec:
                 - name: MIG_UI_REPO
                   value: mig-ui
                 - name: MIG_UI_TAG
+                  value: latest
+                - name: MIGRATION_REGISTRY_REPO
+                  value: registry
+                - name: MIGRATION_REGISTRY_TAG
                   value: latest
                 - name: VELERO_REPO
                   value: velero
