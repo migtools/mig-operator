@@ -76,6 +76,8 @@ spec:
           value: cam
         - name: SECRET_NAME
           value: webhook-server-secret
+        - name: MIGRATION_REGISTRY_IMAGE
+          value: {{ migration_registry_image }}:{{ migration_registry_version }}
         envFrom:
         - configMapRef:
             name: migration-controller

@@ -225,6 +225,10 @@ spec:
           value: mig-controller
         - name: MIG_UI_REPO
           value: mig-ui
+        - name: MIGRATION_REGISTRY_REPO
+          value: registry
+        - name: MIGRATION_REGISTRY_TAG
+          value: latest
         - name: VELERO_REPO
           value: velero
         - name: VELERO_PLUGIN_REPO

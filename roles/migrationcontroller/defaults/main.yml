@@ -28,6 +28,9 @@ mig_ui_oauth_redirect_url: ""
 mig_ui_oauth_secret: ""
 mig_ui_repo: "{{ lookup( 'env', 'MIG_UI_REPO') }}"
 mig_ui_version: "{{ snapshot_tag | default(lookup( 'env', 'MIG_UI_TAG')) }}"
+migration_registry_image: "{{ registry }}/{{ project }}/{{ migration_registry_repo }}"
+migration_registry_repo: "{{ lookup( 'env', 'MIGRATION_REGISTRY_REPO') }}"
+migration_registry_version: "{{ lookup( 'env', 'MIGRATION_REGISTRY_TAG') }}"
 olm_managed: false
 registry: "{{ lookup( 'env', 'REGISTRY') }}"
 project: "{{ lookup( 'env', 'PROJECT') }}"
@@ -68,3 +71,7 @@ noobaa_admin_secret: noobaa-admin
 noobaa_system_namespace: "{{ mig_namespace }}"
 noobaa_mig_bucket_name: mig-storage
 noobaa_s3_endpoint_proto: http
+noobaa_system_core_cpu: 0.5
+noobaa_system_core_mem: 500Mi
+noobaa_system_db_cpu: 0.5
+noobaa_system_db_mem: 1Gi

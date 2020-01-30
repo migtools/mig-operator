@@ -6,4 +6,12 @@ metadata:
   labels:
     app: openshift-migration-noobaa
   namespace: {{ noobaa_system_namespace }}
-spec: {}
+spec:
+ dbResources:
+   requests:
+     cpu: {{ noobaa_system_db_cpu }}
+     memory: {{ noobaa_system_db_mem }}
+ coreResources:
+   requests:
+     cpu: {{ noobaa_system_core_cpu }}
+     memory: {{ noobaa_system_core_mem }}
