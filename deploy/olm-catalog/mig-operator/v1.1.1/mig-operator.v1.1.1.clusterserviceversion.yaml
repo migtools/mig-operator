@@ -2,10 +2,10 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
-  name: mig-operator.v1.1.0
+  name: mig-operator.v1.1.1
   namespace: openshift-migration
   annotations:
-    olm.skipRange: '>=0.0.0 <1.1.0'
+    olm.skipRange: '>=0.0.0 <1.1.1'
     capabilities: Seamless Upgrades
     description: Facilitates migration of workloads from OpenShift 3.x to OpenShift 4.x
     categories: 'OpenShift Optional'
@@ -213,7 +213,7 @@ spec:
     url: https://github.com/fusor/mig-operator
 
   labels:
-    alm-status-descriptors: mig-operator.v1.1.0
+    alm-status-descriptors: mig-operator.v1.1.1
     alm-owner-prometheus: mig-operator
 
   selector:
@@ -770,7 +770,7 @@ spec:
               - name: runner
                 emptyDir: {}
   maturity: stable
-  version: 1.1.0
+  version: 1.1.1
   customresourcedefinitions:
     owned:
     - name: backupstoragelocations.velero.io
