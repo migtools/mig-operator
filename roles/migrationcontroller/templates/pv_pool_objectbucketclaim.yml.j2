@@ -1,0 +1,10 @@
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: {{ noobaa_bucket_name }}
+  namespace: {{ noobaa_namespace }}
+spec:
+  bucketName: migstorage
+  storageClassName: {{ noobaa_namespace }}.noobaa.io
+  additionalConfig:
+    bucketclass: mcg-pv-pool-bc

@@ -9,7 +9,7 @@ metadata:
     capabilities: Seamless Upgrades
     description: Facilitates migration of workloads from OpenShift 3.x to OpenShift 4.x
     categories: 'OpenShift Optional'
-    containerImage: quay.io/ocpmigrate/mig-operator:latest
+    containerImage: quay.io/jmontleon/mig-operator-container:latest
     createdAt: 2019-07-25T10:21:00Z
     repository: https://github.com/fusor/mig-operator
     alm-examples: |-
@@ -31,7 +31,15 @@ metadata:
               "restic_timeout": "1h",
               "mig_pv_limit": "100",
               "mig_pod_limit": "100",
-              "mig_namespace_limit": "10"
+              "mig_namespace_limit": "10",
+              "noobaa": true,
+              "noobaa_system_core_cpu": "0.5",
+              "noobaa_system_core_mem": "500Mi",
+              "noobaa_system_db_cpu": "0.5",
+              "noobaa_system_db_mem": "1Gi",
+              "noobaa_pv_pool_pv_quantity": "3",
+              "noobaa_pv_pool_pv_size": "50Gi",
+              "noobaa_pv_pool_pv_storageclass": "gp2"
             }
         },
         {
@@ -263,6 +271,19 @@ spec:
           - noobaa.io
           resources:
           - noobaas
+          - backingstores
+          - backingstores/status
+          - bucketclasses
+          - bucketclasses/status
+          verbs:
+          - "*"
+        - apiGroups:
+          - objectbucket.io
+          resources:
+          - objectbuckets
+          - objectbuckets/status
+          - objectbucketclaims
+          - objectbucketclaims/status
           verbs:
           - "*"
         - apiGroups:
@@ -699,7 +720,7 @@ spec:
               serviceAccount: migration-operator
               containers:
               - name: ansible
-                image: quay.io/ocpmigrate/mig-operator:latest
+                image: quay.io/jmontleon/mig-operator-container:latest
                 command:
                 - /usr/local/bin/ao-logs
                 - /tmp/ansible-operator/runner
@@ -710,7 +731,7 @@ spec:
                   name: runner
                   readOnly: true
               - name: operator
-                image: quay.io/ocpmigrate/mig-operator:latest
+                image: quay.io/jmontleon/mig-operator-container:latest
                 imagePullPolicy: Always
                 volumeMounts:
                 - mountPath: /tmp/ansible-operator/runner

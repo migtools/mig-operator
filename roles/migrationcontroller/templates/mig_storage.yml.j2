@@ -21,13 +21,13 @@ spec:
   volumeSnapshotProvider: aws
 
   backupStorageConfig:
-    awsBucketName: {{ noobaa_mig_bucket_name }}
+    awsBucketName: {{ noobaa_bucket_name }}
     awsS3ForcePathStyle: true
     awsS3Url: {{ noobaa_s3_url }}
     credsSecretRef:
       namespace: {{ mig_namespace }}
       name: migstorage-default-creds
-
+    insecure: true
   volumeSnapshotConfig:
     credsSecretRef:
       namespace: {{ mig_namespace }}
