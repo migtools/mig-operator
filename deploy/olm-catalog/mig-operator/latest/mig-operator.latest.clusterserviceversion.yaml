@@ -5,6 +5,7 @@ metadata:
   name: mig-operator.latest
   namespace: openshift-migration
   annotations:
+    olm.skipRange: '>=0.0.0 <1.2.0'
     capabilities: Seamless Upgrades
     description: Facilitates migration of workloads from OpenShift 3.x to OpenShift 4.x
     categories: 'OpenShift Optional'
@@ -769,7 +770,7 @@ spec:
               - name: runner
                 emptyDir: {}
   maturity: alpha
-  version: 1.0.1
+  version: 1.2.0
   customresourcedefinitions:
     owned:
     - name: backupstoragelocations.velero.io
