@@ -1,6 +1,3 @@
 ---
-- name: restart velero
-  include_tasks: restart_velero.yml
-
-- name: restart restic
-  include_tasks: restart_restic.yml
+- name: restart velero and restic
+  include_tasks: restart_velero_and_restic.yml

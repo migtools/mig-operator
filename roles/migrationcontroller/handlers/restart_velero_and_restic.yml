@@ -13,3 +13,20 @@
     kind: Pod
     namespace: "{{ mig_namespace }}"
   with_items: "{{ velero_pods.resources }}"
+
+- name: Find Restic Pods
+  k8s_facts:
+    kind: Pod
+    namespace: "{{ mig_namespace }}"
+    label_selectors:
+    - name=restic
+  register: restic_pods
+
+- name: Terminate Restic Pods
+  k8s:
+    name: "{{ item.metadata.name }}"
+    state: absent
+    kind: Pod
+    namespace: "{{ mig_namespace }}"
+  with_items: "{{ restic_pods.resources }}"
+
