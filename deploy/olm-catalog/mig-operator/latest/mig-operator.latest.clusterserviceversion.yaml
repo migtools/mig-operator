@@ -793,6 +793,12 @@ spec:
   maturity: alpha
   version: 1.2.0
   customresourcedefinitions:
+    required:
+    - name: noobaas.noobaa.io
+      version: v1alpha1
+      kind: NooBaa
+      displayName: NooBaa
+      description: NooBaa System
     owned:
     - name: backupstoragelocations.velero.io
       version: v1
