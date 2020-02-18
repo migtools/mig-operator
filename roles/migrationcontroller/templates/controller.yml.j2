@@ -35,7 +35,11 @@ data:
   CORS_ALLOWED_ORIGINS: {{ cors_origins | join(' ') }}
   WORKING_DIR: {{ discovery_volume_path }}
 ---
+{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int < 9 %}
 apiVersion: apps/v1beta1
+{% else %}
+apiVersion: apps/v1
+{% endif %}
 kind: Deployment
 metadata:
   labels:
