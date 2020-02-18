@@ -10,12 +10,19 @@ metadata:
 data:
   image: {{ velero_restic_restore_helper_image }}:{{ velero_restic_restore_helper_version }}
 ---
+{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int < 9 %}
 apiVersion: apps/v1beta1
+{% else %}
+apiVersion: apps/v1
+{% endif %}
 kind: Deployment
 metadata:
   namespace: {{ mig_namespace }}
   name: velero
 spec:
+  selector:
+    matchLabels:
+      component: velero
   replicas: 1
   template:
     metadata:

@@ -17,7 +17,11 @@ spec:
     app: migration
     service: migration-ui
 ---
+{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int < 9 %}
 apiVersion: apps/v1beta1
+{% else %}
+apiVersion: apps/v1
+{% endif %}
 kind: Deployment
 metadata:
   name: migration-ui
