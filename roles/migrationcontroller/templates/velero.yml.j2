@@ -140,7 +140,11 @@ spec:
           - mountPath: /credentials
             name: cloud-credentials
 ---
+{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int < 9 %}
 apiVersion: extensions/v1beta1
+{% else %}
+apiVersion: apps/v1
+{% endif %}
 kind: DaemonSet
 metadata:
   name: restic
