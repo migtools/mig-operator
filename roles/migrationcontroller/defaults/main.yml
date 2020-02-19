@@ -43,7 +43,7 @@ noobaa_pv_pool_pv_size: 50Gi
 noobaa_pv_pool_pv_storageclass: gp2
 noobaa_s3_endpoint_proto: https
 noobaa_system_core_cpu: 0.5
-noobaa_system_core_mem: 500Mi
+noobaa_system_core_mem: 1Gi
 noobaa_system_db_cpu: 0.5
 noobaa_system_db_mem: 1Gi
 olm_managed: false
