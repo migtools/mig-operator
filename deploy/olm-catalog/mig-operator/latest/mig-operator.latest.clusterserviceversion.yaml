@@ -34,7 +34,7 @@ metadata:
               "mig_namespace_limit": "10",
               "noobaa": true,
               "noobaa_system_core_cpu": "0.5",
-              "noobaa_system_core_mem": "500Mi",
+              "noobaa_system_core_mem": "1Gi",
               "noobaa_system_db_cpu": "0.5",
               "noobaa_system_db_mem": "1Gi",
               "noobaa_pv_pool_pv_quantity": "3",
