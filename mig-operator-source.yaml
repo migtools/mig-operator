@@ -1,11 +1,11 @@
 apiVersion: operators.coreos.com/v1
 kind: OperatorSource
 metadata:
-  name: ocpmigrate-operators
+  name: migration-operator
   namespace: openshift-marketplace
 spec:
   type: appregistry
   endpoint: https://quay.io/cnr
-  registryNamespace: ocpmigrateoperator
-  displayName: "Migration Operators"
+  registryNamespace: konveyor
+  displayName: "Migration Operator"
   publisher: "ocp-migrate-team@redhat.com"

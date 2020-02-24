@@ -9,7 +9,7 @@ metadata:
     capabilities: Seamless Upgrades
     description: Facilitates migration of workloads from OpenShift 3.x to OpenShift 4.x
     categories: 'OpenShift Optional'
-    containerImage: quay.io/ocpmigrate/mig-operator:latest
+    containerImage: quay.io/konveyor/mig-operator-container:latest
     createdAt: 2019-07-25T10:21:00Z
     repository: https://github.com/fusor/mig-operator
     alm-examples: |-
@@ -699,7 +699,7 @@ spec:
               serviceAccount: migration-operator
               containers:
               - name: ansible
-                image: quay.io/ocpmigrate/mig-operator:latest
+                image: quay.io/konveyor/mig-operator-container:latest
                 command:
                 - /usr/local/bin/ao-logs
                 - /tmp/ansible-operator/runner
@@ -710,7 +710,7 @@ spec:
                   name: runner
                   readOnly: true
               - name: operator
-                image: quay.io/ocpmigrate/mig-operator:latest
+                image: quay.io/konveyor/mig-operator-container:latest
                 imagePullPolicy: Always
                 volumeMounts:
                 - mountPath: /tmp/ansible-operator/runner
@@ -729,7 +729,7 @@ spec:
                 - name: REGISTRY
                   value: quay.io
                 - name: PROJECT
-                  value: ocpmigrate
+                  value: konveyor
                 - name: MIG_CONTROLLER_REPO
                   value: mig-controller
                 - name: MIG_CONTROLLER_TAG
