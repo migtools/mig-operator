@@ -194,14 +194,14 @@ spec:
         - /usr/local/bin/ao-logs
         - /tmp/ansible-operator/runner
         - stdout
-        image: quay.io/ocpmigrate/mig-operator:latest
+        image: quay.io/konveyor/mig-operator-container:latest
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /tmp/ansible-operator/runner
           name: runner
           readOnly: true
       - name: operator
-        image: quay.io/ocpmigrate/mig-operator:latest
+        image: quay.io/konveyor/mig-operator-container:latest
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /tmp/ansible-operator/runner
@@ -220,7 +220,7 @@ spec:
         - name: REGISTRY
           value: quay.io
         - name: PROJECT
-          value: ocpmigrate
+          value: konveyor
         - name: MIG_CONTROLLER_REPO
           value: mig-controller
         - name: MIG_UI_REPO
