@@ -1,7 +1,7 @@
-packageName: mig-operator
+packageName: konveyor-operator
 channels:
 - name: latest
-  currentCSV: mig-operator.latest
+  currentCSV: konveyor-operator.latest
 - name: release-v1.1
   currentCSV: mig-operator.v1.1.1
 - name: release-v1
