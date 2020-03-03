@@ -1,4 +1,4 @@
-# mig-operator
+#### mig-operator
 This operator will install velero with customized migration plugins, the migration controller, and migration UI used for migrating workloads from Openshift 3 to Openshift 4.
 
 ## Operator Installation with OLM on Openshift 4
