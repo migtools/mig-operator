@@ -2,7 +2,7 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
-  name: konveyor-operator.latest
+  name: konveyor-operator.v1.2.0
   namespace: openshift-migration
   annotations:
     olm.skipRange: '>=0.0.0 <1.2.0'
@@ -198,7 +198,7 @@ spec:
 
     Prior to installing create the openshift-migration namespace (oc create namespace openshift-migration) and install the operator within this namespace.
 
-    After installation you can install components for by creating a MigrationController CR. Generally the defaults provided are acceptable for an OpenShift 4 destination cluster.
+    After installation you can install components by creating a MigrationController CR. Generally the defaults provided are acceptable for an OpenShift 4 destination cluster.
     The components include
     * velero and restic which is required on all source and destination cluster
     * mig-controller to coordinate backups and restores between cluster
@@ -223,7 +223,7 @@ spec:
     url: https://github.com/konveyor/mig-operator
 
   labels:
-    alm-status-descriptors: konveyor-operator.latest
+    alm-status-descriptors: konveyor-operator.v1.2.0
     alm-owner-prometheus: konveyor-operator
 
   selector:
