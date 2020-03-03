@@ -15,7 +15,7 @@ The CSV is responsible in OLM installs for
 
 The operator.yml is responsible in non-OLM installs for
 * [ ] Operator permissions
-* [ ] Operator permissions
+* [ ] Operator deployment
 
 The ansible role is responsible in non-OLM installs for:
 * [ ] Operand permissions
