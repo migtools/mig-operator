@@ -3,4 +3,5 @@
   group: migration.openshift.io
   kind: MigrationController
   role: /opt/ansible/roles/migrationcontroller
+  reconcilePeriod: 30m
   manageStatus: False
