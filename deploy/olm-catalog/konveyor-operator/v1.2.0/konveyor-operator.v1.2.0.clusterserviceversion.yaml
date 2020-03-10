@@ -389,6 +389,7 @@ spec:
           - ""
           resources:
           - serviceaccounts
+          - configmaps
           verbs:
           - get
           - list
@@ -783,6 +784,11 @@ spec:
         version: route.openshift.io/v1
       - kind: Daemonset
         version: apps/v1
+    - name: mighooks.migration.openshift.io
+      version: v1alpha1
+      kind: MigHook
+      displayName: MigHook
+      description: A migration hook
     - name: migstorages.migration.openshift.io
       version: v1alpha1
       kind: MigStorage

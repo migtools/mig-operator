@@ -13,3 +13,4 @@ This guide will provide you with hands-on exposure to the new OpenShift Migratio
 [Section 7 - Additional Links](./7.md)<br>
 [Section 8 - Mirroring Images for Restricted Network Installs](./8.md)<br>
 [Section 9 - Manual Rollback Procedure](./9.md)<br>
+[Section 10 - Migration Hooks](./10.md)<br>

@@ -32,6 +32,24 @@ spec:
               type: boolean
             destMigClusterRef:
               type: object
+            hooks:
+              items:
+                properties:
+                  executionNamespace:
+                    type: string
+                  phase:
+                    type: string
+                  reference:
+                    type: object
+                  serviceAccount:
+                    type: string
+                required:
+                - reference
+                - phase
+                - executionNamespace
+                - serviceAccount
+                type: object
+              type: array
             migStorageRef:
               type: object
             namespaces:
