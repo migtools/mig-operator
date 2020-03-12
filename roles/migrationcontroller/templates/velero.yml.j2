@@ -149,6 +149,8 @@ spec:
   selector:
     matchLabels:
       name: restic
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
