@@ -92,6 +92,35 @@ spec:
               type: object
           type: object
         status:
+          properties:
+            incompatibleNamespaces:
+              items:
+                properties:
+                  gvrs:
+                    items:
+                      properties:
+                        group:
+                          type: string
+                        resource:
+                          type: string
+                        version:
+                          type: string
+                      required:
+                      - group
+                      - version
+                      - resource
+                      type: object
+                    type: array
+                  name:
+                    type: string
+                required:
+                - name
+                - gvrs
+                type: object
+              type: array
+            observedGeneration:
+              format: int64
+              type: integer
           type: object
   version: v1alpha1
 status:
