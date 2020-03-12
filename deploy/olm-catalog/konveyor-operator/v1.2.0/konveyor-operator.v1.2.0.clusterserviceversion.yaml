@@ -685,9 +685,15 @@ spec:
         - nonResourceURLs:
           - '*'
           verbs:
-          - '*'
+          - get
+          - list
+          - watch
+          - create
+          - update
+          - patch
+          - delete
         - apiGroups:
-          - security.openshift.io"
+          - security.openshift.io
           resources:
           - securitycontextconstraints
           verbs:
