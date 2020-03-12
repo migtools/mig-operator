@@ -3,7 +3,7 @@ channels:
 - name: latest
   currentCSV: mig-operator.latest
 - name: release-v1.1
-  currentCSV: mig-operator.v1.1.1
+  currentCSV: mig-operator.v1.1.2
 - name: release-v1
   currentCSV: mig-operator.v1.0.1
 defaultChannel: release-v1.1
