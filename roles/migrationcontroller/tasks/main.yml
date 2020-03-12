@@ -148,9 +148,6 @@
     k8s:
       state: "{{ velero_state }}"
       definition: "{{ lookup('template', 'velero.yml.j2') }}"
-    notify:
-    - restart velero
-    - restart restic
 
   - when: migration_controller or migration_ui
     block:
