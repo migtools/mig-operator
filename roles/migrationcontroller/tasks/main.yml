@@ -171,14 +171,14 @@
       - "migration_v1alpha1_migstorage.yaml"
     when: not olm_managed
 
+  - name: "Set up mig controller RBAC"
+    k8s:
+      state: "{{ controller_state }}"
+      definition: "{{ lookup('template', 'mig_rbac.yml.j2') }}"
+    when: not olm_managed
+
   - when: migration_controller or migration_ui
     block:
-    - name: "Set up mig controller RBAC"
-      k8s:
-        state: "{{ controller_state }}"
-        definition: "{{ lookup('template', 'mig_rbac.yml.j2') }}"
-      when: not olm_managed
-
     - name: Set default CORS URLs
       set_fact:
         mig_ui_cors_loopback: "//127.0.0.1(:|$)"
@@ -444,14 +444,6 @@
       state: "{{ ui_state }}"
       definition: "{{ lookup('template', 'ui.yml.j2') }}"
 
-  - when: mig_svc_account
-    block:
-    - name: "Set up mig svc account for remote connections"
-      k8s:
-        state: "present"
-        definition: "{{ lookup('template', 'mig_service_account.yml.j2') }}"
-      when: not olm_managed
-
   - when: migration_controller or migration_ui
     name: "Set up host MigCluster"
     k8s:
@@ -570,6 +562,5 @@
           phase: Failed
       when: item.type == 'Critical'
       with_items: "{{ controller.resources[0].status.conditions }}"
-
 
 - import_tasks: mcg.yml

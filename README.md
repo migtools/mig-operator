@@ -146,7 +146,7 @@ When adding a remote cluster in the migration UI you will be prompted for a serv
 
 To get a serviceaccount token use the following command:
 ```
-oc sa get-token -n openshift-migration mig
+oc sa get-token -n openshift-migration migration-controller
 ```
 
 ## Cleanup

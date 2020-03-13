@@ -662,18 +662,12 @@ spec:
           - get
           - list
           - watch
-      - serviceAccountName: mig
-        rules:
         - apiGroups:
           - '*'
           resources:
           - '*'
           verbs:
-          - '*'
-        - nonResourceURLs:
-          - '*'
-          verbs:
-          - '*'
+          - list
       - serviceAccountName: velero
         rules:
         - apiGroups:
