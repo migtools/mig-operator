@@ -149,19 +149,19 @@
       state: "{{ velero_state }}"
       definition: "{{ lookup('template', 'velero.yml.j2') }}"
 
+  - name: "Set up migration CRDs"
+    k8s:
+      state: "present"
+      src: "{{ role_path }}/files/{{ item }}"
+    with_items:
+      - "migration_v1alpha1_migcluster.yaml"
+      - "migration_v1alpha1_migmigration.yaml"
+      - "migration_v1alpha1_migplan.yaml"
+      - "migration_v1alpha1_migstorage.yaml"
+    when: not olm_managed
+
   - when: migration_controller or migration_ui
     block:
-    - name: "Set up migration CRDs"
-      k8s:
-        state: "present"
-        src: "{{ role_path }}/files/{{ item }}"
-      with_items:
-        - "migration_v1alpha1_migcluster.yaml"
-        - "migration_v1alpha1_migmigration.yaml"
-        - "migration_v1alpha1_migplan.yaml"
-        - "migration_v1alpha1_migstorage.yaml"
-      when: not olm_managed
-
     - name: "Set up mig controller RBAC"
       k8s:
         state: "{{ controller_state }}"
