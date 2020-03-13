@@ -162,6 +162,55 @@ metadata:
     component: velero
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: migration-velero
+rules:
+- apiGroups:
+  - migration.openshift.io
+  - velero.io
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - packages.operators.coreos.com
+  resources:
+  - packagemanifests
+  verbs:
+  - '*'
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - get
+  - watch
+  - list
+  - update
+  - patch
+  - create
+  - delete
+  - assign
+  - view
+  - admin
+  - impersonate
+  - deletecollection
+  - edit
+- nonResourceURLs:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - security.openshift.io
+  resources:
+  - securitycontextconstraints
+  verbs:
+  - use
+  resourceNames:
+  - privileged`
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
   name: migration-velero
@@ -173,7 +222,7 @@ subjects:
     name: velero
 roleRef:
   kind: ClusterRole
-  name: cluster-admin
+  name: migration-velero
   apiGroup: rbac.authorization.k8s.io
 ---
 allowHostDirVolumePlugin: true

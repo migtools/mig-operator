@@ -677,17 +677,42 @@ spec:
       - serviceAccountName: velero
         rules:
         - apiGroups:
-          - '*'
+          - migration.openshift.io
+          - velero.io
           resources:
           - '*'
           verbs:
           - '*'
+        - apiGroups:
+          - packages.operators.coreos.com
+          resources:
+          - packagemanifests
+          verbs:
+          - '*'
+        - apiGroups:
+          - '*'
+          resources:
+          - '*'
+          verbs:
+          - get
+          - watch
+          - list
+          - update
+          - patch
+          - create
+          - delete
+          - assign
+          - view
+          - admin
+          - impersonate
+          - deletecollection
+          - edit
         - nonResourceURLs:
           - '*'
           verbs:
           - '*'
         - apiGroups:
-          - security.openshift.io"
+          - security.openshift.io
           resources:
           - securitycontextconstraints
           verbs:
