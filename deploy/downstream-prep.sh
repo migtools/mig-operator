@@ -49,7 +49,7 @@ if [ -d deploy/olm-catalog/mig-operator/v1.1.0 ]; then
            deploy/olm-catalog/mig-operator/v1.1.1/mig-operator.v1.1.1.clusterserviceversion.yaml \
            deploy/olm-catalog/mig-operator/v1.1.2/mig-operator.v1.1.2.clusterserviceversion.yaml \
            deploy/non-olm/v1.1.0/operator.yml \
-           deploy/non-olm/v1.1.1/operator.yml
+           deploy/non-olm/v1.1.1/operator.yml \
            deploy/non-olm/v1.1.2/operator.yml
     do
     if [[ "$f" =~ .*clusterserviceversion.* ]]; then
