@@ -173,7 +173,7 @@
 
   - name: "Set up mig controller RBAC"
     k8s:
-      state: "{{ controller_state }}"
+      state: present
       definition: "{{ lookup('template', 'mig_rbac.yml.j2') }}"
     when: not olm_managed
 
