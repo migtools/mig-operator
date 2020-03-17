@@ -677,10 +677,17 @@ spec:
       - serviceAccountName: velero
         rules:
         - apiGroups:
+          - build.openshift.io
           - migration.openshift.io
           - velero.io
           resources:
           - '*'
+          verbs:
+          - '*'
+        - apiGroups:
+          - ""
+          resources:
+          - serviceaccounts
           verbs:
           - '*'
         - apiGroups:
@@ -702,11 +709,7 @@ spec:
           - create
           - delete
           - assign
-          - view
-          - admin
-          - impersonate
           - deletecollection
-          - edit
         - nonResourceURLs:
           - '*'
           verbs:
