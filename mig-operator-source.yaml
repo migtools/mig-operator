@@ -1,7 +1,7 @@
 apiVersion: operators.coreos.com/v1
 kind: OperatorSource
 metadata:
-  name: ocpmigrate-operator
+  name: migration-operator
   namespace: openshift-marketplace
 spec:
   type: appregistry
