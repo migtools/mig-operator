@@ -1,6 +1,6 @@
 ## Testing Changes to the mig-operator CSV with OperatorHub + OLM
-1. Edit [mig-operator CSV](https://github.com/fusor/mig-operator/blob/master/deploy/olm-catalog/mig-operator/v1.0.0/mig-operator.v1.0.0.clusterserviceversion.yaml) making desired changes.
-2. Edit [mig-operator-source.yaml](https://github.com/fusor/mig-operator/blob/master/mig-operator-source.yaml) setting 'registryNamespace' to an unused repo name under your quay.io org.
+1. Edit [mig-operator CSV](https://github.com/konveyor/mig-operator/blob/master/deploy/olm-catalog/mig-operator/v1.0.0/mig-operator.v1.0.0.clusterserviceversion.yaml) making desired changes.
+2. Edit [mig-operator-source.yaml](https://github.com/konveyor/mig-operator/blob/master/mig-operator-source.yaml) setting 'registryNamespace' to an unused repo name under your quay.io org.
 ```
 apiVersion: operators.coreos.com/v1
 kind: OperatorSource
