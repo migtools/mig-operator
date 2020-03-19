@@ -679,6 +679,7 @@ spec:
         - apiGroups:
           - build.openshift.io
           - migration.openshift.io
+          - rbac.authorization.k8s.io
           - velero.io
           resources:
           - '*'
