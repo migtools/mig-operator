@@ -3,12 +3,24 @@ apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRole
 metadata:
   creationTimestamp: null
-  name: migration-manager-role
+  name: migration-controller
 rules:
 - apiGroups:
   - ""
   resources:
   - serviceaccounts
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - apps
+  resources:
+  - '*'
   verbs:
   - get
   - list
@@ -39,64 +51,11 @@ rules:
   - patch
 - apiGroups:
   - migration.openshift.io
+  - velero.io
   resources:
-  - migclusters
+  - '*'
   verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - migration.openshift.io
-  resources:
-  - migclusters/status
-  verbs:
-  - get
-  - update
-  - patch
-- apiGroups:
-  - migration.openshift.io
-  resources:
-  - migmigrations
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - migration.openshift.io
-  resources:
-  - migmigrations/status
-  verbs:
-  - get
-  - update
-  - patch
-- apiGroups:
-  - migration.openshift.io
-  resources:
-  - migplans
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - migration.openshift.io
-  resources:
-  - migplans/status
-  verbs:
-  - get
-  - update
-  - patch
+  - '*'
 - apiGroups:
   - ""
   resources:
@@ -108,12 +67,7 @@ rules:
   - create
   - update
   - patch
-- apiGroups:
-  - ""
-  resources:
-  - pods/log
-  verbs:
-  - '*'
+  - delete
 - apiGroups:
   - ""
   resources:
@@ -128,6 +82,12 @@ rules:
   - pods/exec
   verbs:
   - create
+- apiGroups:
+  - ""
+  resources:
+  - pods/log
+  verbs:
+  - '*'
 - apiGroups:
   - ""
   resources:
@@ -169,38 +129,6 @@ rules:
   - update
   - patch
 - apiGroups:
-  - migration.openshift.io
-  resources:
-  - migstorages
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - migration.openshift.io
-  resources:
-  - migstorages/status
-  verbs:
-  - get
-  - update
-  - patch
-- apiGroups:
-  - velero.io
-  resources:
-  - '*'
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
   - image.openshift.io
   resources:
   - '*'
@@ -214,18 +142,6 @@ rules:
   - delete
 - apiGroups:
   - apps.openshift.io
-  resources:
-  - '*'
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - apps
   resources:
   - '*'
   verbs:
@@ -281,6 +197,12 @@ rules:
   - get
   - list
   - watch
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - list
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -288,16 +210,16 @@ metadata:
   name: migration-controller
   namespace: {{ mig_namespace }}
   labels:
-    component: mig
+    component: migration-controller
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
-  name: migration-manager-rolebinding
+  name: migration-controller
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: migration-manager-role
+  name: migration-controller
 subjects:
 - kind: ServiceAccount
   name: migration-controller

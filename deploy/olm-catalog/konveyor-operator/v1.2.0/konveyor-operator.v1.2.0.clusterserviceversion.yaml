@@ -431,64 +431,11 @@ spec:
           - patch
         - apiGroups:
           - migration.openshift.io
+          - velero.io
           resources:
-          - migclusters
+          - '*'
           verbs:
-          - get
-          - list
-          - watch
-          - create
-          - update
-          - patch
-          - delete
-        - apiGroups:
-          - migration.openshift.io
-          resources:
-          - migclusters/status
-          verbs:
-          - get
-          - update
-          - patch
-        - apiGroups:
-          - migration.openshift.io
-          resources:
-          - migmigrations
-          verbs:
-          - get
-          - list
-          - watch
-          - create
-          - update
-          - patch
-          - delete
-        - apiGroups:
-          - migration.openshift.io
-          resources:
-          - migmigrations/status
-          verbs:
-          - get
-          - update
-          - patch
-        - apiGroups:
-          - migration.openshift.io
-          resources:
-          - migplans
-          verbs:
-          - get
-          - list
-          - watch
-          - create
-          - update
-          - patch
-          - delete
-        - apiGroups:
-          - migration.openshift.io
-          resources:
-          - migplans/status
-          verbs:
-          - get
-          - update
-          - patch
+          - '*'
         - apiGroups:
           - ""
           resources:
@@ -562,38 +509,6 @@ spec:
           - update
           - patch
         - apiGroups:
-          - migration.openshift.io
-          resources:
-          - migstorages
-          verbs:
-          - get
-          - list
-          - watch
-          - create
-          - update
-          - patch
-          - delete
-        - apiGroups:
-          - migration.openshift.io
-          resources:
-          - migstorages/status
-          verbs:
-          - get
-          - update
-          - patch
-        - apiGroups:
-          - velero.io
-          resources:
-          - '*'
-          verbs:
-          - get
-          - list
-          - watch
-          - create
-          - update
-          - patch
-          - delete
-        - apiGroups:
           - image.openshift.io
           resources:
           - '*'
@@ -662,18 +577,12 @@ spec:
           - get
           - list
           - watch
-      - serviceAccountName: mig
-        rules:
         - apiGroups:
           - '*'
           resources:
           - '*'
           verbs:
-          - '*'
-        - nonResourceURLs:
-          - '*'
-          verbs:
-          - '*'
+          - list
       - serviceAccountName: velero
         rules:
         - apiGroups:
