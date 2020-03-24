@@ -1,4 +1,4 @@
-FROM quay.io/operator-framework/ansible-operator:v0.9.0
+FROM quay.io/operator-framework/ansible-operator:latest
 
 USER root
 RUN yum -y update && yum -y install python-boto3 && yum clean all
