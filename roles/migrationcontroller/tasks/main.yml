@@ -386,10 +386,21 @@
             state: present
             definition: "{{ lookup('file', '/tmp/authentication.yaml') | from_yaml }}"
 
-  - name: "Set up mig controller"
-    k8s:
-      state: "{{ controller_state }}"
-      definition: "{{ lookup('template', 'controller.yml.j2') }}"
+  - block:
+    - name: "Set up mig controller"
+      k8s:
+        state: "{{ controller_state }}"
+        definition: "{{ lookup('template', 'controller.yml.j2') }}"
+    rescue:
+    - name: "Set up mig controller"
+      k8s:
+        state: absent
+        definition: "{{ lookup('template', 'controller.yml.j2') }}"
+
+    - name: "Set up mig controller"
+      k8s:
+        state: "{{ controller_state }}"
+        definition: "{{ lookup('template', 'controller.yml.j2') }}"
 
   - name: Check if discovery route exists
     k8s_facts:
@@ -439,10 +450,21 @@
           definition: "{{ lookup('template', 'ui.yml.j2') }}"
         when: not(configmap_secret == mig_ui_oauth_secret) and not skip_ui_restart
 
-  - name: "Set up mig ui"
-    k8s:
-      state: "{{ ui_state }}"
-      definition: "{{ lookup('template', 'ui.yml.j2') }}"
+  - block:
+    - name: "Set up mig ui"
+      k8s:
+        state: "{{ ui_state }}"
+        definition: "{{ lookup('template', 'ui.yml.j2') }}"
+    rescue:
+    - name: "Set up mig ui"
+      k8s:
+        state: absent
+        definition: "{{ lookup('template', 'ui.yml.j2') }}"
+
+    - name: "Set up mig ui"
+      k8s:
+        state: "{{ ui_state }}"
+        definition: "{{ lookup('template', 'ui.yml.j2') }}"
 
   - when: migration_controller or migration_ui
     name: "Set up host MigCluster"
