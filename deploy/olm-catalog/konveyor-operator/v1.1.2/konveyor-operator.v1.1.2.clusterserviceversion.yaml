@@ -295,17 +295,10 @@ spec:
           - '*'
         - apiGroups:
           - apps
-          resources:
-          - deployments
-          - daemonsets
-          - replicasets
-          - statefulsets
-          verbs:
-          - '*'
-        - apiGroups:
+          - batch
           - extensions
           resources:
-          - daemonsets
+          - '*'
           verbs:
           - '*'
         - apiGroups:
