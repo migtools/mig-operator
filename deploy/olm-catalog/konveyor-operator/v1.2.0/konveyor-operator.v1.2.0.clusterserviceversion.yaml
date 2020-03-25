@@ -398,6 +398,7 @@ spec:
           - patch
           - delete
         - apiGroups:
+          - extensions
           - apps
           resources:
           - '*'
