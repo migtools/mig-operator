@@ -398,8 +398,9 @@ spec:
           - patch
           - delete
         - apiGroups:
-          - extensions
           - apps
+          - batch
+          - extensions
           resources:
           - '*'
           verbs:
