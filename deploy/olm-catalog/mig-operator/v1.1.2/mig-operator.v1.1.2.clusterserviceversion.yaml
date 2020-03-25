@@ -285,6 +285,7 @@ spec:
           - '*'
         - apiGroups:
           - apps
+          - extensions
           resources:
           - deployments
           - daemonsets
