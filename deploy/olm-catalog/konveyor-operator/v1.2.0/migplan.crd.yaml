@@ -66,6 +66,8 @@ spec:
                         type: string
                       storageClass:
                         type: string
+                      verify:
+                        type: boolean
                     type: object
                   storageClass:
                     type: string
