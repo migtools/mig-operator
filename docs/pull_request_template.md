@@ -1,6 +1,8 @@
-For each of the following check the box when you have verified either:
-* the changes have been made for each applicable version
-* no changes are required for the item
+
+**For each of the following check the box when you have verified either:**
+* **the changes have been made for each applicable version**
+* **no changes are required for the item**
+* **PR's that are submitted without running through the list below will be CLOSED**
 
 Affected versions:
 * [ ] Latest
