@@ -96,26 +96,26 @@ spec:
             incompatibleNamespaces:
               items:
                 properties:
-                  gvrs:
+                  gvks:
                     items:
                       properties:
                         group:
                           type: string
-                        resource:
+                        kind:
                           type: string
                         version:
                           type: string
                       required:
                       - group
                       - version
-                      - resource
+                      - kind
                       type: object
                     type: array
                   name:
                     type: string
                 required:
                 - name
-                - gvrs
+                - gvks
                 type: object
               type: array
             observedGeneration:
