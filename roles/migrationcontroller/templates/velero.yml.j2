@@ -76,6 +76,18 @@ spec:
               value: {{ mig_namespace }}
             - name: VELERO_SCRATCH_DIR
               value: /scratch
+{% if http_proxy|length >0 %}
+            - name: HTTP_PROXY
+              value: http_proxy
+{% endif %}
+{% if https_proxy|length >0 %}
+            - name: HTTPS_PROXY
+              value: https_proxy
+{% endif %}
+{% if no_proxy|length >0 %}
+            - name: NO_PROXY
+              value: no_proxy
+{% endif %}
       volumes:
         - name: {{ velero_aws_secret_name }}
           secret:
@@ -212,6 +224,18 @@ spec:
               mountPath: /scratch
             - name: certs
               mountPath: /etc/ssl/certs
+{% if http_proxy|length >0 %}
+            - name: HTTP_PROXY
+              value: http_proxy
+{% endif %}
+{% if https_proxy|length >0 %}
+            - name: HTTPS_PROXY
+              value: https_proxy
+{% endif %}
+{% if no_proxy|length >0 %}
+            - name: NO_PROXY
+              value: no_proxy
+{% endif %}
           env:
             - name: NODE_NAME
               valueFrom:
