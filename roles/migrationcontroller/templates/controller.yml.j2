@@ -81,11 +81,11 @@ spec:
         - name: SECRET_NAME
           value: webhook-server-secret
         - name: MIGRATION_REGISTRY_IMAGE
-          value: {{ migration_registry_image }}:{{ migration_registry_version }}
+          value: {{ migraiton_registry_image_fqin }}
         envFrom:
         - configMapRef:
             name: migration-controller
-        image: {{ mig_controller_image }}:{{ mig_controller_version }}
+        image: {{ mig_controller_image_fqin }}
         imagePullPolicy: "{{ image_pull_policy }}"
         name: cam
         ports:
@@ -117,7 +117,7 @@ spec:
         envFrom:
         - configMapRef:
             name: migration-controller
-        image: {{ mig_controller_image }}:{{ mig_controller_version }}
+        image: {{ mig_controller_image_fqin }}
         imagePullPolicy: "{{ image_pull_policy }}"
         name: discovery
         ports:

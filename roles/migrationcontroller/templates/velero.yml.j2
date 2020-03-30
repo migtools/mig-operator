@@ -37,7 +37,7 @@ spec:
       serviceAccountName: velero
       containers:
         - name: velero
-          image: {{ velero_image }}:{{ velero_version }}
+          image: {{ velero_image_fqin }}
           imagePullPolicy: "{{ image_pull_policy }}"
           ports:
             - name: metrics
@@ -129,7 +129,7 @@ spec:
           volumeMounts:
           - mountPath: /target
             name: plugins
-        - image: {{ velero_image }}:{{ velero_version }}
+        - image: {{ velero_image_fqin }}
           imagePullPolicy: "{{ image_pull_policy }}"
           name: setup-certificate-secret
           command:
@@ -191,7 +191,7 @@ spec:
         - name: velero
           securityContext:
             privileged: true
-          image: {{ velero_image }}:{{ velero_version }}
+          image: {{ velero_image_fqin }}
           imagePullPolicy: "{{ image_pull_policy }}"
           command:
             - /velero
@@ -230,7 +230,7 @@ spec:
             - name: VELERO_SCRATCH_DIR
               value: /scratch
       initContainers:
-        - image: {{ velero_image }}:{{ velero_version }}
+        - image: {{ velero_image_fqin }}
           imagePullPolicy: "{{ image_pull_policy }}"
           name: setup-certificate-secret
           command:
