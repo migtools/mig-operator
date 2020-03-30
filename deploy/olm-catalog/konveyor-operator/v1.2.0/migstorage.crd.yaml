@@ -54,6 +54,8 @@ spec:
                   type: object
                 gcpBucket:
                   type: string
+                insecure:
+                  type: boolean
                 s3CustomCABundle:
                   format: byte
                   type: string
