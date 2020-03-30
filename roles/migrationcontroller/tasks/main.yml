@@ -10,7 +10,7 @@
         definition: "{{ lookup('template', 'migration-controller.yml.j2') }}"
 
     - name: Clean conditions and set Reconciling state
-      k8s_status:
+      operator_sdk.util.k8s_status:
         api_version: migration.openshift.io/v1alpha1
         kind: MigrationController
         name: "{{ meta.name }}"
@@ -325,7 +325,7 @@
             definition: "{{ lookup('file', '/tmp/kubeapiserver.yaml') | from_yaml }}"
 
       - name: Assert kubeapiserver setup matches the deprecated_cors_configuration setting
-        k8s_status:
+        operator_sdk.util.k8s_status:
           api_version: migration.openshift.io/v1alpha1
           kind: MigrationController
           name: "{{ meta.name }}"
@@ -341,7 +341,7 @@
               mig_ui_cors_url in apiserver.resources[0].spec.additionalCORSAllowedOrigins
 
       - name: Assert apiserver setup matches the deprecated_cors_configuration setting
-        k8s_status:
+        operator_sdk.util.k8s_status:
           api_version: migration.openshift.io/v1alpha1
           kind: MigrationController
           name: "{{ meta.name }}"
@@ -524,7 +524,7 @@
       reconciled: true
 
   always:
-  - k8s_status:
+  - operator_sdk.util.k8s_status:
       api_version: migration.openshift.io/v1alpha1
       kind: MigrationController
       name: "{{ meta.name }}"
@@ -533,7 +533,7 @@
         phase: Reconciled
     when: olm_managed and reconciled
 
-  - k8s_status:
+  - operator_sdk.util.k8s_status:
       api_version: migration.openshift.io/v1alpha1
       kind: MigrationController
       name: "{{ meta.name }}"
@@ -553,7 +553,7 @@
           controller.resources is defined and
           controller.resources[0].status.conditions is defined
     block:
-    - k8s_status:
+    - operator_sdk.util.k8s_status:
         api_version: migration.openshift.io/v1alpha1
         kind: MigrationController
         name: "{{ meta.name }}"

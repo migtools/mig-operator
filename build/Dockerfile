@@ -10,6 +10,10 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.n
  && yum -y install python3-boto3 \
  && yum clean all
 USER 1001
+COPY build/requirements.yml ${HOME}/requirements.yml
+RUN ansible-galaxy collection install -r ${HOME}/requirements.yml \
+ && chmod -R ug+rwx ${HOME}/.ansible
+
 COPY watches.yaml ${HOME}/watches.yaml
 
 COPY roles/ ${HOME}/roles/
