@@ -82,6 +82,9 @@ spec:
           - backupStorageConfig
           type: object
         status:
+          properties:
+            observedDigest:
+              type: string
           type: object
   version: v1alpha1
 status:
