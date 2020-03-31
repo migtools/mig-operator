@@ -224,6 +224,7 @@ spec:
               mountPath: /scratch
             - name: certs
               mountPath: /etc/ssl/certs
+          env:
 {% if http_proxy|length >0 %}
             - name: HTTP_PROXY
               value: {{ http_proxy }}
@@ -236,7 +237,6 @@ spec:
             - name: NO_PROXY
               value: {{ no_proxy }}
 {% endif %}
-          env:
             - name: NODE_NAME
               valueFrom:
                 fieldRef:
