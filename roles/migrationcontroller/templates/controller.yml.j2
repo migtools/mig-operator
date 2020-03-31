@@ -81,7 +81,7 @@ spec:
         - name: SECRET_NAME
           value: webhook-server-secret
         - name: MIGRATION_REGISTRY_IMAGE
-          value: {{ migraiton_registry_image_fqin }}
+          value: {{ migration_registry_image_fqin }}
         envFrom:
         - configMapRef:
             name: migration-controller
