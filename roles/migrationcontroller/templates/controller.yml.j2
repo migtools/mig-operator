@@ -126,6 +126,18 @@ spec:
           value: discovery
         - name: SECRET_NAME
           value: webhook-server-secret
+{% if http_proxy|length >0 %}
+        - name: HTTP_PROXY
+          value: {{ http_proxy }}
+{% endif %}
+{% if https_proxy|length >0 %}
+        - name: HTTPS_PROXY
+          value: {{ https_proxy }}
+{% endif %}
+{% if no_proxy|length >0 %}
+        - name: NO_PROXY
+          value: {{ no_proxy }}
+{% endif %}
         envFrom:
         - configMapRef:
             name: migration-controller
