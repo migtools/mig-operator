@@ -4,6 +4,8 @@ configmap_secret: ""
 controller_state: absent
 deprecated_cors_configuration: false
 cors_origins: []
+http_proxy: "{{ lookup( 'env', 'HTTP_PROXY') }}"
+https_proxy: "{{ lookup( 'env', 'HTTPS_PROXY') }}"
 image_pull_policy: Always
 mig_controller_image: "{{ registry }}/{{ project }}/{{ mig_controller_repo }}"
 mig_controller_limits_cpu: "100m"
@@ -33,6 +35,7 @@ migration_registry_image: "{{ registry }}/{{ project }}/{{ migration_registry_re
 migration_registry_repo: "{{ lookup( 'env', 'MIGRATION_REGISTRY_REPO') }}"
 migration_registry_version: "{{ lookup( 'env', 'MIGRATION_REGISTRY_TAG') }}"
 migration_registry_image_fqin: "{{ migration_registry_image }}:{{ migration_registry_version }}"
+no_proxy: "{{ lookup( 'env', 'NO_PROXY') }}"
 olm_managed: false
 registry: "{{ lookup( 'env', 'REGISTRY') }}"
 project: "{{ lookup( 'env', 'PROJECT') }}"
