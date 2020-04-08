@@ -49,6 +49,8 @@ spec:
               items:
                 type: string
               type: array
+            observedDigest:
+              type: string
             phase:
               type: string
             startTimestamp:

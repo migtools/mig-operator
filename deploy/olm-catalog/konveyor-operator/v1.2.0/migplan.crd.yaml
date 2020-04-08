@@ -120,9 +120,8 @@ spec:
                 - gvks
                 type: object
               type: array
-            observedGeneration:
-              format: int64
-              type: integer
+            observedDigest:
+              type: string
           type: object
   version: v1alpha1
 status:
