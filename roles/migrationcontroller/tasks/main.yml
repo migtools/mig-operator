@@ -144,6 +144,12 @@
         definition: "{{ lookup('template', 'velero_supporting.yml.j2') }}"
       when: not olm_managed
 
+  - name: "Create proxy configuration secret if proxy is configured"
+    k8s:
+      state: "present"
+      definition: "{{ lookup('template', 'proxy_secret.yml.j2') }}"
+    when: http_proxy != "" or https_proxy != "" or no_proxy != ""
+
   - name: "Set up velero controller"
     k8s:
       state: "{{ velero_state }}"

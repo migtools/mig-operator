@@ -4,8 +4,10 @@ configmap_secret: ""
 controller_state: absent
 deprecated_cors_configuration: false
 cors_origins: []
+proxy_secret_name: "migration-proxy-"
 http_proxy: "{{ lookup( 'env', 'HTTP_PROXY') }}"
 https_proxy: "{{ lookup( 'env', 'HTTPS_PROXY') }}"
+no_proxy: "{{ lookup( 'env', 'NO_PROXY') }}"
 image_pull_policy: Always
 mig_controller_image: "{{ registry }}/{{ project }}/{{ mig_controller_repo }}"
 mig_controller_limits_cpu: "100m"
@@ -33,7 +35,6 @@ mig_ui_version: "{{ snapshot_tag | default(lookup( 'env', 'MIG_UI_TAG')) }}"
 migration_registry_image: "{{ registry }}/{{ project }}/{{ migration_registry_repo }}"
 migration_registry_repo: "{{ lookup( 'env', 'MIGRATION_REGISTRY_REPO') }}"
 migration_registry_version: "{{ lookup( 'env', 'MIGRATION_REGISTRY_TAG') }}"
-no_proxy: "{{ lookup( 'env', 'NO_PROXY') }}"
 olm_managed: false
 registry: "{{ lookup( 'env', 'REGISTRY') }}"
 project: "{{ lookup( 'env', 'PROJECT') }}"
