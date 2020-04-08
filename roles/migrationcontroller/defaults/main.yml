@@ -4,7 +4,7 @@ configmap_secret: ""
 controller_state: absent
 deprecated_cors_configuration: false
 cors_origins: []
-proxy_secret_generate_name: "migration-proxy-"
+proxy_secret_name: "migration-proxy-"
 http_proxy: "{{ lookup( 'env', 'HTTP_PROXY') }}"
 https_proxy: "{{ lookup( 'env', 'HTTPS_PROXY') }}"
 no_proxy: "{{ lookup( 'env', 'NO_PROXY') }}"
