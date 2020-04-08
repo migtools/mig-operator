@@ -585,6 +585,9 @@ spec:
           - '*'
           verbs:
           - list
+          - update
+          - delete
+          - deletecollection
       - serviceAccountName: velero
         rules:
         - apiGroups:
