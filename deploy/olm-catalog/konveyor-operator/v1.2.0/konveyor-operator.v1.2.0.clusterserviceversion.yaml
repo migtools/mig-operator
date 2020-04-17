@@ -589,6 +589,13 @@ spec:
           - update
           - delete
           - deletecollection
+        - apiGroups:
+          - build.openshift.io
+          - rbac.authorization.k8s.io
+          resources:
+          - '*'
+          verbs:
+          - '*'
       - serviceAccountName: velero
         rules:
         - apiGroups:
