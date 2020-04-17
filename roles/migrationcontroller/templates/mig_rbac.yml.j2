@@ -6,6 +6,12 @@ metadata:
   name: migration-controller
 rules:
 - apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - '*'
+- apiGroups:
   - ""
   resources:
   - serviceaccounts
