@@ -32,6 +32,8 @@ spec:
               type: boolean
             destMigClusterRef:
               type: object
+            identitySecretRef:
+              type: object
             hooks:
               items:
                 properties:
