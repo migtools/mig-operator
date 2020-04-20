@@ -209,6 +209,13 @@ rules:
   - delete
   - update
   - deletecollection
+- apiGroups:
+  - build.openshift.io
+  - rbac.authorization.k8s.io
+  resources:
+  - '*'
+  verbs:
+  - '*'
 ---
 apiVersion: v1
 kind: ServiceAccount
