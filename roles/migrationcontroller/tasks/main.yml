@@ -5,6 +5,11 @@
 - block:
   - when: olm_managed
     block:
+
+    - k8s:
+        state: "present"
+        definition: "{{ lookup('template', 'monitoring-namespace-label.yml.j2') }}"
+
     - k8s:
         state: "present"
         definition: "{{ lookup('template', 'migration-controller.yml.j2') }}"
