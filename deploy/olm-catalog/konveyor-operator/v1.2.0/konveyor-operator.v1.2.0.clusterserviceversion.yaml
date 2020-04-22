@@ -192,6 +192,8 @@ spec:
     image: quay.io/konveyor/velero-plugin-for-gcp:latest
   - name: registry
     image: quay.io/konveyor/registry:latest
+  - name: hook_runner
+    image: quay.io/konveyor/hook-runner:latest
   displayName: Konveyor Operator
   description: |
     The Konveyor Operator for OpenShift enables installation of the OpenShift application migration tool.
