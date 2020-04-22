@@ -96,6 +96,10 @@ spec:
         - name: NO_PROXY
           value: {{ no_proxy }}
 {% endif %}
+	- name: PRIVILEGED_NAMESPACE
+	  value: {{ mig_namespace }}
+        - name: SANDBOX_NAMESPACE
+          value: {{ sandbox_namespace }}
         envFrom:
         - configMapRef:
             name: migration-controller
@@ -140,6 +144,10 @@ spec:
         - name: NO_PROXY
           value: {{ no_proxy }}
 {% endif %}
+	- name: PRIVILEGED_NAMESPACE
+	  value: {{ mig_namespace }}
+        - name: SANDBOX_NAMESPACE
+          value: {{ sandbox_namespace }}
         envFrom:
         - configMapRef:
             name: migration-controller
