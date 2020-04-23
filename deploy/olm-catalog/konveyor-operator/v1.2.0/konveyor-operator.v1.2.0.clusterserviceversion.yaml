@@ -249,7 +249,7 @@ spec:
   install:
     strategy: deployment
     spec:
-      permissions:
+      clusterPermissions:
       - serviceAccountName: migration-operator
         rules:
         - apiGroups:
@@ -336,9 +336,6 @@ spec:
           - '*'
           verbs:
           - '*'
-      clusterPermissions:
-      - serviceAccountName: migration-operator
-        rules:
         - apiGroups:
           - ""
           resources:
@@ -377,12 +374,6 @@ spec:
           resources:
           - kubeapiservers
           - authentications
-          verbs:
-          - '*'
-        - apiGroups:
-          - migration.openshift.io
-          resources:
-          - migclusters
           verbs:
           - '*'
       - serviceAccountName: migration-controller

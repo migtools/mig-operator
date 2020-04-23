@@ -1,0 +1,34 @@
+---
+- set_fact:
+    reconciled: false
+
+- block:
+  - when: olm_managed
+    block:
+    - k8s:
+        state: "present"
+        definition: "{{ lookup('template', 'migration-tenant.yml.j2') }}"
+
+    - name: Clean conditions and set Reconciling state
+      operator_sdk.util.k8s_status:
+        api_version: migration.openshift.io/v1alpha1
+        kind: MigrationTenant
+        name: "{{ meta.name }}"
+        namespace: "{{ meta.namespace }}"
+        force: true
+        conditions: []
+        status:
+          phase: Reconciling
+
+    - set_fact:
+        reconciled: true
+  
+  always:
+  - operator_sdk.util.k8s_status:
+      api_version: migration.openshift.io/v1alpha1
+      kind: MigrationTenant
+      name: "{{ meta.name }}"
+      namespace: "{{ meta.namespace }}"
+      status:
+        phase: Reconciled
+    when: olm_managed and reconciled

@@ -1,0 +1,6 @@
+apiVersion: migration.openshift.io/v1alpha1
+kind: MigrationTenant
+metadata:
+  name: example-migrationtenant
+spec:
+  tenant_namespace: foo

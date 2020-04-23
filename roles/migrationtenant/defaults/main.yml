@@ -1,0 +1,5 @@
+---
+sandbox: true
+tenant_namespace: "{{ tenant_namespace }}"
+olm_managed: true
+
