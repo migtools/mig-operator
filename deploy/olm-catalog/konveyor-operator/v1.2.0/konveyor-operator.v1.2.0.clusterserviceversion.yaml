@@ -34,6 +34,19 @@ metadata:
               "mig_namespace_limit": "10"
             }
         },
+      [
+        {
+            "apiVersion": "migration.openshift.io/v1alpha1",
+            "kind": "MigrationTenant",
+            "metadata": {
+              "name": "migration-controller",
+              "namespace": "openshift-migration"
+            },
+            "spec": {
+              # This is a placeholder
+              "tenant_namespace": ""
+            }
+        },
         {
             "apiVersion": "velero.io/v1",
             "kind": "Backup",
