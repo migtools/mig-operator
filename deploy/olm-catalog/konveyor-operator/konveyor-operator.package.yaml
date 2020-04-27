@@ -1,6 +1,6 @@
 packageName: konveyor-operator
 channels:
-- name: latest
+- name: release-v1.2
   currentCSV: konveyor-operator.v1.2.0
 - name: release-v1.1
   currentCSV: konveyor-operator.v1.1.2
