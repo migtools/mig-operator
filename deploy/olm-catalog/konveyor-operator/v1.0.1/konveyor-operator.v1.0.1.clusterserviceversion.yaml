@@ -172,6 +172,8 @@ metadata:
     certified: "false"
     support: Red Hat
 spec:
+  skips:
+  - konveyor-operator.v1.0.0
   relatedImages:
   - name: controller
     image: quay.io/ocpmigrate/mig-controller:release-1.0
