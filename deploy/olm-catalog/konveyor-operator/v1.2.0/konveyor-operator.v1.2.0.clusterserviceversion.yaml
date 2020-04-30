@@ -34,7 +34,6 @@ metadata:
               "mig_namespace_limit": "10"
             }
         },
-      [
         {
             "apiVersion": "migration.openshift.io/v1alpha1",
             "kind": "MigrationTenant",
@@ -43,8 +42,9 @@ metadata:
               "namespace": "openshift-migration"
             },
             "spec": {
-              # This is a placeholder
-              "tenant_namespace": ""
+              "migration_ui": "true",
+              "migration_controller": "true",
+              "olm_managed": true
             }
         },
         {
@@ -695,10 +695,12 @@ spec:
                   valueFrom:
                     fieldRef:
                       fieldPath: metadata.name
-                - name: WATCH_NAMESPACE
+                - name: OPERATOR_NAMESPACE
                   valueFrom:
                     fieldRef:
                       fieldPath: metadata.namespace
+                - name: WATCH_NAMESPACE
+                  value: ""
                 - name: REGISTRY
                   value: quay.io
                 - name: PROJECT
@@ -776,6 +778,11 @@ spec:
       kind: MigMigration
       displayName: MigMigration
       description: A migration process
+    - name: migrationtenants.migration.openshift.io
+      version: v1alpha1
+      kind: MigrationTenant
+      displayName: MigrationTenant
+      description: A migration tenant deployment
     - name: migplans.migration.openshift.io
       version: v1alpha1
       kind: MigPlan

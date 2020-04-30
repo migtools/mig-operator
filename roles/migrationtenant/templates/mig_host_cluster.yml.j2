@@ -1,0 +1,11 @@
+---
+apiVersion: migration.openshift.io/v1alpha1
+kind: MigCluster
+metadata:
+  name: "{{ cluster_name }}"
+  namespace: "{{ tenant_namespace }}"
+spec:
+{% if azure_resource_group != '' %}
+  azureResourceGroup: "{{ azure_resource_group }}"
+{% endif %}
+  isHostCluster: true
