@@ -27,12 +27,3 @@ oc adm must-gather --image=quay.io/konveyor/must-gather:latest
 ### Collected logs and artifacts
 
 You learn more about data that is collected by reading the [collection scripts](https://github.com/konveyor/must-gather/tree/master/collection-scripts), or by looking at the generated output from running CAM must-gather.
-
-*Data Collection Overview*
- - Migration CRs
-   - MigPlan
-   - MigCluster
-   - MigMigration
-   - MigStorage
- - Logs
-   - Pods in `openshift-migration
