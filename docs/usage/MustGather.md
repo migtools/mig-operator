@@ -3,7 +3,7 @@
 
 CAM [*must-gather*](https://github.com/konveyor/must-gather) is a tool for gathering useful debug info related to a CAM installation. 
 
-If you're having trouble migrating workloads with CAM and want to share info about your installation, it may be useful to include *must-gather* artifacts in the GitHub issue or Bugzilla filed.
+If you're having trouble migrating workloads with CAM and want to share info about your installation, it may be useful to include *must-gather* artifacts in the associated GitHub issue or Bugzilla.
 
 ---
 
@@ -26,4 +26,13 @@ oc adm must-gather --image=quay.io/konveyor/must-gather:latest
 
 ### Collected logs and artifacts
 
-You can examine the data collected by reading the [collection scripts](https://github.com/konveyor/must-gather/tree/master/collection-scripts), or by looking at the generated output from running CAM must-gather.
+You learn more about data that is collected by reading the [collection scripts](https://github.com/konveyor/must-gather/tree/master/collection-scripts), or by looking at the generated output from running CAM must-gather.
+
+*Data Collection Overview*
+ - Migration CRs
+   - MigPlan
+   - MigCluster
+   - MigMigration
+   - MigStorage
+ - Logs
+   - Pods in `openshift-migration
