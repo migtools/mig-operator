@@ -9,6 +9,6 @@
 - version: v1alpha1
   group: migration.openshift.io
   kind: MigrationTenant
-  role: /opt/ansible/roles/migrationtenant
+  role: /opt/ansible/roles/migrationcontroller
   reconcilePeriod: 30m
   manageStatus: False
