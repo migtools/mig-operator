@@ -503,13 +503,14 @@
         state: "{{ ui_state }}"
         definition: "{{ lookup('template', 'ui.yml.j2') }}"
 
-  - when: migration_controller or migration_ui
+  - when: (migration_controller is defined and migration_controller) or 
+      (migration_ui is defined and migration_ui)
     name: "Set up host MigCluster"
     k8s:
       state: "present"
       definition: "{{ lookup('template', 'mig_host_cluster.yml.j2') }}"
 
-  - when: not migration_controller
+  - when: migration_controller is defined and not migration_controller
     block:
     - name: Find Controller ReplicaSets
       k8s_facts:
@@ -527,7 +528,7 @@
         namespace: "{{ mig_namespace }}"
       with_items: "{{ controller_replicasets.resources }}"
 
-  - when: not migration_ui
+  - when: migration_ui is defined and not migration_ui
     block:
     - name: Find UI ReplicaSets
       k8s_facts:
@@ -545,7 +546,7 @@
         namespace: "{{ mig_ui_namespace }}"
       with_items: "{{ ui_replicasets.resources }}"
 
-  - when: not migration_velero
+  - when: migration_velero is defined and not migration_velero
     block:
     - name: Find Velero ReplicaSets
       k8s_facts:
