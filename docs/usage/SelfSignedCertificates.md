@@ -55,6 +55,27 @@ spec:
     namespace: openshift-migration
 ```
 
+## Downloading a certificate from a remote endpoint
+
+You can download the certificate you want to trust from the remote endpoint by use
+of the openssl client. Replace HOST and PORT in the below command with the host and port of the https
+endpoint which you'd like to retrieve the certificate chain from.
+
+```
+echo -n | openssl s_client -connect HOST:PORT \
+| sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > self-signed.cert
+
+```
+
+For instance, to download the certificate chain from an Openshift 4.x cluster:
+
+```
+echo -n | openssl s_client -connect api.my-cluster.example.com:6443 \
+| sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > self-signed.cert
+```
+
+The resulting certificate file can then be provided to CAM via the following methods.
+
 ## Providing a trusted certificate bundle via the CAM UI
 
 CAM can be configured to trust a self-signed certificate by uploading
