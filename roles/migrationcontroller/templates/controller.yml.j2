@@ -87,6 +87,12 @@ spec:
               fieldPath: metadata.namespace
         - name: ROLE
           value: cam
+        - name: OPERATOR_NAMESPACE
+          value: {{ mig_namespace }}
+{% if reconcile_migrationtenant %}
+        - name: TENANT_NAMESPACE
+          value: {{ meta.namespace }}
+{% endif %}
         - name: SECRET_NAME
           value: webhook-server-secret
         - name: MIGRATION_REGISTRY_IMAGE
