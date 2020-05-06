@@ -58,7 +58,7 @@ If CAM detects that an OpenShift resource can't be migrated to the destination c
 
 1. Download the respective Velero "Initial Backup" archive
 2. Manually extract the Backup archive YAML contents
-3. Run `oc convert` in offline mdoe on the extracted resources to convert them to the desired version
+3. Run `oc convert` in offline mode on the extracted resources to convert them to the desired version
 4. Restore the converted resources with `oc create -f`
 
 Further instructions on this process can be found in an upcoming blog post.
