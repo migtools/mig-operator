@@ -41,10 +41,12 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.name
-        - name: WATCH_NAMESPACE
+        - name: OPERATOR_NAMESPACE
           valueFrom:
             fieldRef:
               fieldPath: metadata.namespace
+        - name: WATCH_NAMESPACE
+          value: ""
         - name: REGISTRY
           value: quay.io
         - name: PROJECT

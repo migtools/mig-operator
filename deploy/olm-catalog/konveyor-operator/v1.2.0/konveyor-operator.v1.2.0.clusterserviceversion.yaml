@@ -35,6 +35,19 @@ metadata:
             }
         },
         {
+            "apiVersion": "migration.openshift.io/v1alpha1",
+            "kind": "MigrationTenant",
+            "metadata": {
+              "name": "migration-controller",
+              "namespace": "openshift-migration"
+            },
+            "spec": {
+              "migration_ui": "true",
+              "migration_controller": "true",
+              "olm_managed": true
+            }
+        },
+        {
             "apiVersion": "velero.io/v1",
             "kind": "Backup",
             "metadata": {
@@ -249,7 +262,7 @@ spec:
   install:
     strategy: deployment
     spec:
-      permissions:
+      clusterPermissions:
       - serviceAccountName: migration-operator
         rules:
         - apiGroups:
@@ -336,9 +349,6 @@ spec:
           - '*'
           verbs:
           - '*'
-      clusterPermissions:
-      - serviceAccountName: migration-operator
-        rules:
         - apiGroups:
           - ""
           resources:
@@ -377,12 +387,6 @@ spec:
           resources:
           - kubeapiservers
           - authentications
-          verbs:
-          - '*'
-        - apiGroups:
-          - migration.openshift.io
-          resources:
-          - migclusters
           verbs:
           - '*'
       - serviceAccountName: migration-controller
@@ -691,10 +695,12 @@ spec:
                   valueFrom:
                     fieldRef:
                       fieldPath: metadata.name
-                - name: WATCH_NAMESPACE
+                - name: OPERATOR_NAMESPACE
                   valueFrom:
                     fieldRef:
                       fieldPath: metadata.namespace
+                - name: WATCH_NAMESPACE
+                  value: ""
                 - name: REGISTRY
                   value: quay.io
                 - name: PROJECT
@@ -772,6 +778,11 @@ spec:
       kind: MigMigration
       displayName: MigMigration
       description: A migration process
+    - name: migrationtenants.migration.openshift.io
+      version: v1alpha1
+      kind: MigrationTenant
+      displayName: MigrationTenant
+      description: A migration tenant deployment
     - name: migplans.migration.openshift.io
       version: v1alpha1
       kind: MigPlan
