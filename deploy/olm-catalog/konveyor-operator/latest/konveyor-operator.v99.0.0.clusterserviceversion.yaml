@@ -172,6 +172,8 @@ metadata:
       ]
     certified: "false"
     support: Red Hat
+    operatorframework.io/cluster-monitoring: "true"
+    operatorframework.io/suggested-namespace: openshift-migration
 spec:
   relatedImages:
   - name: controller
