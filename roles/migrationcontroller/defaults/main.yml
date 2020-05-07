@@ -82,3 +82,6 @@ noobaa_system_core_cpu: 0.5
 noobaa_system_core_mem: 500Mi
 noobaa_system_db_cpu: 0.5
 noobaa_system_db_mem: 1Gi
+noobaa_system_endpoints_cpu: 1
+noobaa_system_endpoints_mem: 500Mi
+noobaa_system_endpoints_pod_count: 2
