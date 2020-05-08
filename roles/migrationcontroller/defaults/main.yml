@@ -83,3 +83,13 @@ noobaa_system_core_cpu: 0.5
 noobaa_system_core_mem: 500Mi
 noobaa_system_db_cpu: 0.5
 noobaa_system_db_mem: 1Gi
+
+# Non admin configuration
+tenant_cluster_scoped_blacklist: []
+# Possible values for blacklist:
+  #  - persistentvolumes
+  #  - clusterresourcequotas
+  #  - securitycontextconstraints
+  #  - clusterrolebindings
+  #  - clusterroles
+  #  - customresourcedefinitions

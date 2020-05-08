@@ -162,6 +162,10 @@ spec:
           value: {{ mig_namespace }}
         - name: SANDBOX_NAMESPACE
           value: {{ sandbox_namespace }}
+{% if tenant_cluster_scoped_blacklist|length >0 %}
+        - name: CLUSTER_SCOPED_BLACKLIST
+          value: {{ tenant_cluster_scoped_blacklist|join(',') }}
+{% endif %}
         envFrom:
         - configMapRef:
             name: migration-controller
