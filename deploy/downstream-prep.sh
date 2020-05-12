@@ -10,6 +10,9 @@ rm -rf deploy/olm-catalogstable deploy/olm-catalog/konveyor-operator/latest
 #deal with k8s_status change upstream/downstream
 sed -i 's/operator_sdk\.util\.//g' roles/migrationcontroller/tasks/main.yml
 
+#adjust downstream entrypoint command
+sed -i 's/exec-entrypoint/run/g' build/entrypoint
+
 if [ -d deploy/olm-catalog/konveyor-operator/v1.2.0 ]; then
   #Declare v1.2 image information
   V1_2_IMAGES=(
