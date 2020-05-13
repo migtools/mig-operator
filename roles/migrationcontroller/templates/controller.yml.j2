@@ -86,7 +86,7 @@ spec:
             fieldRef:
               fieldPath: metadata.namespace
         - name: ROLE
-          value: cluster,plan,migration,storage
+          value: cluster,plan,migration,storage,token
         - name: OPERATOR_NAMESPACE
           value: {{ mig_namespace }}
 {% if reconcile_migrationtenant %}
