@@ -1,3 +1,4 @@
+{% if reconcile_migrationcontroller %}
 ---
 apiVersion: v1
 kind: Secret
@@ -34,6 +35,7 @@ data:
   NAMESPACE_LIMIT: "{{ mig_namespace_limit }}"
   CORS_ALLOWED_ORIGINS: {{ cors_origins | join(' ') }}
   WORKING_DIR: {{ discovery_volume_path }}
+{% endif %}
 ---
 {% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int < 9 %}
 apiVersion: apps/v1beta1
@@ -46,7 +48,12 @@ metadata:
     app: migration
     control-plane: controller-manager
     controller-tools.k8s.io: "1.0"
+{% if reconcile_migrationcontroller %}
   name: migration-controller
+{% endif %}
+{% if reconcile_migrationtenant %}
+  name: {{ meta.namespace }}-{{ meta.name }}
+{% endif %}
   namespace: {{ mig_namespace }}
 spec:
   selector:
@@ -80,6 +87,12 @@ spec:
               fieldPath: metadata.namespace
         - name: ROLE
           value: cluster,plan,migration,storage
+        - name: OPERATOR_NAMESPACE
+          value: {{ mig_namespace }}
+{% if reconcile_migrationtenant %}
+        - name: TENANT_NAMESPACE
+          value: {{ meta.namespace }}
+{% endif %}
         - name: SECRET_NAME
           value: webhook-server-secret
         - name: MIGRATION_REGISTRY_IMAGE
@@ -121,6 +134,7 @@ spec:
         - mountPath: /tmp/cert
           name: cert
           readOnly: true
+{% if reconcile_migrationcontroller|bool %}
       - command:
         - /manager
         env:
@@ -169,6 +183,7 @@ spec:
         volumeMounts:
         - mountPath: {{ discovery_volume_path }}
           name: discovery
+{% endif %}
       terminationGracePeriodSeconds: 10
       volumes:
       - name: cert

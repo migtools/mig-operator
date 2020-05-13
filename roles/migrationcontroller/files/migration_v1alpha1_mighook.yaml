@@ -4,12 +4,12 @@ metadata:
   creationTimestamp: null
   labels:
     controller-tools.k8s.io: "1.0"
-  name: migmigrations.migration.openshift.io
+  name: mighooks.migration.openshift.io
 spec:
   group: migration.openshift.io
   names:
-    kind: MigMigration
-    plural: migmigrations
+    kind: MigHook
+    plural: mighooks
   scope: Namespaced
   validation:
     openAPIV3Schema:
@@ -28,36 +28,27 @@ spec:
           type: object
         spec:
           properties:
-            canceled:
+            activeDeadlineSeconds:
+              format: int64
+              type: integer
+            custom:
               type: boolean
-            keepAnnotations:
-              type: boolean
-            migPlanRef:
-              type: object
-            quiescePods:
-              type: boolean
-            stage:
-              type: boolean
-            verify:
-              type: boolean
+            image:
+              type: string
+            playbook:
+              type: string
+            targetCluster:
+              type: string
           required:
-          - stage
+          - custom
+          - image
+          - targetCluster
           type: object
         status:
           properties:
-            errors:
-              items:
-                type: string
-              type: array
-            itenerary:
-              type: string
-            observedDigest:
-              type: string
-            phase:
-              type: string
-            startTimestamp:
-              format: date-time
-              type: string
+            observedGeneration:
+              format: int64
+              type: integer
           type: object
   version: v1alpha1
 status:

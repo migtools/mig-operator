@@ -54,7 +54,7 @@ EOF
 oc create -f mig-operator-source.yaml
 ```
 
-## Disabling default operator sources
+## Disabling default OperatorSources
 If you are working on an operator such as konveyor, that exists in community-operators or elsewhere you may see duplicate operators in the UI. It can be difficult to discern which copy comes from which source. To alleviate this problem you may disable the default operator sources.
 ```
 oc patch OperatorHub cluster --type json -p '[{"op": "add", "path": "/spec/disableAllDefaultSources", "value": true}]'
@@ -65,7 +65,22 @@ To reverse this change simply update the value again.
 oc patch OperatorHub cluster --type json -p '[{"op": "add", "path": "/spec/disableAllDefaultSources", "value": false}]'
 ```
 
-## Creating the subscription
+## Creating the OperatorGroup
+Before creating a subscription from the CLI, you must create an OperatorGroup.
+
+```
+cat << EOF > operatorgroup.yml
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  generateName: openshift-migration-
+spec:
+  targetNamespaces:
+  - openshift-migration
+EOF
+```
+
+## Creating the Subscription
 You may either create the subscription via the UI console or from the CLI.
 
 To do so from the CLI, ensure the namespace exists, select a channel, write a subscription.yml, and create the resource.

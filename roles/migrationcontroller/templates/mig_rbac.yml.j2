@@ -6,9 +6,16 @@ metadata:
   name: migration-controller
 rules:
 - apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - '*'
+- apiGroups:
   - ""
   resources:
   - serviceaccounts
+  - configmaps
   verbs:
   - get
   - list
@@ -208,6 +215,13 @@ rules:
   - delete
   - update
   - deletecollection
+- apiGroups:
+  - build.openshift.io
+  - rbac.authorization.k8s.io
+  resources:
+  - '*'
+  verbs:
+  - '*'
 ---
 apiVersion: v1
 kind: ServiceAccount

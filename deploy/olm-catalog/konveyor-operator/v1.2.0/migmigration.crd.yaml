@@ -49,6 +49,8 @@ spec:
               items:
                 type: string
               type: array
+            itenerary:
+              type: string
             observedDigest:
               type: string
             phase:
