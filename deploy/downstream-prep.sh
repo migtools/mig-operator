@@ -5,7 +5,7 @@ if grep -q latest deploy/olm-catalog/konveyor-operator/konveyor-operator.package
   sed -i 3,4d deploy/olm-catalog/konveyor-operator/konveyor-operator.package.yaml
 fi
 sed -i s,konveyor-operator,cam-operator,g deploy/olm-catalog/konveyor-operator/konveyor-operator.package.yaml
-rm -rf deploy/olm-catalogstable deploy/olm-catalog/konveyor-operator/latest
+rm -rf deploy/non-olm/latest/ deploy/olm-catalog/konveyor-operator/latest
 
 #deal with k8s_status change upstream/downstream
 sed -i 's/operator_sdk\.util\.//g' roles/migrationcontroller/tasks/main.yml

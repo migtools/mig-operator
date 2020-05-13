@@ -6,4 +6,4 @@ channels:
   currentCSV: konveyor-operator.v1.2.0
 - name: release-v1.1
   currentCSV: konveyor-operator.v1.1.2
-defaultChannel: release-v1.1
+defaultChannel: release-v1.2
