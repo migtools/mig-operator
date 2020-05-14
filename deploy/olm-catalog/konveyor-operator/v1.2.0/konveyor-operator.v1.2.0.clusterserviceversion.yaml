@@ -9,7 +9,7 @@ metadata:
     capabilities: Seamless Upgrades
     description: Facilitates migration of workloads from OpenShift 3.x to OpenShift 4.x
     categories: 'OpenShift Optional'
-    containerImage: quay.io/konveyor/mig-operator-container:latest
+    containerImage: quay.io/konveyor/mig-operator-container:non-admin
     createdAt: 2019-07-25T10:21:00Z
     repository: https://github.com/konveyor/mig-operator
     alm-examples: |-
@@ -188,7 +188,7 @@ metadata:
 spec:
   relatedImages:
   - name: controller
-    image: quay.io/konveyor/mig-controller:latest
+    image: quay.io/konveyor/mig-controller:non-admin
   - name: ui
     image: quay.io/konveyor/mig-ui:latest
   - name: velero
@@ -672,7 +672,7 @@ spec:
               serviceAccount: migration-operator
               containers:
               - name: ansible
-                image: quay.io/konveyor/mig-operator-container:latest
+                image: quay.io/konveyor/mig-operator-container:non-admin
                 command:
                 - /usr/local/bin/ao-logs
                 - /tmp/ansible-operator/runner
@@ -683,7 +683,7 @@ spec:
                   name: runner
                   readOnly: true
               - name: operator
-                image: quay.io/konveyor/mig-operator-container:latest
+                image: quay.io/konveyor/mig-operator-container:non-admin
                 imagePullPolicy: Always
                 volumeMounts:
                 - mountPath: /tmp/ansible-operator/runner
@@ -708,7 +708,7 @@ spec:
                 - name: MIG_CONTROLLER_REPO
                   value: mig-controller
                 - name: MIG_CONTROLLER_TAG
-                  value: latest
+                  value: non-admin
                 - name: MIG_UI_REPO
                   value: mig-ui
                 - name: MIG_UI_TAG
