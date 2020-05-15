@@ -62,7 +62,7 @@ of the openssl client. Replace HOST and PORT in the below command with the host 
 endpoint which you'd like to retrieve the certificate chain from.
 
 ```
-echo -n | openssl s_client -connect HOST:PORT \
+echo -n | openssl s_client -connect HOST:PORT -showcerts \
 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > self-signed.cert
 
 ```
@@ -70,7 +70,7 @@ echo -n | openssl s_client -connect HOST:PORT \
 For instance, to download the certificate chain from an Openshift 4.x cluster:
 
 ```
-echo -n | openssl s_client -connect api.my-cluster.example.com:6443 \
+echo -n | openssl s_client -connect api.my-cluster.example.com:6443 -showcerts \
 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' > self-signed.cert
 ```
 
