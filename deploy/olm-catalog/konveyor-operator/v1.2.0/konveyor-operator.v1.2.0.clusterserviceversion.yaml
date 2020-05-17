@@ -706,7 +706,7 @@ spec:
                 - name: MIGRATION_REGISTRY_REPO
                   value: registry
                 - name: MIGRATION_REGISTRY_TAG
-                  value: registry_2.7
+                  value: release_2.7
                 - name: VELERO_REPO
                   value: velero
                 - name: VELERO_TAG
