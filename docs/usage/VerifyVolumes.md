@@ -40,6 +40,21 @@ spec:
       - snapshot
 ```
 
+## Selecting verify via the CAM API
+
+To enable volume verification via the UI, there is a checkbox that can be
+checked on a per-volume basis for those that have been designated with the "copy"
+action:
+
+![Copy Option Verify](./files/CopyOptionVerify.png)
+
+### Restic verify failure in the UI
+
+When a Restic verify failure occurs, the migration will report a status of
+"Complete with warnings":
+
+![Completed With Warnings](./files/CompletedWithWarnings.png)
+
 ## CAM API output for restic verify (and other errors)
 
 If there are any restic verify errors on restore, the `migmigration`
