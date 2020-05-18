@@ -138,21 +138,50 @@
       AWS_ACCESS_KEY_ID: "{{ noobaa_s3_access_key_id }}"
       AWS_SECRET_ACCESS_KEY: "{{ noobaa_s3_secret_access_key }}"
     block:
-    - name: Creating bucket for migstorage
-      aws_s3:
-        bucket: "{{ noobaa_mig_bucket_name }}"
-        mode: create
-        s3_url: "{{ noobaa_s3_endpoint_proto }}://{{ noobaa_endpoint }}/"
-        validate_certs: false
-      register: bucket_status
-      retries: 20
-      delay: 3
-      until: not bucket_status.failed
-
-    - name: Creating NooBaa backed migstorage
+    - name: "Create PV Pool BackingStore"
       k8s:
-        state: present
-        definition: "{{ lookup('template', 'mig_storage.yml.j2') }}"
-      vars:
-        noobaa_s3_url: "{{ noobaa_s3_endpoint_proto }}://{{ noobaa_endpoint }}/"
-      when: migration_controller|bool
+        state: "present"
+        definition: "{{ lookup('template', 'pv_pool_backingstore.yml.j2') }}"
+
+    - name: "Create PV Pool BucketClass"
+      k8s:
+        state: "present"
+        definition: "{{ lookup('template', 'pv_pool_bucketclass.yml.j2') }}"
+
+    - name: "Create PV Pool ObjectBucketClaim"
+      k8s:
+        state: "present"
+        definition: "{{ lookup('template', 'pv_pool_objectbucketclaim.yml.j2') }}"
+
+    - name: "Wait for Bucket to exist"
+      k8s_facts:
+        api_version: "objectbucket.io/v1alpha1"
+        kind: ObjectBucketClaim
+        name: "{{ noobaa_system_pv_pool_bucket_name }}"
+        namespace: "{{ noobaa_system_namespace }}"
+      register: bucket
+      until: (bucket.resources|length) > 0
+      retries: 30
+      delay: 10
+
+    - name: "Wait for Bucket to have status"
+      k8s_facts:
+        api_version: "objectbucket.io/v1alpha1"
+        kind: ObjectBucketClaim
+        name: "{{ noobaa_system_pv_pool_bucket_name }}"
+        namespace: "{{ noobaa_system_namespace }}"
+      register: bucket
+      until: (bucket.resources|first).status is defined
+      retries: 30
+      delay: 10
+
+    - name: "Wait for Bucket to become bound"
+      k8s_facts:
+        api_version: "objectbucket.io/v1alpha1"
+        kind: ObjectBucketClaim
+        name: "{{ noobaa_system_pv_pool_bucket_name }}"
+        namespace: "{{ noobaa_system_namespace }}"
+      register: bucket
+      until: (bucket.resources|first).status.phase == "Bound"
+      retries: 75
+      delay: 10
