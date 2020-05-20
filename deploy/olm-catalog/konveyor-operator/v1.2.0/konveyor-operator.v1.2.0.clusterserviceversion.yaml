@@ -833,7 +833,7 @@ spec:
       version: v1alpha1
       kind: MigToken
       displayName: MigToken
-      description: A token for a given cluster
+      description: A token to identify a user for a given cluster
     - name: podvolumebackups.velero.io
       version: v1
       kind: PodVolumeBackup
