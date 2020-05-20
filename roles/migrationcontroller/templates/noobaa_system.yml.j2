@@ -15,3 +15,10 @@ spec:
    requests:
      cpu: {{ noobaa_system_core_cpu }}
      memory: {{ noobaa_system_core_mem }}
+ endpoints:
+   maxCount: {{ noobaa_system_endpoints_pod_count }}
+   minCount: {{ noobaa_system_endpoints_pod_count }}
+   resources:
+     requests:
+       cpu: {{ noobaa_system_endpoints_cpu }}
+       memory: {{ noobaa_system_endpoints_mem }}
