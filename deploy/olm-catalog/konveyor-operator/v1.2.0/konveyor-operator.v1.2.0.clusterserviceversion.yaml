@@ -38,8 +38,8 @@ metadata:
             "apiVersion": "migration.openshift.io/v1alpha1",
             "kind": "MigrationTenant",
             "metadata": {
-              "name": "migration-controller",
-              "namespace": "openshift-migration"
+              "name": "migration-tenant",
+              "namespace": "tenant-namespace"
             },
             "spec": {
               "migration_ui": "true",
@@ -178,6 +178,15 @@ metadata:
             "kind": "MigStorage",
             "metadata": {
               "name": "migstorage",
+              "namespace": "openshift-migration"
+            },
+            "spec": {}
+        },
+        {
+            "apiVersion": "migration.openshift.io/v1alpha1",
+            "kind": "MigToken",
+            "metadata": {
+              "name": "migtoken",
               "namespace": "openshift-migration"
             },
             "spec": {}
@@ -820,6 +829,11 @@ spec:
       kind: MigStorage
       displayName: MigStorage
       description: A migration storage location
+    - name: migtokens.migration.openshift.io
+      version: v1alpha1
+      kind: MigToken
+      displayName: MigToken
+      description: A token to identify a user for a given cluster
     - name: podvolumebackups.velero.io
       version: v1
       kind: PodVolumeBackup
