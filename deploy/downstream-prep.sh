@@ -46,12 +46,33 @@ if [ -d deploy/olm-catalog/konveyor-operator/v1.2.0 ]; then
 
   #Get latest 1.2 images
   for i in ${V1_2_IMAGES[@]}; do
-    docker pull registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_2_IMG_MAP[${i}_repo]}:v1.2 > /dev/null
+    docker pull -q registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_2_IMG_MAP[${i}_repo]}:v1.2 2>/dev/null
+    DOCKER_STAT=$?
+    RETRIES=10
+    while [ "$DOCKER_STAT" -ne 0 ] && [ $RETRIES -gt 0 ]; do
+      docker pull -q registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_2_IMG_MAP[${i}_repo]}:v1.2 2>/dev/null
+      DOCKER_STAT=$?
+      let RETRIES=RETRIES-1
+    done
+
+    if [ $RETRIES -le 0 ]; then
+      echo "Failed to pull new images"
+      exit 1
+    fi
   done
 
   #oc mirror 1.2 images to get correct shas
   for i in ${V1_2_IMAGES[@]}; do
-    V1_2_IMG_MAP[${i}_sha]=$(oc image mirror --dry-run=true registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_2_IMG_MAP[${i}_repo]}:v1.2=quay.io/ocpmigrate/rhcam-${V1_2_IMG_MAP[${i}_repo]}:v1.2 2>&1 | grep -A1 manifests | grep sha256 | awk -F'[: ]' '{ print $8 }')
+    RETRIES=10
+    while [ -z "${V1_2_IMG_MAP[${i}_sha]}" ] && [ $RETRIES -gt 0 ]; do
+      V1_2_IMG_MAP[${i}_sha]=$(oc image mirror --dry-run=true registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_2_IMG_MAP[${i}_repo]}:v1.2=quay.io/ocpmigrate/rhcam-${V1_2_IMG_MAP[${i}_repo]}:v1.2 2>&1 | grep -A1 manifests | grep sha256 | awk -F'[: ]' '{ print $8 }')
+      let RETRIES=RETRIES-1
+    done
+
+    if [ $RETRIES -le 0 ]; then
+      echo "Failed to mirror images to obtain SHAs"
+      exit 1
+    fi
   done
 
   # Make 1.2.0 Downstream CSV Changes
@@ -141,12 +162,31 @@ if [ -d deploy/olm-catalog/konveyor-operator/v1.1.2 ]; then
 
   #Get latest 1.1 images
   for i in ${V1_1_IMAGES[@]}; do
-    docker pull registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_1_IMG_MAP[${i}_repo]}:v1.1 > /dev/null
+    docker pull -q registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_1_IMG_MAP[${i}_repo]}:v1.1 2>/dev/null
+    while [ "$DOCKER_STAT" -ne 0 ] && [ $RETRIES -gt 0 ]; do
+      docker pull -q registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_1_IMG_MAP[${i}_repo]}:v1.1 2>/dev/null
+      DOCKER_STAT=$?
+      let RETRIES=RETRIES-1
+    done
+
+    if [ $RETRIES -le 0 ]; then
+      echo "Failed to pull new images"
+      exit 1
+    fi
   done
 
   #oc mirror 1.1 images to get correct shas
   for i in ${V1_1_IMAGES[@]}; do
-    V1_1_IMG_MAP[${i}_sha]=$(oc image mirror --dry-run=true registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_1_IMG_MAP[${i}_repo]}:v1.1=quay.io/ocpmigrate/rhcam-${V1_1_IMG_MAP[${i}_repo]}:v1.1 2>&1 | grep -A1 manifests | grep sha256 | awk -F'[: ]' '{ print $8 }')
+    RETRIES=10
+    while [ -z "${V1_1_IMG_MAP[${i}_sha]}" ] && [ $RETRIES -gt 0 ]; do
+      V1_1_IMG_MAP[${i}_sha]=$(oc image mirror --dry-run=true registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_1_IMG_MAP[${i}_repo]}:v1.1=quay.io/ocpmigrate/rhcam-${V1_1_IMG_MAP[${i}_repo]}:v1.1 2>&1 | grep -A1 manifests | grep sha256 | awk -F'[: ]' '{ print $8 }')
+      let RETRIES=RETRIES-1
+    done
+
+    if [ $RETRIES -le 0 ]; then
+      echo "Failed to mirror images to obtain SHAs"
+      exit 1
+    fi
   done
 
   # Make 1.1 Downstream CSV Changes
