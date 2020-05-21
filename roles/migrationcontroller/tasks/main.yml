@@ -502,8 +502,8 @@
         state: "{{ ui_state }}"
         definition: "{{ lookup('template', 'ui.yml.j2') }}"
 
-  - when: (migration_controller is defined and migration_controller) or 
-      (migration_ui is defined and migration_ui)
+  - when: reconcile_migrationcontroller and ((migration_controller is defined and migration_controller) or
+      (migration_ui is defined and migration_ui))
     name: "Set up host MigCluster"
     k8s:
       state: "present"
@@ -590,7 +590,16 @@
       namespace: "{{ meta.namespace }}"
       status:
         phase: Reconciled
-    when: olm_managed and reconciled
+    when: reconcile_migrationcontroller and olm_managed and reconciled
+
+  - operator_sdk.util.k8s_status:
+      api_version: migration.openshift.io/v1alpha1
+      kind: MigrationTenant
+      name: "{{ meta.name }}"
+      namespace: "{{ meta.namespace }}"
+      status:
+        phase: Reconciled
+    when: reconcile_migrationtenant and olm_managed and reconciled
 
   - operator_sdk.util.k8s_status:
       api_version: migration.openshift.io/v1alpha1
@@ -599,7 +608,7 @@
       namespace: "{{ meta.namespace }}"
       status:
         phase: Failed
-    when: olm_managed and not reconciled
+    when: reconcile_migrationcontroller and olm_managed and not reconciled
 
   - name: Retrieve migrationController status
     k8s_facts:
@@ -608,7 +617,7 @@
       namespace: "{{ mig_namespace }}"
     register: controller
 
-  - when: olm_managed and
+  - when:  reconcile_migrationcontroller and olm_managed and
           controller.resources is defined and
           controller.resources[0].status.conditions is defined
     block:
