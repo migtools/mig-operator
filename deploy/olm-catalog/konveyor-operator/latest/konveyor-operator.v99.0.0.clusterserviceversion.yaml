@@ -695,6 +695,10 @@ spec:
                   value: quay.io
                 - name: PROJECT
                   value: konveyor
+                - name: HOOK_RUNNER_REPO
+                  value: hook-runner
+                - NAME: HOOK_RUNNER_TAG
+                  value: latest
                 - name: MIG_CONTROLLER_REPO
                   value: mig-controller
                 - name: MIG_CONTROLLER_TAG
