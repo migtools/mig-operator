@@ -87,6 +87,7 @@ if [ -d deploy/olm-catalog/konveyor-operator/v1.2.0 ]; then
     sed -i "s,gcp-rhel8@sha256:.*,gcp-rhel8@sha256:${V1_2_IMG_MAP[gcpplugin_sha]},g"                                                                        ${f}
     sed -i "s,registry-rhel8@sha256:.*,registry-rhel8@sha256:${V1_2_IMG_MAP[registry_sha]},g"                                                               ${f}
     sed -i "s,hook-runner-rhel7@sha256:.*,hook-runner-rhel7@sha256:${V1_2_IMG_MAP[hookrunner_sha]},g"                                                       ${f}
+    sed -i 's,value: hook-runner,value: openshift-migration-hook-runner-rhel7@sha256,g'                                                                     ${f}
     sed -i 's,value: mig-controller,value: openshift-migration-controller-rhel8@sha256,g'                                                                   ${f}
     sed -i 's,value: mig-ui,value: openshift-migration-ui-rhel8@sha256,g'                                                                                   ${f}
     sed -i 's,value: velero-restic-restore-helper,value: openshift-migration-velero-restic-restore-helper-rhel8@sha256,g'                                   ${f}
@@ -109,6 +110,7 @@ if [ -d deploy/olm-catalog/konveyor-operator/v1.2.0 ]; then
     sed -i "/VELERO_AWS_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[awsplugin_sha]}/"                                                          ${f}
     sed -i "/VELERO_AZURE_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[azureplugin_sha]}/"                                                      ${f}
     sed -i "/MIGRATION_REGISTRY_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[registry_sha]}/"                                                          ${f}
+    sed -i "/HOOK_RUNNER_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[hookrunner_sha]}/"                                                               ${f}
   done
 fi
 
