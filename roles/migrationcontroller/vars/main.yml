@@ -4,6 +4,7 @@ mig_ui_configmap_data:
   namespace: "{{ mig_namespace }}"
   configNamespace: "{{ mig_ui_config_namespace }}"
   discoveryApi: "{{ discovery_api_url }}"
+  hookRunnerImage: "{{ hook_runner_image_fqin }}"
   oauth:
     clientId: migration
     redirectUrl: "{{ mig_ui_oauth_redirect_url }}"
