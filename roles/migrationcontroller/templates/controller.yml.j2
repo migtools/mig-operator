@@ -111,8 +111,8 @@ spec:
 {% endif %}
         - name: PRIVILEGED_NAMESPACE
           value: {{ mig_namespace }}
-        - name: SANDBOX_NAMESPACE
-          value: {{ sandbox_namespace }}
+        - name: TENANT_NAMESPACE
+          value: {{ tenant_namespace }}
         envFrom:
         - configMapRef:
             name: migration-controller
@@ -160,8 +160,8 @@ spec:
 {% endif %}
         - name: PRIVILEGED_NAMESPACE
           value: {{ mig_namespace }}
-        - name: SANDBOX_NAMESPACE
-          value: {{ sandbox_namespace }}
+        - name: TENANT_NAMESPACE
+          value: {{ tenant_namespace }}
         envFrom:
         - configMapRef:
             name: migration-controller
