@@ -111,8 +111,6 @@ spec:
 {% endif %}
         - name: PRIVILEGED_NAMESPACE
           value: {{ mig_namespace }}
-        - name: TENANT_NAMESPACE
-          value: {{ tenant_namespace }}
         envFrom:
         - configMapRef:
             name: migration-controller
@@ -160,8 +158,10 @@ spec:
 {% endif %}
         - name: PRIVILEGED_NAMESPACE
           value: {{ mig_namespace }}
+{% if reconcile_migrationtenant %}
         - name: TENANT_NAMESPACE
-          value: {{ tenant_namespace }}
+          value: {{ meta.namespace }}
+{% endif %}
         envFrom:
         - configMapRef:
             name: migration-controller
