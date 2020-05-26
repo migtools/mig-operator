@@ -12,3 +12,7 @@
   role: /opt/ansible/roles/migrationcontroller
   reconcilePeriod: 30m
   manageStatus: False
+  finalizer:
+    name: migrationtenant-finalizer.migration.openshift.io
+    vars:
+      state: absent

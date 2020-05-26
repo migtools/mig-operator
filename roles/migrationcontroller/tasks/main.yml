@@ -31,7 +31,7 @@
   - when: olm_managed and reconcile_migrationtenant
     block:
     - k8s:
-        state: "present"
+        state: {{ state | default("present") }}
         definition: "{{ lookup('template', 'migration-tenant.yml.j2') }}"
 
     - name: Clean conditions and set Reconciling state
