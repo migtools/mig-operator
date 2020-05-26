@@ -89,10 +89,8 @@ spec:
           value: cluster,plan,migration,storage,token
         - name: OPERATOR_NAMESPACE
           value: {{ mig_namespace }}
-{% if reconcile_migrationtenant %}
         - name: TENANT_NAMESPACE
           value: {{ meta.namespace }}
-{% endif %}
         - name: SECRET_NAME
           value: webhook-server-secret
         - name: MIGRATION_REGISTRY_IMAGE
@@ -111,8 +109,6 @@ spec:
 {% endif %}
         - name: PRIVILEGED_NAMESPACE
           value: {{ mig_namespace }}
-        - name: TENANT_NAMESPACE
-          value: {{ tenant_namespace }}
         envFrom:
         - configMapRef:
             name: migration-controller
@@ -161,7 +157,7 @@ spec:
         - name: PRIVILEGED_NAMESPACE
           value: {{ mig_namespace }}
         - name: TENANT_NAMESPACE
-          value: {{ tenant_namespace }}
+          value: {{ meta.namespace }}
         envFrom:
         - configMapRef:
             name: migration-controller
