@@ -30,8 +30,12 @@
 
   - when: olm_managed and reconcile_migrationtenant
     block:
+    #    setting state from finalizer env var
+    - set_fact:
+        state: "{{ state | default('present') }}"
+
     - k8s:
-        state: "present"
+        state: "{{ state }}"
         definition: "{{ lookup('template', 'migration-tenant.yml.j2') }}"
 
     - name: Clean conditions and set Reconciling state
@@ -422,7 +426,8 @@
             state: present
             definition: "{{ lookup('file', '/tmp/authentication.yaml') | from_yaml }}"
 
-  - block:
+  - when: reconcile_migrationcontroller
+    block:
     - name: "Set up mig controller"
       k8s:
         state: "{{ controller_state }}"
@@ -433,9 +438,25 @@
         state: absent
         definition: "{{ lookup('template', 'controller.yml.j2') }}"
 
-    - name: "Set up mig controller"
+  - when: reconcile_migrationtenant
+    block:
+    #    set multi_tenant_controller_state present only when
+    #      it is reconcile_migration and migration_controller for the tenant is to be installed
+    - set_fact:
+        multi_tenant_controller_state: "absent"
+
+    - set_fact:
+        multi_tenant_controller_state: "{{ state | default('present') }}"
+      when: migration_controller is defined and migration_controller
+
+    - name: "Set up tenant mig controller"
       k8s:
-        state: "{{ controller_state }}"
+        state: "{{ multi_tenant_controller_state }}"
+        definition: "{{ lookup('template', 'controller.yml.j2') }}"
+    rescue:
+    - name: "Set up tenant mig controller"
+      k8s:
+        state: absent
         definition: "{{ lookup('template', 'controller.yml.j2') }}"
 
   - name: Check if discovery route exists
