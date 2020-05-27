@@ -440,8 +440,14 @@
 
   - when: reconcile_migrationtenant
     block:
+    #    set multi_tenant_controller_state present only when
+    #      it is reconcile_migration and migration_controller for the tenant is to be installed
+    - set_fact:
+        multi_tenant_controller_state: "absent"
+
     - set_fact:
         multi_tenant_controller_state: "{{ state | default('present') }}"
+      when: migration_controller is defined and migration_controller
 
     - name: "Set up tenant mig controller"
       k8s:
