@@ -37,6 +37,8 @@ spec:
               type: boolean
             isHostCluster:
               type: boolean
+            restartRestic:
+              type: boolean
             serviceAccountSecretRef:
               type: object
             storageClasses:
