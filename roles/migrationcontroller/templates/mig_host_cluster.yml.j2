@@ -8,4 +8,7 @@ spec:
 {% if azure_resource_group != '' %}
   azureResourceGroup: "{{ azure_resource_group }}"
 {% endif %}
+{% if host_cluster_restart_restic is defined %}
+  restartRestic: "{{ host_cluster_restart_restic }}"
+{% endif %}
   isHostCluster: true
