@@ -223,7 +223,7 @@ spec:
           value: konveyor
         - name: HOOK_RUNNER_REPO
           value: hook-runner
-        - NAME: HOOK_RUNNER_TAG
+        - name: HOOK_RUNNER_TAG
           value: release-1.2.0
         - name: MIG_CONTROLLER_REPO
           value: mig-controller
