@@ -13,7 +13,7 @@ sed -i 's/operator_sdk\.util\.//g' roles/migrationcontroller/tasks/main.yml
 #adjust downstream entrypoint command
 sed -i 's/exec-entrypoint/run/g' build/entrypoint
 
-if [ -d deploy/olm-catalog/konveyor-operator/v1.2.0 ]; then
+if [ -d deploy/olm-catalog/konveyor-operator/v1.2.1 ]; then
   #Declare v1.2 image information
   V1_2_IMAGES=(
     "controller"
@@ -54,9 +54,9 @@ if [ -d deploy/olm-catalog/konveyor-operator/v1.2.0 ]; then
     V1_2_IMG_MAP[${i}_sha]=$(oc image mirror --dry-run=true registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_2_IMG_MAP[${i}_repo]}:v1.2=quay.io/ocpmigrate/rhcam-${V1_2_IMG_MAP[${i}_repo]}:v1.2 2>&1 | grep -A1 manifests | grep sha256 | awk -F'[: ]' '{ print $8 }')
   done
 
-  # Make 1.2.0 Downstream CSV Changes
-  for f in deploy/olm-catalog/konveyor-operator/v1.2.0/konveyor-operator.v1.2.0.clusterserviceversion.yaml \
-           deploy/non-olm/v1.2.0/operator.yml
+  # Make 1.2 Downstream CSV Changes
+  for f in deploy/olm-catalog/konveyor-operator/v1.2.1/konveyor-operator.v1.2.1.clusterserviceversion.yaml \
+           deploy/non-olm/v1.2.1/operator.yml
     do
     if [[ "$f" =~ .*clusterserviceversion.* ]]; then
       sed -i "s,mig-operator-container:.*,openshift-migration-rhel7-operator@sha256:${V1_2_IMG_MAP[operator_sha]},g"                                        ${f}
