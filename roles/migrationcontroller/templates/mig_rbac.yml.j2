@@ -12,6 +12,14 @@ rules:
   verbs:
   - '*'
 - apiGroups:
+  - oauth.openshift.io
+  resources:
+  - oauthaccesstokens
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
   - ""
   resources:
   - serviceaccounts
