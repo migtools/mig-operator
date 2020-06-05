@@ -12,6 +12,12 @@ rules:
   verbs:
   - '*'
 - apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - '*'
+- apiGroups:
   - oauth.openshift.io
   resources:
   - oauthaccesstokens
