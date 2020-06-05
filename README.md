@@ -56,6 +56,11 @@ The default limits are:
   - 100 Persistent Volumes per MigPlan
 
 Resource limits can be adjusted by configuring the MigrationController resource responsible for deploying mig-controller.
+
+```
+oc edit MigrationController -n openshift-migration
+```
+
 ```
   [...]
   migration_controller: true
@@ -69,9 +74,14 @@ Resource limits can be adjusted by configuring the MigrationController resource 
 ```
 
 #### Adjusting Rollback on Migration Failure
-Sometimes, an unexpected error will cause a migration to fail. In these scenarios, you can control migration behavior.
+If an unexpected error causes a migration to fail, you can control migration behavior according to your needs.
 
-Automatic rollback behavior can be adjusted by configuring the MigrationController resource responsible for deploying mig-controller.
+Automatic rollback is disabled by default, but can be enabled by configuring the MigrationController resource responsible for deploying mig-controller.
+
+```
+oc edit MigrationController -n openshift-migration
+```
+
 ```
  [...]
  
