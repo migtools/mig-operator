@@ -89,11 +89,6 @@ Automatic rollback behavior can be adjusted by configuring the MigrationControll
  [...]
 ```
 
-
-
-1. Finish the migration manually by making adjustments to resources on the _target cluster_
-1. _OR_ Automatically delete resources from the _target cluster_ and scale source cluster 
-
 ## CORS (Cross-Origin Resource Sharing) Configuration
 These steps are only required if you are using a Konveyor version older than 1.1.1 OR are installing the controller/UI on OpenShift 3.
 
