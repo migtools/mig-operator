@@ -46,11 +46,11 @@ if [ -d deploy/olm-catalog/konveyor-operator/v1.2.2 ]; then
 
   #Get latest 1.2 images
   for i in ${V1_2_IMAGES[@]}; do
-    docker pull -q registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_2_IMG_MAP[${i}_repo]}:v1.2 2>/dev/null
+    docker pull registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_2_IMG_MAP[${i}_repo]}:v1.2 >/dev/null 2>&1
     DOCKER_STAT=$?
     RETRIES=10
     while [ "$DOCKER_STAT" -ne 0 ] && [ $RETRIES -gt 0 ]; do
-      docker pull -q registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_2_IMG_MAP[${i}_repo]}:v1.2 2>/dev/null
+      docker pull registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_2_IMG_MAP[${i}_repo]}:v1.2 >/dev/null 2>&1
       DOCKER_STAT=$?
       let RETRIES=RETRIES-1
     done
@@ -164,9 +164,9 @@ if [ -d deploy/olm-catalog/konveyor-operator/v1.1.2 ]; then
 
   #Get latest 1.1 images
   for i in ${V1_1_IMAGES[@]}; do
-    docker pull -q registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_1_IMG_MAP[${i}_repo]}:v1.1 2>/dev/null
+    docker pull registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_1_IMG_MAP[${i}_repo]}:v1.1 >/dev/null 2>&1
     while [ "$DOCKER_STAT" -ne 0 ] && [ $RETRIES -gt 0 ]; do
-      docker pull -q registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_1_IMG_MAP[${i}_repo]}:v1.1 2>/dev/null
+      docker pull registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_1_IMG_MAP[${i}_repo]}:v1.1 >/dev/null 2>&1
       DOCKER_STAT=$?
       let RETRIES=RETRIES-1
     done
