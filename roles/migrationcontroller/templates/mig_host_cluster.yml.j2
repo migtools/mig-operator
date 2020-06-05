@@ -3,7 +3,7 @@ apiVersion: migration.openshift.io/v1alpha1
 kind: MigCluster
 metadata:
   name: "{{ cluster_name }}"
-  namespace: "{{ mig_ui_namespace }}"
+  namespace: "{{ mig_namespace }}"
 spec:
 {% if azure_resource_group != '' %}
   azureResourceGroup: "{{ azure_resource_group }}"

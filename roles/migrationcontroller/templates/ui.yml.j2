@@ -3,7 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: migration-ui
-  namespace: "{{ mig_ui_namespace }}"
+  namespace: "{{ mig_namespace }}"
   labels:
     app: migration
     service: migration-ui
@@ -25,7 +25,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: migration-ui
-  namespace: "{{ mig_ui_namespace }}"
+  namespace: "{{ mig_namespace }}"
   labels:
     app: migration
     service: migration-ui

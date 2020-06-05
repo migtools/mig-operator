@@ -95,7 +95,7 @@ spec:
     storage: true
 ---
 apiVersion: rbac.authorization.k8s.io/v1beta1
-kind: ClusterRole
+kind: Role
 metadata:
   creationTimestamp: null
   name: migration-operator
@@ -144,7 +144,7 @@ rules:
   verbs:
   - '*'
 ---
-kind: ClusterRoleBinding
+kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
 metadata:
   name: migration-operator
@@ -153,7 +153,7 @@ subjects:
 - kind: ServiceAccount
   name: migration-operator
 roleRef:
-  kind: ClusterRole
+  kind: Role
   name: migration-operator
   apiGroup: rbac.authorization.k8s.io
 ---

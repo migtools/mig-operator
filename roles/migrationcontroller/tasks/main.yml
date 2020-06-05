@@ -1,12 +1,9 @@
 ---
 - set_fact:
     reconciled: false
-    reconcile_migrationcontroller: "{{ true if _migration_openshift_io_migrationcontroller is defined else false }}"
-    reconcile_migrationtenant: "{{ true if _migration_openshift_io_migrationtenant is defined else false }}"
-    mig_ui_namespace: "{{ mig_namespace if _migration_openshift_io_migrationcontroller is defined else meta.namespace }}"
 
 - block:
-  - when: olm_managed and reconcile_migrationcontroller
+  - when: olm_managed
     block:
 
     - k8s:
@@ -21,27 +18,6 @@
       operator_sdk.util.k8s_status:
         api_version: migration.openshift.io/v1alpha1
         kind: MigrationController
-        name: "{{ meta.name }}"
-        namespace: "{{ meta.namespace }}"
-        force: true
-        conditions: []
-        status:
-          phase: Reconciling
-
-  - when: olm_managed and reconcile_migrationtenant
-    block:
-    #    setting state from finalizer env var
-    - set_fact:
-        state: "{{ state | default('present') }}"
-
-    - k8s:
-        state: "{{ state }}"
-        definition: "{{ lookup('template', 'migration-tenant.yml.j2') }}"
-
-    - name: Clean conditions and set Reconciling state
-      operator_sdk.util.k8s_status:
-        api_version: migration.openshift.io/v1alpha1
-        kind: MigrationTenant
         name: "{{ meta.name }}"
         namespace: "{{ meta.namespace }}"
         force: true
@@ -102,7 +78,7 @@
     - cluster_configmap.resources|length == 0
     - origin_three_dev is defined and origin_three_dev
 
-  - when: migration_velero is defined and migration_velero
+  - when: migration_velero
     block:
     - name: Check if cloud-credentials secret exists already so we don't update it
       k8s_facts:
@@ -184,78 +160,74 @@
           state: "{{ velero_state }}"
           definition: "{{ lookup('template', 'velero_supporting.yml.j2') }}"
 
-  - when: reconcile_migrationcontroller
-    block:
-    - name: "Create proxy configuration secret if proxy is configured"
-      k8s:
-        state: "present"
-        definition: "{{ lookup('template', 'proxy_secret.yml.j2') }}"
-      when: http_proxy != "" or https_proxy != "" or no_proxy != ""
+  - name: "Create proxy configuration secret if proxy is configured"
+    k8s:
+      state: "present"
+      definition: "{{ lookup('template', 'proxy_secret.yml.j2') }}"
+    when: http_proxy != "" or https_proxy != "" or no_proxy != ""
 
-    - name: "Set up velero controller"
-      k8s:
-        state: "{{ velero_state }}"
-        definition: "{{ lookup('template', 'velero.yml.j2') }}"
+  - name: "Set up velero controller"
+    k8s:
+      state: "{{ velero_state }}"
+      definition: "{{ lookup('template', 'velero.yml.j2') }}"
 
-    - name: "Set up migration CRDs"
-      k8s:
-        state: "present"
-        src: "{{ role_path }}/files/{{ item }}"
-      with_items:
-        - "migration_v1alpha1_migcluster.yaml"
-        - "migration_v1alpha1_migmigration.yaml"
-        - "migration_v1alpha1_migplan.yaml"
-        - "migration_v1alpha1_mighook.yaml"
-        - "migration_v1alpha1_migstorage.yaml"
-      when: not olm_managed
+  - name: "Set up migration CRDs"
+    k8s:
+      state: "present"
+      src: "{{ role_path }}/files/{{ item }}"
+    with_items:
+      - "migration_v1alpha1_migcluster.yaml"
+      - "migration_v1alpha1_migmigration.yaml"
+      - "migration_v1alpha1_migplan.yaml"
+      - "migration_v1alpha1_mighook.yaml"
+      - "migration_v1alpha1_migstorage.yaml"
+    when: not olm_managed
 
-    - name: "Set up mig controller RBAC"
-      k8s:
-        state: present
-        definition: "{{ lookup('template', 'mig_rbac.yml.j2') }}"
-      when: not olm_managed
+  - name: "Set up mig controller RBAC"
+    k8s:
+      state: present
+      definition: "{{ lookup('template', 'mig_rbac.yml.j2') }}"
+    when: not olm_managed
 
-    - name: "Set up mig controller monitoring config"
-      k8s:
-        state: "{{ controller_state }}"
-        definition: "{{ lookup('template', item) | from_yaml }}"
-      when: "'monitoring.coreos.com' in lookup('k8s', cluster_info='api_groups')"
-      with_items:
-      - monitoring-servicemonitor.yml.j2
-      - monitoring-service.yml.j2
-      - monitoring-role.yml.j2
-      - monitoring-rolebinding.yml.j2     
-
-
-  - when: (migration_controller is defined and migration_controller) or 
-      (migration_ui is defined and migration_ui)
+  - when: migration_controller or migration_ui
     block:
     - name: Set default CORS URLs
       set_fact:
         mig_ui_cors_loopback: "//127.0.0.1(:|$)"
         mig_ui_cors_localhost: "//localhost(:|$)"
 
-  - when: migration_ui is defined and migration_ui
-    block:
-    - name: Check if mig ui route exists already so we don't update it
-      k8s_facts:
-        api_version: v1
-        kind: Route
-        name: migration
-        namespace: "{{ mig_ui_namespace }}"
-      register: route_status
-  
-    - name: "Set up mig ui route"
-      k8s:
-        state: "{{ ui_state }}"
-        definition: "{{ lookup('template', 'ui-route.yml.j2') }}"
-      when: (route_status.resources|length) == 0 or ui_state == "absent"
+  - name: "Set up mig controller monitoring config"
+    k8s:
+      state: "{{ controller_state }}"
+      definition: "{{ lookup('template', item) | from_yaml }}"
+    when: "'monitoring.coreos.com' in lookup('k8s', cluster_info='api_groups')"
+    with_items:
+    - monitoring-servicemonitor.yml.j2
+    - monitoring-service.yml.j2
+    - monitoring-role.yml.j2
+    - monitoring-rolebinding.yml.j2
 
+  - name: Check if mig ui route exists already so we don't update it
+    k8s_facts:
+      api_version: v1
+      kind: Route
+      name: migration
+      namespace: "{{ mig_namespace }}"
+    register: route_status
+
+  - name: "Set up mig ui route"
+    k8s:
+      state: "{{ ui_state }}"
+      definition: "{{ lookup('template', 'ui-route.yml.j2') }}"
+    when: (route_status.resources|length) == 0 or ui_state == "absent"
+
+  - when: migration_ui
+    block:
     - name: Find generated route
       k8s_facts:
         api_version: "route.openshift.io/v1"
         kind: "Route"
-        namespace: "{{ mig_ui_namespace }}"
+        namespace: "{{ mig_namespace }}"
         name: migration
       register: route
 
@@ -285,7 +257,7 @@
         api_version: v1
         kind: OAuthClient
         name: migration
-        namespace: "{{ mig_ui_namespace }}"
+        namespace: "{{ mig_namespace }}"
       register: oauthclient_status
 
     - name: Generate random secret value for oauth client
@@ -426,8 +398,7 @@
             state: present
             definition: "{{ lookup('file', '/tmp/authentication.yaml') | from_yaml }}"
 
-  - when: reconcile_migrationcontroller
-    block:
+  - block:
     - name: "Set up mig controller"
       k8s:
         state: "{{ controller_state }}"
@@ -438,25 +409,9 @@
         state: absent
         definition: "{{ lookup('template', 'controller.yml.j2') }}"
 
-  - when: reconcile_migrationtenant
-    block:
-    #    set multi_tenant_controller_state present only when
-    #      it is reconcile_migration and migration_controller for the tenant is to be installed
-    - set_fact:
-        multi_tenant_controller_state: "absent"
-
-    - set_fact:
-        multi_tenant_controller_state: "{{ state | default('present') }}"
-      when: migration_controller is defined and migration_controller
-
-    - name: "Set up tenant mig controller"
+    - name: "Set up mig controller"
       k8s:
-        state: "{{ multi_tenant_controller_state }}"
-        definition: "{{ lookup('template', 'controller.yml.j2') }}"
-    rescue:
-    - name: "Set up tenant mig controller"
-      k8s:
-        state: absent
+        state: "{{ controller_state }}"
         definition: "{{ lookup('template', 'controller.yml.j2') }}"
 
   - name: Check if discovery route exists
@@ -466,9 +421,9 @@
       name: discovery
       namespace: "{{ mig_namespace }}"
     register: discovery_route
-    when: migration_ui is defined and migration_ui
+    when: migration_ui
 
-  - when: migration_ui is defined and migration_ui and (discovery_route.resources|length) > 0
+  - when: migration_ui and (discovery_route.resources|length) > 0
     block:
     - set_fact:
         discovery_api_url: "https://{{discovery_route.resources[0].spec.host}}"
@@ -478,7 +433,7 @@
         api_version: v1
         kind: ConfigMap
         name: "{{ mig_ui_configmap_name }}"
-        namespace: "{{ mig_ui_namespace }}"
+        namespace: "{{ mig_namespace }}"
       register: configmap_status
 
     - name: Set up mig ui configmap
@@ -523,8 +478,8 @@
         state: "{{ ui_state }}"
         definition: "{{ lookup('template', 'ui.yml.j2') }}"
 
-  - when: reconcile_migrationcontroller and ((migration_controller is defined and migration_controller) or
-      (migration_ui is defined and migration_ui))
+  - when: (migration_controller is defined and migration_controller) or 
+      (migration_ui is defined and migration_ui)
     name: "Set up host MigCluster"
     k8s:
       state: "present"
@@ -553,7 +508,7 @@
     - name: Find UI ReplicaSets
       k8s_facts:
         kind: ReplicaSet
-        namespace: "{{ mig_ui_namespace }}"
+        namespace: "{{ mig_namespace }}"
         label_selectors:
         - service=migration-ui
       register: ui_replicasets
@@ -563,7 +518,7 @@
         name: "{{ item.metadata.name }}"
         state: absent
         kind: ReplicaSet
-        namespace: "{{ mig_ui_namespace }}"
+        namespace: "{{ mig_namespace }}"
       with_items: "{{ ui_replicasets.resources }}"
 
   - when: migration_velero is defined and not migration_velero
@@ -611,16 +566,7 @@
       namespace: "{{ meta.namespace }}"
       status:
         phase: Reconciled
-    when: reconcile_migrationcontroller and olm_managed and reconciled
-
-  - operator_sdk.util.k8s_status:
-      api_version: migration.openshift.io/v1alpha1
-      kind: MigrationTenant
-      name: "{{ meta.name }}"
-      namespace: "{{ meta.namespace }}"
-      status:
-        phase: Reconciled
-    when: reconcile_migrationtenant and olm_managed and reconciled
+    when: olm_managed and reconciled
 
   - operator_sdk.util.k8s_status:
       api_version: migration.openshift.io/v1alpha1
@@ -629,7 +575,7 @@
       namespace: "{{ meta.namespace }}"
       status:
         phase: Failed
-    when: reconcile_migrationcontroller and olm_managed and not reconciled
+    when: olm_managed and not reconciled
 
   - name: Retrieve migrationController status
     k8s_facts:
@@ -638,7 +584,7 @@
       namespace: "{{ mig_namespace }}"
     register: controller
 
-  - when:  reconcile_migrationcontroller and olm_managed and
+  - when: olm_managed and
           controller.resources is defined and
           controller.resources[0].status.conditions is defined
     block:

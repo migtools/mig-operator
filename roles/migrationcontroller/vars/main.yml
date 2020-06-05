@@ -1,11 +1,11 @@
 ---
 mig_ui_configmap_data:
   clusterApi: "{{ mig_ui_cluster_api_endpoint }}"
-  namespace: "{{ mig_ui_namespace }}"
+  namespace: "{{ mig_namespace }}"
   configNamespace: "{{ mig_ui_config_namespace }}"
   discoveryApi: "{{ discovery_api_url }}"
   oauth:
     clientId: migration
-    redirectUri: "{{ mig_ui_oauth_redirect_url }}"
+    redirectUrl: "{{ mig_ui_oauth_redirect_url }}"
     userScope: "{{ mig_ui_oauth_user_scope }}"
     clientSecret: "{{ mig_ui_oauth_secret }}"
