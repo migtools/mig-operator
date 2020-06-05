@@ -60,13 +60,39 @@ Resource limits can be adjusted by configuring the MigrationController resource 
   [...]
   migration_controller: true
   
-  # This configuration is loaded into mig-controller, and should be set on the
+  # Resource limit configuration is loaded into mig-controller, and should be set on the
   # cluster where `migration_controller: true`
   mig_pv_limit: 100
   mig_pod_limit: 100
   mig_namespace_limit: 10
   [...]
 ```
+
+#### Adjusting Rollback on Migration Failure
+Sometimes, an unexpected error will cause a migration to fail. In these scenarios, you can control migration behavior.
+
+Automatic rollback behavior can be adjusted by configuring the MigrationController resource responsible for deploying mig-controller.
+```
+ [...]
+ 
+ # Rollback configuration is loaded into mig-controller, and should be set on the
+ # cluster where `migration_controller: true`
+ migration_controller: true
+
+ # [Default] Setting 'mig_failure_rollback: false' leaves the partially migrated workloads 
+ # in place on the target cluster.
+ mig_failure_rollback: false
+
+ # Setting 'mig_failure_rollback: true' removes the partially migrated workloads from the
+ # target cluster and scales them back up on the source cluster.
+ mig_failure_rollback: true
+ [...]
+```
+
+
+
+1. Finish the migration manually by making adjustments to resources on the _target cluster_
+1. _OR_ Automatically delete resources from the _target cluster_ and scale source cluster 
 
 ## CORS (Cross-Origin Resource Sharing) Configuration
 These steps are only required if you are using a Konveyor version older than 1.1.1 OR are installing the controller/UI on OpenShift 3.
