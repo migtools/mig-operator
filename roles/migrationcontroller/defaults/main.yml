@@ -25,6 +25,7 @@ discovery_volume_path: "/var/cache/discovery"
 mig_pv_limit: "100"
 mig_pod_limit: "100"
 mig_namespace_limit: "10"
+mig_failure_rollback: false
 mig_namespace: "{{ lookup( 'env', 'WATCH_NAMESPACE') | default('openshift-migration') }}"
 mig_ui_cluster_api_endpoint: ""
 mig_ui_configmap_data: ""
