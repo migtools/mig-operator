@@ -17,6 +17,9 @@ The same versions are available for use without OLM. Run the command correspondi
 `oc create -f deploy/non-olm/v1.2/operator.yml`  
 `oc create -f deploy/non-olm/v1.1/operator.yml`  
 
+## Operator Upgrade Procedure
+See the [CAM Upgrade Documentation](./docs/usage/UpgradingCAM.md).
+
 ## Component Installation and Configuration
 Component installation and configuration is accomplished by creating or modifying a MigrationController CR.
 

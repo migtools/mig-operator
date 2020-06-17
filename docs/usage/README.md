@@ -17,3 +17,4 @@ This guide will provide you with hands-on exposure to the new OpenShift Migratio
 [Section 11 - Proxy Configuration](./11.md)<br>
 [Section 12 - Alternative CAM Toplogies](./AlternativeCAMTopologies.md): Describes
 installing CAM for OCP3->3 installations, and 4->4 installations.<br>
+[Section 13 - Upgrading CAM](./UpgradingCAM.md)<br>
