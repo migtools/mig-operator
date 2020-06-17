@@ -1,7 +1,9 @@
 # Openshift 3
 If you have previously installed a version of CAM upgrading is straight forward.
 
-As an example if you have previously installed version 1.2.1 and now wish to upgrade to 1.2.2 run:
+**Removing the namespace and recreating it will remove service accounts and will require updating the remote cluster credentials so this should be avoided.**
+
+Instead, as an example, if you have previously installed version 1.2.1 and now wish to upgrade to 1.2.2 run:  
 `oc replace -f deploy/non-olm/v1.2.2/operator.yml`
 
 This will redeploy the new operator, which will in turn deploy the new operands.
