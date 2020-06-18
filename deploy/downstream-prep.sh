@@ -65,7 +65,7 @@ if [ -d deploy/olm-catalog/konveyor-operator/v1.2.3 ]; then
   for i in ${V1_2_IMAGES[@]}; do
     RETRIES=10
     while [ -z "${V1_2_IMG_MAP[${i}_sha]}" ] && [ $RETRIES -gt 0 ]; do
-      V1_2_IMG_MAP[${i}_sha]=$(oc image mirror --dry-run=true registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_2_IMG_MAP[${i}_repo]}:v1.2=quay.io/ocpmigrate/rhcam-${V1_2_IMG_MAP[${i}_repo]}:v1.2.3>&1 | grep -A1 manifests | grep sha256 | awk -F'[: ]' '{ print $8 }')
+      V1_2_IMG_MAP[${i}_sha]=$(oc image mirror --dry-run=true registry-proxy.engineering.redhat.com/rh-osbs/rhcam-${V1_2_IMG_MAP[${i}_repo]}:v1.2=quay.io/ocpmigrate/rhcam-${V1_2_IMG_MAP[${i}_repo]}:v1.2 2>&1 | grep -A1 manifests | grep sha256 | awk -F'[: ]' '{ print $8 }')
       let RETRIES=RETRIES-1
     done
 
