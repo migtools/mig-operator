@@ -4,6 +4,13 @@ configmap_secret: ""
 controller_state: absent
 deprecated_cors_configuration: false
 cors_origins: []
+disable_image_migration: false
+disable_pv_migration: false
+exclude_resources:
+  - clusterserviceversions
+  - imagetags
+  - subscriptions
+  - templateinstances
 proxy_secret_name: "migration-proxy"
 http_proxy: "{{ lookup( 'env', 'HTTP_PROXY') }}"
 https_proxy: "{{ lookup( 'env', 'HTTPS_PROXY') }}"
