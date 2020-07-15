@@ -56,26 +56,30 @@
       namespace: kube-system
     register: cluster_configmap
 
+  - name: Get the infrastructure
+    k8s_facts:
+      api_version: config.openshift.io/v1
+      kind: Infrastructure
+      name: cluster
+    register: infrastructures
+    ignore_errors: yes
+
   - when: migration_ui and cluster_configmap.resources|length > 0
     block:
+    # this will not be executed in a 3.x cluster
     - set_fact:
-        cluster_config_data: "{{ cluster_configmap.resources[0].data | regex_replace('install-config', 'install_config') }}"
-
-    - set_fact:
-        cluster_config: "{{ cluster_config_data.install_config | from_yaml }}"
-
-    - set_fact:
-        mig_ui_cluster_api_endpoint: "https://api.{{ cluster_config.metadata.name }}.{{ cluster_config.baseDomain }}:6443"
+        mig_ui_cluster_api_endpoint: "{{ infrastructures.resources[0].status.apiServerURL }}"
+      when: infrastructures is defined and infrastructures.get('resources', [{}])[0].get('status'. {}).get('apiServerURL', '') != ''
 
   - set_fact:
       restic_pv_host_path: /var/lib/origin/openshift.local.volumes/pods
-    when: cluster_configmap.resources|length == 0
+    when: infrastructures is not defined or infrastructures.resources|length == 0
 
   # This is only here to ease testing with openshift 3 dev environments
   - set_fact:
       restic_pv_host_path: /tmp/openshift.local.clusterup/openshift.local.volumes/pods
     when:
-    - cluster_configmap.resources|length == 0
+    - infrastructures.resources|length == 0
     - origin_three_dev is defined and origin_three_dev
 
   - when: migration_velero
