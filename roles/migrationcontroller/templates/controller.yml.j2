@@ -76,7 +76,7 @@ spec:
       - command:
         - /manager
         env:
-        - name: EXCLUDE_RESOURCES
+        - name: EXCLUDED_RESOURCES
           value: {{ all_excluded_resources | join(',') }}
         - name: POD_NAMESPACE
           valueFrom:
