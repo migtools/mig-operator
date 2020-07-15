@@ -115,6 +115,10 @@ spec:
           type: object
         status:
           properties:
+            excludedResources:
+              items:
+                type: string
+              type: array
             incompatibleNamespaces:
               items:
                 properties:
