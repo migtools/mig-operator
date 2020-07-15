@@ -34,6 +34,21 @@
   - set_fact: velero_state="present"
     when: migration_velero
 
+  - set_fact:
+      all_exclude_resources: "{{ exclude_resources }}"
+
+  - set_fact:
+      all_exclude_resources: "{{ all_exclude_resources + ['imagestreams'] }}"
+    when: disable_image_migration and 'imagestreams' not in exclude_resources
+
+  - set_fact:
+      all_exclude_resources: "{{ all_exclude_resources + ['persistentvolumes'] }}"
+    when: disable_pv_migration and 'persistentvolumes' not in exclude_resources
+
+  - set_fact:
+      all_exclude_resources: "{{ all_exclude_resources + ['persistentvolumeclaims'] }}"
+    when: disable_pv_migration and 'persistentvolumeclaims' not in exclude_resources
+
   - name: Get cluster config
     k8s_facts:
       api_version: v1
