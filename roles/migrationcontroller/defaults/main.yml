@@ -6,7 +6,7 @@ deprecated_cors_configuration: false
 cors_origins: []
 disable_image_migration: false
 disable_pv_migration: false
-exclude_resources:
+excluded_resources:
   - clusterserviceversions
   - imagetags
   - subscriptions
