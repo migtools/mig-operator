@@ -204,16 +204,13 @@ spec:
     image: quay.io/konveyor/hook-runner:release-1.2.4
   displayName: Konveyor Operator
   description: |
-    The Konveyor Operator for OpenShift enables installation of the OpenShift application migration tool.
+    The Konveyor Operator enables installation of the application migration tool.
 
-    Prior to installing create the openshift-migration namespace (oc create namespace openshift-migration) and install the operator within this namespace.
-
-    After installation you can install components by creating a MigrationController CR. Generally the defaults provided are acceptable for an OpenShift 4 destination cluster.
+    After installation you can install components by creating a MigrationController CR. Generally the defaults provided are acceptable for a target cluster.
     The components include
-    * velero and restic which is required on all source and destination cluster
+    * velero and restic which is required on all source and target cluster
     * mig-controller to coordinate backups and restores between cluster
     * mig-ui which provides a user friendly interface for creating migration plans.
-
     If you experience any issues or have feature requests, please [file an issue in our Github repository](https://github.com/konveyor/mig-operator/issues)
   keywords: ['migration']
 
