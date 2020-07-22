@@ -7,10 +7,11 @@ cors_origins: []
 disable_image_migration: false
 disable_pv_migration: false
 excluded_resources:
-  - clusterserviceversions
   - imagetags
-  - subscriptions
   - templateinstances
+  - clusterserviceversions
+  - packagemanifests
+  - subscriptions
   - servicebrokers
   - servicebindings
   - serviceclasses
