@@ -11,6 +11,11 @@ excluded_resources:
   - imagetags
   - subscriptions
   - templateinstances
+  - servicebrokers
+  - servicebindings
+  - serviceclasses
+  - serviceinstances
+  - serviceplans
 proxy_secret_name: "migration-proxy"
 http_proxy: "{{ lookup( 'env', 'HTTP_PROXY') }}"
 https_proxy: "{{ lookup( 'env', 'HTTPS_PROXY') }}"
