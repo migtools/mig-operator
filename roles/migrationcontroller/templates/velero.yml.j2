@@ -148,7 +148,7 @@ spec:
           - sh
           - '-ec'
           - >-
-            cp /etc/ssl/certs/* /certs/; ln -sf /credentials/ca_bundle.pem
+            cp -f /etc/ssl/certs/* /certs/; ln -sf /credentials/ca_bundle.pem
             /certs/ca_bundle.pem;
           resources: {}
           terminationMessagePath: /dev/termination-log
