@@ -39,15 +39,15 @@
 
   - set_fact:
       all_excluded_resources: "{{ all_excluded_resources + ['imagestreams'] }}"
-    when: disable_image_migration and 'imagestreams' not in excluded_resources
+    when: disable_image_migration|bool and 'imagestreams' not in excluded_resources
 
   - set_fact:
       all_excluded_resources: "{{ all_excluded_resources + ['persistentvolumes'] }}"
-    when: disable_pv_migration and 'persistentvolumes' not in excluded_resources
+    when: disable_pv_migration|bool and 'persistentvolumes' not in excluded_resources
 
   - set_fact:
       all_excluded_resources: "{{ all_excluded_resources + ['persistentvolumeclaims'] }}"
-    when: disable_pv_migration and 'persistentvolumeclaims' not in excluded_resources
+    when: disable_pv_migration|bool and 'persistentvolumeclaims' not in excluded_resources
 
   - name: Get cluster config
     k8s_facts:
