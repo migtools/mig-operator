@@ -29,7 +29,7 @@ spec:
 ...
 ```
 
-
+Disabling pv migration will also disable PV discovery during plan creation.
 
 # Exclude Kubernetes Resources
 To modify the default list of excluded resources add an `excluded_resources` parameter to the MigrationController CR.
