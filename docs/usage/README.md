@@ -20,3 +20,4 @@ installing CAM for OCP3->3 installations, and 4->4 installations.<br>
 [Section 13 - Upgrading CAM](./UpgradingCAM.md)<br>
 [Section 14 - Excluding Resources](./ExcludeResources.md)<br>
 [Section 15 - Adjusting Controller Resource Limits](./AdjustingControllerLimits.md)<br>
+[Section 16 - Analytics](./Analytics.md)<br>

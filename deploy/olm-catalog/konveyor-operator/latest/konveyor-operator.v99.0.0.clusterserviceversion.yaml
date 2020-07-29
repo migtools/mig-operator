@@ -136,6 +136,23 @@ metadata:
         },
         {
             "apiVersion": "migration.openshift.io/v1alpha1",
+            "kind": "MigAnalytic",
+            "metadata": {
+              "name": "host",
+              "namespace": "openshift-migration"
+            },
+            "spec": {
+              "plan": {
+                "name": "foo",
+                "namespace": "openshift-migration"
+              },
+              "analyzeK8SResources": true,
+              "analyzeImageCount": true,
+              "analyzePVCapacity": true
+            }
+        },
+        {
+            "apiVersion": "migration.openshift.io/v1alpha1",
             "kind": "MigCluster",
             "metadata": {
               "name": "host",
@@ -761,6 +778,11 @@ spec:
       kind: DownloadRequest
       displayName: DownloadRequest
       description: A download request for velero
+    - name: miganalytics.migration.openshift.io
+      version: v1alpha1
+      kind: MigAnalytic
+      displayName: MigAnalytic
+      description: A request to Analyze a MigPlan and its namespaces
     - name: migclusters.migration.openshift.io
       version: v1alpha1
       kind: MigCluster
