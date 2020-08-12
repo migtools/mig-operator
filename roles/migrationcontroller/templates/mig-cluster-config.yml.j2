@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    control-plane: controller-manager
+    controller-tools.k8s.io: "1.0"
+  name: migration-cluster-config
+  namespace: {{ mig_namespace }}
+data:
+  STAGE_IMAGE: "{{ migration_stage_image_fqin }}"
+  REGISTRY_IMAGE: "{{ migration_registry_image_fqin }}"
