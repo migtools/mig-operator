@@ -50,11 +50,11 @@
   #It also lets us generate the cluster API endpoint URL on Openshift 4.
   - name: Get cluster config
     k8s_facts:
-      api_version: v1
-      kind: ConfigMap
-      name: cluster-config-v1
-      namespace: kube-system
-    register: cluster_configmap
+      api_version: config.openshift.io/v1
+      kind: ClusterVersion
+      name: version
+    register:
+    cluster_version
 
   - name: Get the infrastructure
     k8s_facts:
@@ -64,7 +64,7 @@
     register: infrastructures
     ignore_errors: yes
 
-  - when: migration_ui and cluster_configmap.resources|length > 0
+  - when: migration_ui and cluster_version.resources|length > 0
     block:
     # this will not be executed in a 3.x cluster
     - set_fact:
@@ -279,7 +279,7 @@
         state: "{{ ui_state }}"
         definition: "{{ lookup('template', 'ui-oauthsecret.yml.j2') }}"
 
-    - when: cluster_configmap.resources|length > 0
+    - when: cluster_version.resources|length > 0
       block:
       - name: Retrieve apiserver config definition
         k8s_facts:
