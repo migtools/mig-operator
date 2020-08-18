@@ -391,6 +391,7 @@ spec:
           - config.openshift.io
           resources:
           - infrastructures
+          - clusterversions
           verbs:
           - get
       - serviceAccountName: migration-controller
