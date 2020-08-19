@@ -80,58 +80,59 @@ if [ -d deploy/olm-catalog/konveyor-operator/v1.2.5 ]; then
            deploy/non-olm/v1.2.5/operator.yml
     do
     if [[ "$f" =~ .*clusterserviceversion.* ]]; then
-      sed -i "s,mig-operator-container:.*,openshift-migration-rhel7-operator@sha256:${V1_2_IMG_MAP[operator_sha]},g"                                        ${f}
+      sed -i "s,mig-operator-container:.*,openshift-migration-rhel7-operator@sha256:${V1_2_IMG_MAP[operator_sha]},g"                                                   ${f}
     else
-      sed -i "s,mig-operator-container:.*,openshift-migration-rhel7-operator:v1.2,g"                                                                        ${f}
+      sed -i "s,mig-operator-container:.*,openshift-migration-rhel7-operator:v1.2,g"                                                                                   ${f}
     fi
-    sed -i 's,quay.io,registry.redhat.io,g'                                                                                                                 ${f}
-    sed -i 's,registry.redhat.io\/konveyor,registry.redhat.io/rhcam-1-2,g'                                                                                  ${f}
-    sed -i 's,value: konveyor,value: rhcam-1-2,g'                                                                                                           ${f}
-    sed -i "s,/mig-controller:.*,/openshift-migration-controller-rhel8@sha256:${V1_2_IMG_MAP[controller_sha]},g"                                            ${f}
-    sed -i "s,/mig-ui:.*,/openshift-migration-ui-rhel8@sha256:${V1_2_IMG_MAP[ui_sha]},g"                                                                    ${f}
-    sed -i "s,/velero:.*,/openshift-migration-velero-rhel8@sha256:${V1_2_IMG_MAP[velero_sha]},g"                                                            ${f}
-    sed -i "s,/velero-restic-restore-helper:.*,/openshift-migration-velero-restic-restore-helper-rhel8@sha256:${V1_2_IMG_MAP[helper_sha]},g"                ${f}
-    sed -i "s,/migration-plugin:.*,/openshift-migration-plugin-rhel8@sha256:${V1_2_IMG_MAP[plugin_sha]},g"                                                  ${f}
-    sed -i "s,/velero-plugin-for-aws:.*,/openshift-migration-velero-plugin-for-aws-rhel8@sha256:${V1_2_IMG_MAP[awsplugin_sha]},g"                           ${f}
-    sed -i "s,/velero-plugin-for-microsoft-azure:.*,/openshift-migration-velero-plugin-for-microsoft-azure-rhel8@sha256:${V1_2_IMG_MAP[azureplugin_sha]},g" ${f}
-    sed -i "s,/velero-plugin-for-gcp:.*,/openshift-migration-velero-plugin-for-gcp-rhel8@sha256:${V1_2_IMG_MAP[gcpplugin_sha]},g"                           ${f}
-    sed -i "s,/registry:.*,/openshift-migration-registry-rhel8@sha256:${V1_2_IMG_MAP[registry_sha]},g"                                                      ${f}
-    sed -i "s,/hook-runner:.*,/openshift-migration-hook-runner-rhel7@sha256:${V1_2_IMG_MAP[hookrunner_sha]},g"                                              ${f}
-    sed -i "s,rhel7-operator@sha256:.*,rhel7-operator@sha256:${V1_2_IMG_MAP[operator_sha]},g"                                                               ${f}
-    sed -i "s,controller-rhel8@sha256:.*,controller-rhel8@sha256:${V1_2_IMG_MAP[controller_sha]},g"                                                         ${f}
-    sed -i "s,ui-rhel8@sha256:.*,ui-rhel8@sha256:${V1_2_IMG_MAP[ui_sha]},g"                                                                                 ${f}
-    sed -i "s,velero-rhel8@sha256:.*,velero-rhel8@sha256:${V1_2_IMG_MAP[velero_sha]},g"                                                                     ${f}
-    sed -i "s,velero-restic-restore-helper-rhel8@sha256:.*,velero-restic-restore-helper-rhel8@sha256:${V1_2_IMG_MAP[helper_sha]},g"                         ${f}
-    sed -i "s,plugin-rhel8@sha256:.*,plugin-rhel8@sha256:${V1_2_IMG_MAP[plugin_sha]},g"                                                                     ${f}
-    sed -i "s,aws-rhel8@sha256:.*,aws-rhel8@sha256:${V1_2_IMG_MAP[awsplugin_sha]},g"                                                                        ${f}
-    sed -i "s,azure-rhel8@sha256:.*,azure-rhel8@sha256:${V1_2_IMG_MAP[azureplugin_sha]},g"                                                                  ${f}
-    sed -i "s,gcp-rhel8@sha256:.*,gcp-rhel8@sha256:${V1_2_IMG_MAP[gcpplugin_sha]},g"                                                                        ${f}
-    sed -i "s,registry-rhel8@sha256:.*,registry-rhel8@sha256:${V1_2_IMG_MAP[registry_sha]},g"                                                               ${f}
-    sed -i "s,hook-runner-rhel7@sha256:.*,hook-runner-rhel7@sha256:${V1_2_IMG_MAP[hookrunner_sha]},g"                                                       ${f}
-    sed -i 's,value: hook-runner,value: openshift-migration-hook-runner-rhel7@sha256,g'                                                                     ${f}
-    sed -i 's,value: mig-controller,value: openshift-migration-controller-rhel8@sha256,g'                                                                   ${f}
-    sed -i 's,value: mig-ui,value: openshift-migration-ui-rhel8@sha256,g'                                                                                   ${f}
-    sed -i 's,value: velero-restic-restore-helper,value: openshift-migration-velero-restic-restore-helper-rhel8@sha256,g'                                   ${f}
-    sed -i 's,value: velero-plugin-for-gcp,value: openshift-migration-velero-plugin-for-gcp-rhel8@sha256,g'                                                 ${f}
-    sed -i 's,value: velero-plugin-for-aws,value: openshift-migration-velero-plugin-for-aws-rhel8@sha256,g'                                                 ${f}
-    sed -i 's,value: velero-plugin-for-microsoft-azure,value: openshift-migration-velero-plugin-for-microsoft-azure-rhel8@sha256,g'                         ${f}
-    sed -i 's,value: velero,value: openshift-migration-velero-rhel8@sha256,g'                                                                               ${f}
-    sed -i 's,value: migration-plugin,value: openshift-migration-plugin-rhel8@sha256,g'                                                                     ${f}
-    sed -i 's,value: registry$,value: openshift-migration-registry-rhel8@sha256,g'                                                                          ${f}
-    sed -i 's,konveyor-operator\.,cam-operator.,g'                                                                                                          ${f}
-    sed -i 's,:\ konveyor-operator,: cam-operator,g'                                                                                                        ${f}
-    sed -i 's/displayName: Konveyor Operator/displayName: Cluster Application Migration Operator/g'                                                         ${f}
-    sed -i 's/The Konveyor Operator/The Cluster Application Migration Operator/g'                                                                           ${f}
-    sed -i "/MIG_CONTROLLER_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[controller_sha]}/"                                                            ${f}
-    sed -i "/MIG_UI_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[ui_sha]}/"                                                                            ${f}
-    sed -i "/VELERO_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[plugin_sha]}/"                                                                 ${f}
-    sed -i "/VELERO_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[velero_sha]}/"                                                                        ${f}
-    sed -i "/VELERO_RESTIC_RESTORE_HELPER_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[helper_sha]}/"                                                  ${f}
-    sed -i "/VELERO_GCP_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[gcpplugin_sha]}/"                                                          ${f}
-    sed -i "/VELERO_AWS_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[awsplugin_sha]}/"                                                          ${f}
-    sed -i "/VELERO_AZURE_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[azureplugin_sha]}/"                                                      ${f}
-    sed -i "/MIGRATION_REGISTRY_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[registry_sha]}/"                                                          ${f}
-    sed -i "/HOOK_RUNNER_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[hookrunner_sha]}/"                                                               ${f}
+    sed -i 's,quay.io,registry.redhat.io,g'                                                                                                                            ${f}
+    sed -i 's,registry.redhat.io\/konveyor,registry.redhat.io/rhcam-1-2,g'                                                                                             ${f}
+    sed -i 's,value: konveyor,value: rhcam-1-2,g'                                                                                                                      ${f}
+    sed -i "s,/mig-controller:.*,/openshift-migration-controller-rhel8@sha256:${V1_2_IMG_MAP[controller_sha]},g"                                                       ${f}
+    sed -i "s,/mig-ui:.*,/openshift-migration-ui-rhel8@sha256:${V1_2_IMG_MAP[ui_sha]},g"                                                                               ${f}
+    sed -i "s,/velero:.*,/openshift-migration-velero-rhel8@sha256:${V1_2_IMG_MAP[velero_sha]},g"                                                                       ${f}
+    sed -i "s,/velero-restic-restore-helper:.*,/openshift-migration-velero-restic-restore-helper-rhel8@sha256:${V1_2_IMG_MAP[helper_sha]},g"                           ${f}
+    sed -i "s,/migration-plugin:.*,/openshift-migration-plugin-rhel8@sha256:${V1_2_IMG_MAP[plugin_sha]},g"                                                             ${f}
+    sed -i "s,/velero-plugin-for-aws:.*,/openshift-migration-velero-plugin-for-aws-rhel8@sha256:${V1_2_IMG_MAP[awsplugin_sha]},g"                                      ${f}
+    sed -i "s,/velero-plugin-for-microsoft-azure:.*,/openshift-migration-velero-plugin-for-microsoft-azure-rhel8@sha256:${V1_2_IMG_MAP[azureplugin_sha]},g"            ${f}
+    sed -i "s,/velero-plugin-for-gcp:.*,/openshift-migration-velero-plugin-for-gcp-rhel8@sha256:${V1_2_IMG_MAP[gcpplugin_sha]},g"                                      ${f}
+    sed -i "s,/registry:.*,/openshift-migration-registry-rhel8@sha256:${V1_2_IMG_MAP[registry_sha]},g"                                                                 ${f}
+    sed -i "s,/hook-runner:.*,/openshift-migration-hook-runner-rhel7@sha256:${V1_2_IMG_MAP[hookrunner_sha]},g"                                                         ${f}
+    sed -i "s,rhel7-operator@sha256:.*,rhel7-operator@sha256:${V1_2_IMG_MAP[operator_sha]},g"                                                                          ${f}
+    sed -i "s,controller-rhel8@sha256:.*,controller-rhel8@sha256:${V1_2_IMG_MAP[controller_sha]},g"                                                                    ${f}
+    sed -i "s,ui-rhel8@sha256:.*,ui-rhel8@sha256:${V1_2_IMG_MAP[ui_sha]},g"                                                                                            ${f}
+    sed -i "s,velero-rhel8@sha256:.*,velero-rhel8@sha256:${V1_2_IMG_MAP[velero_sha]},g"                                                                                ${f}
+    sed -i "s,velero-restic-restore-helper-rhel8@sha256:.*,velero-restic-restore-helper-rhel8@sha256:${V1_2_IMG_MAP[helper_sha]},g"                                    ${f}
+    sed -i "s,plugin-rhel8@sha256:.*,plugin-rhel8@sha256:${V1_2_IMG_MAP[plugin_sha]},g"                                                                                ${f}
+    sed -i "s,aws-rhel8@sha256:.*,aws-rhel8@sha256:${V1_2_IMG_MAP[awsplugin_sha]},g"                                                                                   ${f}
+    sed -i "s,azure-rhel8@sha256:.*,azure-rhel8@sha256:${V1_2_IMG_MAP[azureplugin_sha]},g"                                                                             ${f}
+    sed -i "s,gcp-rhel8@sha256:.*,gcp-rhel8@sha256:${V1_2_IMG_MAP[gcpplugin_sha]},g"                                                                                   ${f}
+    sed -i "s,registry-rhel8@sha256:.*,registry-rhel8@sha256:${V1_2_IMG_MAP[registry_sha]},g"                                                                          ${f}
+    sed -i "s,hook-runner-rhel7@sha256:.*,hook-runner-rhel7@sha256:${V1_2_IMG_MAP[hookrunner_sha]},g"                                                                  ${f}
+    sed -i 's,value: hook-runner,value: openshift-migration-hook-runner-rhel7@sha256,g'                                                                                ${f}
+    sed -i 's,value: mig-controller,value: openshift-migration-controller-rhel8@sha256,g'                                                                              ${f}
+    sed -i 's,value: mig-ui,value: openshift-migration-ui-rhel8@sha256,g'                                                                                              ${f}
+    sed -i 's,value: velero-restic-restore-helper,value: openshift-migration-velero-restic-restore-helper-rhel8@sha256,g'                                              ${f}
+    sed -i 's,value: velero-plugin-for-gcp,value: openshift-migration-velero-plugin-for-gcp-rhel8@sha256,g'                                                            ${f}
+    sed -i 's,value: velero-plugin-for-aws,value: openshift-migration-velero-plugin-for-aws-rhel8@sha256,g'                                                            ${f}
+    sed -i 's,value: velero-plugin-for-microsoft-azure,value: openshift-migration-velero-plugin-for-microsoft-azure-rhel8@sha256,g'                                    ${f}
+    sed -i 's,value: velero,value: openshift-migration-velero-rhel8@sha256,g'                                                                                          ${f}
+    sed -i 's,value: migration-plugin,value: openshift-migration-plugin-rhel8@sha256,g'                                                                                ${f}
+    sed -i 's,value: registry$,value: openshift-migration-registry-rhel8@sha256,g'                                                                                     ${f}
+    sed -i 's,konveyor-operator\.,cam-operator.,g'                                                                                                                     ${f}
+    sed -i 's,:\ konveyor-operator,: cam-operator,g'                                                                                                                   ${f}
+    sed -i 's/displayName: Konveyor Operator/displayName: Cluster Application Migration Operator/g'                                                                    ${f}
+    sed -i 's/The Konveyor Operator/The Cluster Application Migration Operator/g'                                                                                      ${f}
+    sed -i "/MIG_CONTROLLER_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[controller_sha]}/"                                                                       ${f}
+    sed -i "/MIG_UI_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[ui_sha]}/"                                                                                       ${f}
+    sed -i "/VELERO_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[plugin_sha]}/"                                                                            ${f}
+    sed -i "/VELERO_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[velero_sha]}/"                                                                                   ${f}
+    sed -i "/VELERO_RESTIC_RESTORE_HELPER_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[helper_sha]}/"                                                             ${f}
+    sed -i "/VELERO_GCP_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[gcpplugin_sha]}/"                                                                     ${f}
+    sed -i "/VELERO_AWS_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[awsplugin_sha]}/"                                                                     ${f}
+    sed -i "/VELERO_AZURE_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[azureplugin_sha]}/"                                                                 ${f}
+    sed -i "/MIGRATION_REGISTRY_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[registry_sha]}/"                                                                     ${f}
+    sed -i "/HOOK_RUNNER_TAG/,/^ *[^:]*:/s/value: .*/value: ${V1_2_IMG_MAP[hookrunner_sha]}/"                                                                          ${f}
+    sed -i "/name: Documentation/,/^ *[^:]*:/s/url: .*|url: https:\/\/docs.openshift.com\/container-platform\/latest\/migration\/migrating-3-4\/about-migration.html/" ${f}
   done
 fi
 
