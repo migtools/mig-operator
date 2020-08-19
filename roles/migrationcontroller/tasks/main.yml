@@ -3,9 +3,12 @@
     reconciled: false
 
 - block:
+  - k8s:
+      state: "present"
+      definition: "{{ lookup('template', 'mig-cluster-config.yml.j2') }}"
+
   - when: olm_managed
     block:
-
     - k8s:
         state: "present"
         definition: "{{ lookup('template', 'monitoring-namespace-label.yml.j2') }}"
