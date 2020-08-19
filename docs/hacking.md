@@ -1,5 +1,14 @@
 # Hacking.md
-In order to test OLM metadata you will need to push your test metadata to Quay and tell your cluster where to look for it.
+To test changes to the operator ansible playbook you will need to build and push an updated container.
+
+To test OLM metadata you will need to push your test metadata to Quay and tell your cluster where to look for it.
+
+# Building and pushing the container
+This is done with a standard docker build command, for example in the root of the mig-operator repo run:
+
+`docker build -f build/Dockerfile -t quay.io/foo/mig-operator-container:latest . && docker push quay.io/foo/mig-operator-container:latest`
+
+To test this image you may manually edit the CSV to use it instead of the default after installing the operator, or you can update the CSV and push it using the instructions below.
 
 # Pushing metadata
 
