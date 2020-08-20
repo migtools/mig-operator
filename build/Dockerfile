@@ -16,6 +16,7 @@ COPY build/entrypoint /usr/local/bin/entrypoint
 USER 1001
 
 COPY build/requirements.yml ${HOME}/requirements.yml
+RUN ansible-galaxy collection install operator_sdk.util
 RUN ansible-galaxy collection install -r ${HOME}/requirements.yml \
  && chmod -R ug+rwx ${HOME}/.ansible
 

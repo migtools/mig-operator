@@ -1,7 +1,7 @@
 apiVersion: migration.openshift.io/v1alpha1
 kind: MigrationController
 metadata:
-  name: "{{ meta.name }}"
-  namespace: "{{ meta.namespace }}"
+  name: "{{ ansible_operator_meta.name }}"
+  namespace: "{{ ansible_operator_meta.namespace }}"
 spec:
   version: "1.0 (OLM)"
