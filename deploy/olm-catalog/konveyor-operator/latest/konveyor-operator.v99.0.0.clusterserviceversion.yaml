@@ -7,7 +7,7 @@ metadata:
   annotations:
     olm.skipRange: '>=0.0.0 <99.0.0'
     capabilities: Seamless Upgrades
-    description: Facilitates migration of workloads from OpenShift 3.x to OpenShift 4.x
+    description: Facilitates migration of container workloads from OpenShift 3.x to OpenShift 4.x
     categories: 'OpenShift Optional'
     containerImage: quay.io/konveyor/mig-operator-container:latest
     createdAt: 2019-07-25T10:21:00Z
@@ -204,7 +204,7 @@ spec:
     image: quay.io/konveyor/registry:latest
   - name: hook_runner
     image: quay.io/konveyor/hook-runner:latest
-  displayName: Konveyor Operator
+  displayName: Konveyor Operator for Containers
   description: |
     The Konveyor Operator enables installation of the application migration tool components.
 
