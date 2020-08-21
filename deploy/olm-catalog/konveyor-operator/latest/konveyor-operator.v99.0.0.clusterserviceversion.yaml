@@ -601,6 +601,7 @@ spec:
           verbs:
           - list
           - update
+          - watch
           - delete
           - deletecollection
         - apiGroups:
