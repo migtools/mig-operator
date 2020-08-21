@@ -17,6 +17,7 @@ excluded_resources:
   - serviceclasses
   - serviceinstances
   - serviceplans
+  - operatorgroups
 proxy_secret_name: "migration-proxy"
 http_proxy: "{{ lookup( 'env', 'HTTP_PROXY') }}"
 https_proxy: "{{ lookup( 'env', 'HTTPS_PROXY') }}"
