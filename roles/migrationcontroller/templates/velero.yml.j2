@@ -8,7 +8,7 @@ metadata:
     velero.io/plugin-config: ""
     velero.io/restic: RestoreItemAction
 data:
-  image: {{ velero_restic_restore_helper_image }}:{{ velero_restic_restore_helper_version }}
+  image: {{ velero_restic_restore_helper_fqin }}
 ---
 {% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int < 9 %}
 apiVersion: apps/v1beta1
@@ -105,7 +105,7 @@ spec:
         - name: certs
           emptyDir: {}
       initContainers:
-        - image: {{ velero_plugin_image }}:{{ velero_plugin_version }}
+        - image: {{ velero_plugin_fqin }}
           imagePullPolicy: "{{ image_pull_policy }}"
           name: velero-plugin
           resources: {}
@@ -114,7 +114,7 @@ spec:
           volumeMounts:
           - mountPath: /target
             name: plugins
-        - image: {{ velero_aws_plugin_image }}:{{ velero_aws_plugin_version }}
+        - image: {{ velero_aws_plugin_fqin }}
           imagePullPolicy: "{{ image_pull_policy }}"
           name: velero-plugin-for-aws
           resources: {}
@@ -123,7 +123,7 @@ spec:
           volumeMounts:
           - mountPath: /target
             name: plugins
-        - image: {{ velero_gcp_plugin_image }}:{{ velero_gcp_plugin_version }}
+        - image: {{ velero_gcp_plugin_fqin }}
           imagePullPolicy: "{{ image_pull_policy }}"
           name: velero-plugin-for-gcp
           resources: {}
@@ -132,7 +132,7 @@ spec:
           volumeMounts:
           - mountPath: /target
             name: plugins
-        - image: {{ velero_azure_plugin_image }}:{{ velero_azure_plugin_version }}
+        - image: {{ velero_azure_plugin_fqin }}
           imagePullPolicy: "{{ image_pull_policy }}"
           name: velero-plugin-for-microsoft-azure
           resources: {}
