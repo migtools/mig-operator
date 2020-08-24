@@ -21,8 +21,8 @@
       operator_sdk.util.k8s_status:
         api_version: migration.openshift.io/v1alpha1
         kind: MigrationController
-        name: "{{ meta.name }}"
-        namespace: "{{ meta.namespace }}"
+        name: "{{ ansible_operator_meta.name }}"
+        namespace: "{{ ansible_operator_meta.namespace }}"
         force: true
         conditions: []
         status:
@@ -359,8 +359,8 @@
         operator_sdk.util.k8s_status:
           api_version: migration.openshift.io/v1alpha1
           kind: MigrationController
-          name: "{{ meta.name }}"
-          namespace: "{{ meta.namespace }}"
+          name: "{{ ansible_operator_meta.name }}"
+          namespace: "{{ ansible_operator_meta.namespace }}"
           conditions:
             - type: Critical
               status: True
@@ -375,8 +375,8 @@
         operator_sdk.util.k8s_status:
           api_version: migration.openshift.io/v1alpha1
           kind: MigrationController
-          name: "{{ meta.name }}"
-          namespace: "{{ meta.namespace }}"
+          name: "{{ ansible_operator_meta.name }}"
+          namespace: "{{ ansible_operator_meta.namespace }}"
           conditions:
             - type: Critical
               status: True
@@ -580,8 +580,8 @@
   - operator_sdk.util.k8s_status:
       api_version: migration.openshift.io/v1alpha1
       kind: MigrationController
-      name: "{{ meta.name }}"
-      namespace: "{{ meta.namespace }}"
+      name: "{{ ansible_operator_meta.name }}"
+      namespace: "{{ ansible_operator_meta.namespace }}"
       status:
         phase: Reconciled
     when: olm_managed and reconciled
@@ -589,8 +589,8 @@
   - operator_sdk.util.k8s_status:
       api_version: migration.openshift.io/v1alpha1
       kind: MigrationController
-      name: "{{ meta.name }}"
-      namespace: "{{ meta.namespace }}"
+      name: "{{ ansible_operator_meta.name }}"
+      namespace: "{{ ansible_operator_meta.namespace }}"
       status:
         phase: Failed
     when: olm_managed and not reconciled
@@ -609,8 +609,8 @@
     - operator_sdk.util.k8s_status:
         api_version: migration.openshift.io/v1alpha1
         kind: MigrationController
-        name: "{{ meta.name }}"
-        namespace: "{{ meta.namespace }}"
+        name: "{{ ansible_operator_meta.name }}"
+        namespace: "{{ ansible_operator_meta.namespace }}"
         status:
           phase: Failed
       when: item.type == 'Critical'
