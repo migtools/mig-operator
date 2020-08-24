@@ -6,6 +6,31 @@ metadata:
     controller-tools.k8s.io: "1.0"
   name: miganalytics.migration.openshift.io
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .status.conditions[?(@.type=='Ready')].status
+    name: Ready
+    type: string
+  - JSONPath: .spec.migPlanRef.name
+    name: Plan
+    type: string
+  - JSONPath: .status.analytics.percentComplete
+    name: Progress
+    type: string
+  - JSONPath: .status.analytics.k8sResourceTotal
+    name: Resources
+    type: string
+  - JSONPath: .status.analytics.imageCount
+    name: Images
+    type: string
+  - JSONPath: .status.analytics.imageSizeTotal
+    name: ImageSize
+    type: string
+  - JSONPath: .status.analytics.pvCount
+    name: PVs
+    type: string
+  - JSONPath: .status.analytics.pvCapacity
+    name: PVCapacity
+    type: string
   group: migration.openshift.io
   names:
     kind: MigAnalytic
