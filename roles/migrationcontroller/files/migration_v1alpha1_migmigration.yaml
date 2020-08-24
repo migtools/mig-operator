@@ -6,6 +6,22 @@ metadata:
     controller-tools.k8s.io: "1.0"
   name: migmigrations.migration.openshift.io
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .status.conditions[?(@.type=='Ready')].status
+    name: Ready
+    type: string
+  - JSONPath: .spec.migPlanRef.name
+    name: Plan
+    type: string
+  - JSONPath: .spec.stage
+    name: Stage
+    type: string
+  - JSONPath: .status.itinerary
+    name: Itinerary
+    type: string
+  - JSONPath: .status.phase
+    name: Phase
+    type: string
   group: migration.openshift.io
   names:
     kind: MigMigration
@@ -49,7 +65,7 @@ spec:
               items:
                 type: string
               type: array
-            itenerary:
+            itinerary:
               type: string
             observedDigest:
               type: string

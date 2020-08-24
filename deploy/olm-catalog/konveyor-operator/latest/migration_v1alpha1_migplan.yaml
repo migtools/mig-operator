@@ -6,6 +6,19 @@ metadata:
     controller-tools.k8s.io: "1.0"
   name: migplans.migration.openshift.io
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .status.conditions[?(@.type=='Ready')].status
+    name: Ready
+    type: string
+  - JSONPath: .spec.srcMigClusterRef.name
+    name: Source
+    type: string
+  - JSONPath: .spec.destMigClusterRef.name
+    name: Target
+    type: string
+  - JSONPath: .spec.migStorageRef.name
+    name: Storage
+    type: string
   group: migration.openshift.io
   names:
     kind: MigPlan

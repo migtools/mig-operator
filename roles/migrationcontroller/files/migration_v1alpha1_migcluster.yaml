@@ -6,6 +6,16 @@ metadata:
     controller-tools.k8s.io: "1.0"
   name: migclusters.migration.openshift.io
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .status.conditions[?(@.type=='Ready')].status
+    name: Ready
+    type: string
+  - JSONPath: .spec.url
+    name: URL
+    type: string
+  - JSONPath: .spec.isHostCluster
+    name: Host
+    type: boolean
   group: migration.openshift.io
   names:
     kind: MigCluster
