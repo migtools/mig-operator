@@ -776,7 +776,7 @@ spec:
                 - name: VELERO_TAG
                   value: latest
                 - name: VELERO_PLUGIN_REPO
-                  value: migration-plugin
+                  value: openshift-velero-plugin
                 - name: VELERO_PLUGIN_TAG
                   value: latest
                 - name: VELERO_AWS_PLUGIN_REPO
