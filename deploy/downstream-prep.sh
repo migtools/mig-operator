@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Remove latest as option
-if grep -q latest deploy/olm-catalog/konveyor-operator/konveyor-operator.package.yaml; then
+if grep -q development deploy/olm-catalog/konveyor-operator/konveyor-operator.package.yaml; then
   sed -i 3,4d deploy/olm-catalog/konveyor-operator/konveyor-operator.package.yaml
 fi
 sed -i s,konveyor-operator,mtc-operator,g deploy/olm-catalog/konveyor-operator/konveyor-operator.package.yaml
