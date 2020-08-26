@@ -322,6 +322,7 @@ spec:
           - events
           - configmaps
           - secrets
+          - serviceaccounts
           verbs:
           - '*'
         - apiGroups:
@@ -412,6 +413,49 @@ spec:
           - migration.openshift.io
           resources:
           - migclusters
+          verbs:
+          - '*'
+        - apiGroups:
+          - config.openshift.io
+          resources:
+          - infrastructures
+          - clusterversions
+          verbs:
+          - get
+        - apiGroups:
+          - rbac.authorization.k8s.io
+          - security.openshift.io
+          - build.openshift.io
+          - migration.openshift.io
+          - velero.io
+          - packages.operators.coreos.com
+          resources:
+          - '*'
+          verbs:
+          - '*'
+        - apiGroups:
+          - '*'
+          resources:
+          - '*'
+          verbs:
+          - get
+          - watch
+          - list
+          - update
+          - patch
+          - create
+          - delete
+          - assign
+          - deletecollection
+        - apiGroups:
+          - ""
+          resources:
+          - serviceaccounts
+          - pods/log
+          verbs:
+          - '*'
+        - nonResourceURLs:
+          - '*'
           verbs:
           - '*'
       - serviceAccountName: migration-controller
