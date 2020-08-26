@@ -102,7 +102,7 @@ for f in deploy/olm-catalog/konveyor-operator/${MTCVERSION}/konveyor-operator.${
   sed -i "s,/mig-ui:.*,/openshift-migration-ui-rhel8@sha256:${IMG_MAP[ui_sha]},g"                                                                                    ${f}
   sed -i "s,/velero:.*,/openshift-migration-velero-rhel8@sha256:${IMG_MAP[velero_sha]},g"                                                                            ${f}
   sed -i "s,/velero-restic-restore-helper:.*,/openshift-migration-velero-restic-restore-helper-rhel8@sha256:${IMG_MAP[helper_sha]},g"                                ${f}
-  sed -i "s,/migration-plugin:.*,/openshift-migration-plugin-rhel8@sha256:${IMG_MAP[plugin_sha]},g"                                                                  ${f}
+  sed -i "s,/openshift-velero-plugin:.*,/openshift-velero-plugin-rhel8@sha256:${IMG_MAP[plugin_sha]},g"                                                              ${f}
   sed -i "s,/velero-plugin-for-aws:.*,/openshift-migration-velero-plugin-for-aws-rhel8@sha256:${IMG_MAP[awsplugin_sha]},g"                                           ${f}
   sed -i "s,/velero-plugin-for-microsoft-azure:.*,/openshift-migration-velero-plugin-for-microsoft-azure-rhel8@sha256:${IMG_MAP[azureplugin_sha]},g"                 ${f}
   sed -i "s,/velero-plugin-for-gcp:.*,/openshift-migration-velero-plugin-for-gcp-rhel8@sha256:${IMG_MAP[gcpplugin_sha]},g"                                           ${f}
@@ -127,7 +127,7 @@ for f in deploy/olm-catalog/konveyor-operator/${MTCVERSION}/konveyor-operator.${
   sed -i 's,value: velero-plugin-for-aws,value: openshift-migration-velero-plugin-for-aws-rhel8@sha256,g'                                                            ${f}
   sed -i 's,value: velero-plugin-for-microsoft-azure,value: openshift-migration-velero-plugin-for-microsoft-azure-rhel8@sha256,g'                                    ${f}
   sed -i 's,value: velero,value: openshift-migration-velero-rhel8@sha256,g'                                                                                          ${f}
-  sed -i 's,value: migration-plugin,value: openshift-migration-plugin-rhel8@sha256,g'                                                                                ${f}
+  sed -i 's,value: openshift-velero-plugin$,value: openshift-velero-plugin-rhel8@sha256,g'                                                                           ${f}
   sed -i 's,value: registry$,value: openshift-migration-registry-rhel8@sha256,g'                                                                                     ${f}
   sed -i 's,konveyor-operator\.,mtc-operator.,g'                                                                                                                     ${f}
   sed -i 's,:\ konveyor-operator,: mtc-operator,g'                                                                                                                   ${f}
