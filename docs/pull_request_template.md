@@ -15,4 +15,3 @@
 * [ ] I created a new release directory in `deploy/non-olm`
 * [ ] I created or updated the major.minor link in `deploy/non-olm`
 * [ ] I updated the spec.skips parameter in the CSV
-* [ ] I updated downstream-prep.sh to only update the latest CSV patch version in the channel
