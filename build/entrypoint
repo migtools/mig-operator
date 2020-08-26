@@ -17,4 +17,4 @@ if [ x"$USER_ID" != x"0" -a x"$USER_ID" != x"1001" ]; then
     export LD_PRELOAD
 fi
 
-exec ${OPERATOR} exec-entrypoint ansible --watches-file=/opt/ansible/watches.yaml $@
+/tini -- /usr/local/bin/ansible-operator run --watches-file=./watches.yaml
