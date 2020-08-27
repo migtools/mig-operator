@@ -126,6 +126,8 @@ spec:
                 - selection
                 type: object
               type: array
+            refresh:
+              type: boolean
             srcMigClusterRef:
               type: object
           type: object

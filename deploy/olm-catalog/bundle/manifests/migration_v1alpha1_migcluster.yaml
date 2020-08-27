@@ -50,6 +50,8 @@ spec:
               type: boolean
             isHostCluster:
               type: boolean
+            refresh:
+              type: boolean
             restartRestic:
               type: boolean
             serviceAccountSecretRef:
