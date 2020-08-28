@@ -1,9 +1,7 @@
 packageName: konveyor-operator
 channels:
-- name: latest
+- name: development
   currentCSV: konveyor-operator.v99.0.0
-- name: release-v1.2
-  currentCSV: konveyor-operator.v1.2.5
-- name: release-v1.1
-  currentCSV: konveyor-operator.v1.1.2
-defaultChannel: release-v1.2
+- name: stable
+  currentCSV: konveyor-operator.v1.3.0
+defaultChannel: stable
