@@ -4,7 +4,11 @@ To test changes to the operator ansible playbook you will need to build and push
 To test OLM metadata you will need to push your test metadata to Quay and tell your cluster where to look for it.
 
 # Building and pushing the container
-This is done with a standard docker build command, for example in the root of the mig-operator repo run:
+Ensure you have the latest operator-sdk base image before building.
+
+`docker pull quay.io/operator-framework/ansible-operator:latest`
+
+The build is done with a standard docker build command, for example in the root of the mig-operator repo run:
 
 `docker build -f build/Dockerfile -t quay.io/foo/mig-operator-container:latest . && docker push quay.io/foo/mig-operator-container:latest`
 
