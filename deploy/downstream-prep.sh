@@ -4,7 +4,7 @@
 if grep -q development deploy/olm-catalog/konveyor-operator/konveyor-operator.package.yaml; then
   sed -i 3,4d deploy/olm-catalog/konveyor-operator/konveyor-operator.package.yaml
 fi
-sed -i s,konveyor-operator,mtc-operator,g deploy/olm-catalog/konveyor-operator/konveyor-operator.package.yaml
+sed -i s,konveyor-operator,cam-operator,g deploy/olm-catalog/konveyor-operator/konveyor-operator.package.yaml
 rm -rf deploy/non-olm/latest/ deploy/olm-catalog/konveyor-operator/latest
 
 #Find most recent version
@@ -129,8 +129,8 @@ for f in deploy/olm-catalog/konveyor-operator/${MTCVERSION}/konveyor-operator.${
   sed -i 's,value: velero,value: openshift-migration-velero-rhel8@sha256,g'                                                                                          ${f}
   sed -i 's,value: openshift-velero-plugin$,value: openshift-velero-plugin-rhel8@sha256,g'                                                                           ${f}
   sed -i 's,value: registry$,value: openshift-migration-registry-rhel8@sha256,g'                                                                                     ${f}
-  sed -i 's,konveyor-operator\.,mtc-operator.,g'                                                                                                                     ${f}
-  sed -i 's,:\ konveyor-operator,: mtc-operator,g'                                                                                                                   ${f}
+  sed -i 's,konveyor-operator\.,cam-operator.,g'                                                                                                                     ${f}
+  sed -i 's,:\ konveyor-operator,: cam-operator,g'                                                                                                                   ${f}
   sed -i 's/displayName: Konveyor Operator/displayName: Migration Toolkit for Containers Operator/g'                                                                 ${f}
   sed -i 's/The Konveyor Operator/The Migration Toolkit for Containers Operator/g'                                                                                   ${f}
   sed -i "/MIG_CONTROLLER_TAG/,/^ *[^:]*:/s/value: .*/value: ${IMG_MAP[controller_sha]}/"                                                                            ${f}
