@@ -44,7 +44,7 @@ IMAGES=(
 declare -A IMG_MAP
 IMG_MAP[controller_repo]="openshift-migration-controller"
 IMG_MAP[operator_repo]="openshift-migration-operator"
-IMG_MAP[plugin_repo]="openshift-migration-plugin"
+IMG_MAP[plugin_repo]="openshift-velero-plugin"
 IMG_MAP[ui_repo]="openshift-migration-ui"
 IMG_MAP[velero_repo]="openshift-migration-velero"
 IMG_MAP[helper_repo]="openshift-migration-velero-restic-restore-helper"
@@ -96,8 +96,8 @@ for f in deploy/olm-catalog/konveyor-operator/${MTCVERSION}/konveyor-operator.${
     sed -i "s,mig-operator-container:.*,openshift-migration-rhel7-operator:${MTCVERSION},g"                                                                          ${f}
   fi
   sed -i 's,quay.io,registry.redhat.io,g'                                                                                                                            ${f}
-  sed -i "s,registry.redhat.io\/konveyor,registry.redhat.io/rhmtc-${MTCMAJOR}-${MTCMINOR},g'"                                                                        ${f}
-  sed -i "s,value: konveyor,value: rhmtc-${MTCMAJOR}-${MTCMINOR},g"                                                                                                  ${f}
+  sed -i "s,registry.redhat.io\/konveyor,registry.redhat.io/rhmtc,g'"                                                                                                ${f}
+  sed -i "s,value: konveyor,value: rhmtc,g"                                                                                                                          ${f}
   sed -i "s,/mig-controller:.*,/openshift-migration-controller-rhel8@sha256:${IMG_MAP[controller_sha]},g"                                                            ${f}
   sed -i "s,/mig-ui:.*,/openshift-migration-ui-rhel8@sha256:${IMG_MAP[ui_sha]},g"                                                                                    ${f}
   sed -i "s,/velero:.*,/openshift-migration-velero-rhel8@sha256:${IMG_MAP[velero_sha]},g"                                                                            ${f}
