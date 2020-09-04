@@ -94,7 +94,7 @@ for f in deploy/olm-catalog/konveyor-operator/${MTCVERSION}/konveyor-operator.${
     sed -i "s,mig-operator-container:.*,openshift-migration-rhel7-operator:${MTCVERSION},g"                                                                          ${f}
   fi
   sed -i 's,quay.io,registry.redhat.io,g'                                                                                                                            ${f}
-  sed -i "s,registry.redhat.io\/konveyor,registry.redhat.io/rhmtc,g'"                                                                                                ${f}
+  sed -i "s,registry.redhat.io\/konveyor,registry.redhat.io/rhmtc,g"                                                                                                 ${f}
   sed -i "s,value: konveyor,value: rhmtc,g"                                                                                                                          ${f}
   sed -i "s,/mig-controller:.*,/openshift-migration-controller-rhel8@sha256:${IMG_MAP[controller_sha]},g"                                                            ${f}
   sed -i "s,/mig-ui:.*,/openshift-migration-ui-rhel8@sha256:${IMG_MAP[ui_sha]},g"                                                                                    ${f}
@@ -141,7 +141,7 @@ for f in deploy/olm-catalog/konveyor-operator/${MTCVERSION}/konveyor-operator.${
   sed -i "/VELERO_AZURE_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${IMG_MAP[azureplugin_sha]}/"                                                                      ${f}
   sed -i "/MIGRATION_REGISTRY_TAG/,/^ *[^:]*:/s/value: .*/value: ${IMG_MAP[registry_sha]}/"                                                                          ${f}
   sed -i "/HOOK_RUNNER_TAG/,/^ *[^:]*:/s/value: .*/value: ${IMG_MAP[hookrunner_sha]}/"                                                                               ${f}
-  sed -i "/name: Documentation/,/^ *[^:]*:/s/url: .*|url: https:\/\/docs.openshift.com\/container-platform\/latest\/migration\/migrating-3-4\/about-migration.html/" ${f}
+  sed -i "/name: Documentation/,/^ *[^:]*:/s/url: .*/url: https:\/\/docs.openshift.com\/container-platform\/latest\/migration\/migrating_3_4\/about-migration.html/" ${f}
 if [[ "$f" =~ .*clusterserviceversion.* ]] && ! grep -q infrastructure-features ${f}; then
   sed -i '/^spec:/i\ \ \ \ operators.openshift.io/infrastructure-features: \x27[\"Disconnected\"]\x27'                                                               ${f}
 fi
