@@ -9,8 +9,6 @@ rm -rf deploy/non-olm/latest/ deploy/olm-catalog/konveyor-operator/latest
 
 #Find most recent version
 export MTCVERSION=$(grep currentCSV deploy/olm-catalog/konveyor-operator/konveyor-operator.package.yaml | head -1 | awk -F '.' '{out=""; for(i=2;i<NF;i++){out=out$i"."}{out=out$NF}; print out}')
-export MTCMAJOR=$(echo $MTCVERSION | sed -e 's/v//' | awk -F '.' '{print $1}')
-export MTCMINOR=$(echo $MTCVERSION | sed -e 's/v//' | awk -F '.' '{print $2}')
 #Checkout all the old operator.ymls and CSVs
 git checkout origin/$(git branch --show-current) -- Dockerfile
 git checkout origin/$(git branch --show-current) -- .gitignore
@@ -57,11 +55,11 @@ IMG_MAP[hookrunner_repo]="openshift-migration-hook-runner"
 
 #Get latest images
 for i in ${IMAGES[@]}; do
-  docker pull registry-proxy.engineering.redhat.com/rh-osbs/rhmtc-${IMG_MAP[${i}_repo]}:v${MTCMAJOR}.${MTCMINOR} >/dev/null 2>&1
+  docker pull registry-proxy.engineering.redhat.com/rh-osbs/rhmtc-${IMG_MAP[${i}_repo]}:${MTCVERSION} >/dev/null 2>&1
   DOCKER_STAT=$?
   RETRIES=10
   while [ "$DOCKER_STAT" -ne 0 ] && [ $RETRIES -gt 0 ]; do
-    docker pull registry-proxy.engineering.redhat.com/rh-osbs/rhmtc-${IMG_MAP[${i}_repo]}:v${MTCMAJOR}.${MTCMINOR} >/dev/null 2>&1
+    docker pull registry-proxy.engineering.redhat.com/rh-osbs/rhmtc-${IMG_MAP[${i}_repo]}:${MTCVERSION} >/dev/null 2>&1
     DOCKER_STAT=$?
     let RETRIES=RETRIES-1
   done
@@ -76,7 +74,7 @@ done
 for i in ${IMAGES[@]}; do
   RETRIES=10
   while [ -z "${IMG_MAP[${i}_sha]}" ] && [ $RETRIES -gt 0 ]; do
-    IMG_MAP[${i}_sha]=$(oc image mirror --dry-run=true registry-proxy.engineering.redhat.com/rh-osbs/rhmtc-${IMG_MAP[${i}_repo]}:v${MTCMAJOR}.${MTCMINOR}=quay.io/ocpmigrate/rhmtc-${IMG_MAP[${i}_repo]}:v${MTCMAJOR}.${MTCMINOR} 2>&1 | grep -A1 manifests | grep sha256 | awk -F'[: ]' '{ print $8 }')
+    IMG_MAP[${i}_sha]=$(oc image mirror --dry-run=true registry-proxy.engineering.redhat.com/rh-osbs/rhmtc-${IMG_MAP[${i}_repo]}:${MTCVERSION}=quay.io/ocpmigrate/rhmtc-${IMG_MAP[${i}_repo]}:${MTCVERSION} 2>&1 | grep -A1 manifests | grep sha256 | awk -F'[: ]' '{ print $8 }')
     let RETRIES=RETRIES-1
   done
 
