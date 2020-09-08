@@ -16,12 +16,11 @@ for i in $(ls -1d deploy/non-olm/v* | grep -v $MTCVERSION); do git checkout orig
 for i in $(ls -1d deploy/olm-catalog/konveyor-operator/v* | grep -v $MTCVERSION); do git checkout origin/$(git branch --show-current) $i; done
 
 #deal with k8s_status change upstream/downstream
-sed -i 's/operator_sdk\.util\.//g' roles/migrationcontroller/tasks/main.yml
 sed -i "s,ansible_operator_meta,meta,g" roles/migrationcontroller/tasks/main.yml
 sed -i "s,ansible_operator_meta,meta,g" roles/migrationcontroller/templates/migration-controller.yml.j2
 
-#adjust downstream entrypoint command
-sed -i 's/exec-entrypoint/run/g' build/entrypoint
+#Fix differing entrypoint
+sed -i 's,.tini.*,exec ${OPERATOR} exec-entrypoint ansible --watches-file=/opt/ansible/watches.yaml $@,g' build/entrypoint
 
 #Declare image information
 IMAGES=(
@@ -129,7 +128,7 @@ for f in deploy/olm-catalog/konveyor-operator/${MTCVERSION}/konveyor-operator.${
   sed -i 's,value: registry$,value: openshift-migration-registry-rhel8@sha256,g'                                                                                     ${f}
   sed -i 's,konveyor-operator\.,mtc-operator.,g'                                                                                                                     ${f}
   sed -i 's,:\ konveyor-operator,: mtc-operator,g'                                                                                                                   ${f}
-  sed -i 's/displayName: Konveyor Operator/displayName: Migration Toolkit for Containers Operator/g'                                                                 ${f}
+  sed -i 's/displayName: Konveyor Operator for Containers/displayName: Migration Toolkit for Containers Operator/g'                                                  ${f}
   sed -i 's/The Konveyor Operator/The Migration Toolkit for Containers Operator/g'                                                                                   ${f}
   sed -i "/MIG_CONTROLLER_TAG/,/^ *[^:]*:/s/value: .*/value: ${IMG_MAP[controller_sha]}/"                                                                            ${f}
   sed -i "/MIG_UI_TAG/,/^ *[^:]*:/s/value: .*/value: ${IMG_MAP[ui_sha]}/"                                                                                            ${f}
