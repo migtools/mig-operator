@@ -92,6 +92,14 @@ spec:
         - name: HTTP_PROXY
           value: {{ http_proxy }}
 {% endif %}
+{% if not mig_controller_mem_profile_enabled %}
+        - name: GODEBUG
+          value: "memprofilerate=0,"
+{% endif %}
+{% if mig_controller_mem_profile_enabled %}
+        - name: GODEBUG
+          value: "memprofilerate=524288,"
+{% endif %}
 {% if https_proxy|length >0 %}
         - name: HTTPS_PROXY
           value: {{ https_proxy }}
