@@ -1,0 +1,8 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
+metadata:
+  name: konveyor-containers-bundle
+  namespace: openshift-migration
+spec:
+  sourceType: grpc
+  image: quay.io/konveyor/mig-operator-index:latest
