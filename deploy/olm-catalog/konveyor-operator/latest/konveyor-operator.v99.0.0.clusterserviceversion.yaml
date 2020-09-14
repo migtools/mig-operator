@@ -231,7 +231,7 @@ spec:
 
     * velero and restic, to back up data on the source cluster and restore it on the target cluster
     * mig-controller, to coordinate the backup and restore processes
-    * mig-ui, the CAM web console for managing migrations
+    * mig-ui, the web console for managing migrations
 
     If you experience any issues or have feature requests, please file an [issue](https://github.com/konveyor/mig-operator/issues)
 
