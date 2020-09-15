@@ -182,6 +182,7 @@ spec:
       serviceAccountName: velero
       securityContext:
         runAsUser: 0
+        supplementalGroups: {{ restic_supplemental_groups }}
       volumes:
         - name: {{ velero_aws_secret_name }}
           secret:
