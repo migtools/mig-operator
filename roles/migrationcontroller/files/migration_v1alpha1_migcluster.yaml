@@ -16,6 +16,9 @@ spec:
   - JSONPath: .spec.isHostCluster
     name: Host
     type: boolean
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: migration.openshift.io
   names:
     kind: MigCluster
