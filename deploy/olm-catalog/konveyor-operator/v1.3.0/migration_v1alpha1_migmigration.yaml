@@ -22,6 +22,9 @@ spec:
   - JSONPath: .status.phase
     name: Phase
     type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: migration.openshift.io
   names:
     kind: MigMigration
