@@ -16,7 +16,7 @@ Count of MigMigration CRs over time. Useful for viewing alongside "mtc_client...
 |   status  |   running, idle, failed, completed  |   Status of MigMigration CR  |
 |   type  |   stage, final  |   Type of MigMigration CR  |
 
----
+
 ### mtc_client_request_count
 
 Cumulative count of k8s API requests issued from mig-controller
@@ -28,7 +28,7 @@ Cumulative count of k8s API requests issued from mig-controller
 |   function  |   (*ReconcileMigPlan).Reconcile"  |   Function request was issued from  |
 |   kind  |   SecretList, Deployment, ...  |   K8s kind request was issued for  |
 
----
+
 ### mtc_client_request_elapsed
 
 Cumulative milliseconds latency for k8s API requests issued from mig-controller.
@@ -41,9 +41,8 @@ Cumulative milliseconds latency for k8s API requests issued from mig-controller.
 |   kind  |   SecretList, Deployment, ...  |   K8s kind request was issued for  |
 
 
----
+
 ## Accessing Metrics in the OpenShift 4 Monitoring UI
----
 
 From the OpenShift 4 Web Console, select the sidebar menu item Monitoring > Metrics.
 
@@ -56,16 +55,16 @@ You can enter PromQL queries and select a time window to display.
 If your web browser is having trouble displaying all of the metrics results, using the Prometheus UI directly can provide a more responsive experience.
 
 
----
+
 ## Useful queries
----
+
 
 |   Query  |   Description  |
 |-|-|
-|   mtc_client_request_count  |   Shows number of API requests issued, binned by type of request  |
-|   sum(mtc_client_request_count)  |   Shows total number of API requests issued  |
-|   mtc_client_request_elapsed  |   Shows API request latency, binned by request type  |
-|   sum(mtc_client_request_elapsed)  |   Shows sum of API request latency  |
-|   mtc_client_request_elapsed / mtc_client_request_count  |   Shows average latency of API requests, binned by type of request  |
-|   sum(mtc_client_request_elapsed) / sum(mtc_client_request_count)  |   Shows average latency of API requests overall  |
-|   cam_app_workload_migrations{status="running"} * 100  |   Shows count of running migrations, scaled up (100x) for easier viewing alongside request counts  |
+|   `mtc_client_request_count`  |   Shows number of API requests issued, binned by type of request  |
+|   `sum(mtc_client_request_count)`  |   Shows total number of API requests issued  |
+|   `mtc_client_request_elapsed`  |   Shows API request latency, binned by request type  |
+|   `sum(mtc_client_request_elapsed)`  |   Shows sum of API request latency  |
+|   `mtc_client_request_elapsed / mtc_client_request_count`  |   Shows average latency of API requests, binned by type of request  |
+|   `sum(mtc_client_request_elapsed) / sum(mtc_client_request_count)`  |   Shows average latency of API requests overall  |
+|   `cam_app_workload_migrations{status="running"} * 100`  |   Shows count of running migrations, scaled up (100x) for easier viewing alongside request counts  |
