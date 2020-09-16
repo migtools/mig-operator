@@ -6,7 +6,7 @@ mig-controller records a set of metrics that may be useful in diagnosing migrati
 
 ### cam_app_workload_migrations
 
-Count of MigMigration CRs over time. Useful for viewing alongside "mtc_client..." metrics to collate API request info with migration status changes. This metric is included in Telemetry.
+Count of MigMigration CRs over time. Useful for viewing alongside "mtc_client..." metrics to collate API request info with migration status changes. Included in Telemtry.
 
 |   Queryable Label Name  |   Sample Label Values  |   Label Description  |
 |-|-|-|
@@ -16,7 +16,7 @@ Count of MigMigration CRs over time. Useful for viewing alongside "mtc_client...
 
 ### mtc_client_request_count
 
-Cumulative count of k8s API requests issued from mig-controller
+Cumulative count of k8s API requests issued from mig-controller. Not included in Telemetry.
 
 |   Queryable Label Name  |   Sample Label Values(s)  |   Label Description  |
 |-|-|-|
@@ -28,7 +28,7 @@ Cumulative count of k8s API requests issued from mig-controller
 
 ### mtc_client_request_elapsed
 
-Cumulative milliseconds latency for k8s API requests issued from mig-controller.
+Cumulative milliseconds latency for k8s API requests issued from mig-controller. Not included in Telemetry.
 
 |   Queryable Label Name  |   Sample Label Value(s)  |   Label Description  |
 |-|-|-|
