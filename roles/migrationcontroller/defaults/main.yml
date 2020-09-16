@@ -65,6 +65,7 @@ registry: "{{ lookup( 'env', 'REGISTRY') }}"
 project: "{{ lookup( 'env', 'PROJECT') }}"
 restic_pv_host_path: /var/lib/kubelet/pods
 restic_timeout: 1h
+restic_supplemental_groups: []
 ui_state: absent
 velero_aws_secret_name: cloud-credentials
 velero_gcp_secret_name: gcp-cloud-credentials
