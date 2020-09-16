@@ -19,6 +19,9 @@ spec:
   - JSONPath: .spec.migStorageRef.name
     name: Storage
     type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: migration.openshift.io
   names:
     kind: MigPlan
