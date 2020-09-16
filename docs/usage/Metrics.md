@@ -58,10 +58,10 @@ If your web browser is having trouble displaying all of the metrics results, usi
 
 |   Query  |   Description  |
 |-|-|
-|   `mtc_client_request_count`  |   Shows number of API requests issued, binned by type of request  |
+|   `mtc_client_request_count`  |   Shows number of API requests issued, binned by request type  |
 |   `sum(mtc_client_request_count)`  |   Shows total number of API requests issued  |
 |   `mtc_client_request_elapsed`  |   Shows API request latency, binned by request type  |
 |   `sum(mtc_client_request_elapsed)`  |   Shows sum of API request latency  |
-|   `mtc_client_request_elapsed / mtc_client_request_count`  |   Shows average latency of API requests, binned by type of request  |
+|   `mtc_client_request_elapsed / mtc_client_request_count`  |   Shows average latency of API requests, binned by request type  |
 |   `sum(mtc_client_request_elapsed) / sum(mtc_client_request_count)`  |   Shows average latency of API requests overall  |
 |   `cam_app_workload_migrations{status="running"} * 100`  |   Shows count of running migrations, scaled up (100x) for easier viewing alongside request counts  |
