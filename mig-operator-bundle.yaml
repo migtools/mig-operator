@@ -1,7 +1,7 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
-  name: konveyor-containers-bundle
+  name: konveyor-for-containers-bundle
   namespace: openshift-migration
 spec:
   sourceType: grpc
