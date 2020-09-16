@@ -43,11 +43,11 @@ Cumulative milliseconds latency for k8s API requests issued from mig-controller.
 
 From the OpenShift 4 Web Console, select the sidebar menu item Monitoring > Metrics.
 
-![alt](../screenshots/metrics/monitoring-menu.png)
+![Monitoring Menu](./screenshots/metrics/monitoring-menu.png)
 
 You can enter PromQL queries and select a time window to display.
 
-![alt](../screenshots/metrics/promql-queries.png)
+![PromQL queries](./screenshots/metrics/promql-queries.png)
 
 If your web browser is having trouble displaying all of the metrics results, using the Prometheus UI directly can provide a more responsive experience.
 
