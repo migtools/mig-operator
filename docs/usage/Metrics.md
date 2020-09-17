@@ -1,6 +1,6 @@
 # Accessing mig-controller prometheus metrics
 
-mig-controller records a set of metrics that may be useful in diagnosing migration performance issues. All metrics reset when the mig-controller manager container restarts. Metrics are pulled into the the on-cluster monitoring storage for querying via PromQL.
+mig-controller records a set of metrics that may be useful in diagnosing migration performance issues. All metrics reset when the mig-controller manager container restarts. Metrics are pulled into on-cluster monitoring storage for querying via PromQL.
 
 ## Provided Metrics
 
