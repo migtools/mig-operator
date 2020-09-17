@@ -375,13 +375,6 @@ spec:
           verbs:
           - '*'
         - apiGroups:
-          - config.openshift.io
-          resources:
-          - infrastructures
-          - clusterversions
-          verbs:
-          - get
-        - apiGroups:
           - operator.openshift.io
           resources:
           - kubeapiservers
@@ -394,6 +387,13 @@ spec:
           - migclusters
           verbs:
           - '*'
+        - apiGroups:
+          - config.openshift.io
+          resources:
+          - infrastructures
+          - clusterversions
+          verbs:
+          - get
       - serviceAccountName: migration-controller
         rules:
         - apiGroups:
