@@ -6,7 +6,7 @@ mig-controller records a set of metrics that may be useful in diagnosing migrati
 
 ### cam_app_workload_migrations
 
-Count of MigMigration CRs over time. Useful for viewing alongside "mtc_client..." metrics to collate API request info with migration status changes. Included in Telemtry.
+Count of MigMigration CRs over time. Useful for viewing alongside "mtc_client..." metrics to collate API request info with migration status changes. Included in Telemetry.
 
 |   Queryable Label Name  |   Sample Label Values  |   Label Description  |
 |-|-|-|
