@@ -3,47 +3,58 @@ dependency:
   name: galaxy
 driver:
   name: docker
-lint:
-  name: yamllint
-  enabled: False
+lint: |
+  set -e
+  yamllint -d "{extends: relaxed, rules: {line-length: {max: 400}}}" roles
 platforms:
-- name: kind-test-local
-  groups:
-  - k8s
-  image: bsycorp/kind:latest-1.12
-  privileged: True
-  override_command: no
-  exposed_ports:
-    - 8443/tcp
-    - 10080/tcp
-  published_ports:
-    - 0.0.0.0:${TEST_CLUSTER_PORT:-10443}:8443/tcp
-  pre_build_image: yes
-  volumes:
-    - ${MOLECULE_PROJECT_DIRECTORY}:/build:Z
+  - name: kind-test-local
+    groups:
+      - k8s
+    image: bsycorp/kind:latest-${KUBE_VERSION:-1.17}
+    privileged: true
+    override_command: false
+    exposed_ports:
+      - 8443/tcp
+      - 10080/tcp
+    published_ports:
+      - 0.0.0.0:${TEST_CLUSTER_PORT:-10443}:8443/tcp
+    pre_build_image: true
+    volumes:
+      - ${MOLECULE_PROJECT_DIRECTORY}:/build:Z
 provisioner:
   name: ansible
-  log: True
-  lint:
-    name: ansible-lint
-    enabled: False
+  log: true
+  lint: |
+    set -e
+    ansible-lint
   inventory:
     group_vars:
       all:
         controller_namespace: ${TEST_CONTROLLER_NAMESPACE:-openshift-migration}
         migration_namespace: ${TEST_MIGRATION_NAMESPACE:-openshift-migration}
-        test_image: ${REPLACE_IMAGE:-quay.io/ocpmigrate/mig-operator:test}
+        namespace: ${TEST_OPERATOR_NAMESPACE:-openshift-migration}
+        kubeconfig_file: ${MOLECULE_EPHEMERAL_DIRECTORY}/kubeconfig
+        test_image: ${REPLACE_IMAGE:-quay.io/konveyor/mig-operator-container:latest}
+    host_vars:
+      localhost:
+        ansible_python_interpreter: '{{ ansible_playbook_python }}'
+        template_dir: ${MOLECULE_PROJECT_DIRECTORY}/molecule/templates
+        deploy_dir: ${MOLECULE_PROJECT_DIRECTORY}/molecule/deploy
   env:
-    K8S_AUTH_KUBECONFIG: /tmp/molecule/kind-test-local/kubeconfig
-    KUBECONFIG: /tmp/molecule/kind-test-local/kubeconfig
+    K8S_AUTH_KUBECONFIG: ${MOLECULE_EPHEMERAL_DIRECTORY}/kubeconfig
+    KUBECONFIG: ${MOLECULE_EPHEMERAL_DIRECTORY}/kubeconfig
     ANSIBLE_ROLES_PATH: ${MOLECULE_PROJECT_DIRECTORY}/roles
     KIND_PORT: '${TEST_CLUSTER_PORT:-10443}'
+verifier:
+  name: ansible
+  lint: |
+    set -e
+    ansible-lint
 scenario:
   name: test-local
   test_sequence:
     - lint
     - destroy
-    - dependency
     - syntax
     - create
     - prepare
@@ -51,7 +62,3 @@ scenario:
     - side_effect
     - verify
     - destroy
-verifier:
-  name: testinfra
-  lint:
-    name: flake8

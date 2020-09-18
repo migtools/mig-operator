@@ -1,0 +1,23 @@
+---
+- name: Prepare
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  no_log: "{{ molecule_no_log }}"
+
+  tasks:
+    - name: Create Custom Resource Definitions
+      k8s:
+        definition: "{{ lookup('file', item) }}"
+      with_items:
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/migrationcontroller.crd.yaml"
+
+    - name: Create namespace
+      k8s:
+        api_version: v1
+        kind: Namespace
+        name: '{{ namespace }}'
+
+    - name: Create ServiceMonitor Custom Resource Definiiton
+      k8s:
+        definition: "{{ lookup('url', 'https://raw.githubusercontent.com/coreos/prometheus-operator/release-0.35/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml', split_lines=False) | from_yaml_all | list }}"
