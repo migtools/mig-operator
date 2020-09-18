@@ -1,9 +1,8 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: migration-operator
-  namespace: openshift-migration
+  namespace: "openshift-migration"
   labels:
     app: migration
 spec:
@@ -17,19 +16,8 @@ spec:
     spec:
       serviceAccountName: migration-operator
       containers:
-      - name: ansible
-        command:
-        - /usr/local/bin/ao-logs
-        - /tmp/ansible-operator/runner
-        - stdout
-        image: quay.io/ocpmigrate/mig-operator:stable
-        imagePullPolicy: Always
-        volumeMounts:
-        - mountPath: /tmp/ansible-operator/runner
-          name: runner
-          readOnly: true
       - name: operator
-        image: quay.io/ocpmigrate/mig-operator:stable
+        image: quay.io/konveyor/mig-operator-container:latest
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /tmp/ansible-operator/runner
@@ -48,15 +36,23 @@ spec:
         - name: REGISTRY
           value: quay.io
         - name: PROJECT
-          value: ocpmigrate
+          value: konveyor
+        - name: HOOK_RUNNER_REPO
+          value: hook-runner
+        - name: HOOK_RUNNER_TAG
+          value: latest
         - name: MIG_CONTROLLER_REPO
           value: mig-controller
         - name: MIG_UI_REPO
           value: mig-ui
+        - name: MIGRATION_REGISTRY_REPO
+          value: registry
+        - name: MIGRATION_REGISTRY_TAG
+          value: latest
         - name: VELERO_REPO
           value: velero
         - name: VELERO_PLUGIN_REPO
-          value: migration-plugin
+          value: openshift-velero-plugin
         - name: VELERO_RESTIC_RESTORE_HELPER_REPO
           value: velero-restic-restore-helper
         - name: VELERO_AWS_PLUGIN_REPO
@@ -65,16 +61,22 @@ spec:
           value: velero-plugin-for-gcp
         - name: VELERO_AZURE_PLUGIN_REPO
           value: velero-plugin-for-microsoft-azure
+        - name: VELERO_TAG
+          value: latest
+        - name: VELERO_RESTIC_RESTORE_HELPER_TAG
+          value: latest
+        - name: VELERO_PLUGIN_TAG
+          value: latest
         - name: VELERO_AWS_PLUGIN_TAG
           value: latest
         - name: VELERO_GCP_PLUGIN_TAG
           value: latest
         - name: VELERO_AZURE_PLUGIN_TAG
           value: latest
-        - name: MIGRATION_TAG
-          value: stable
-        - name: VELERO_TAG
-          value: stable
+        - name: MIG_UI_TAG
+          value: latest
+        - name: MIG_CONTROLLER_TAG
+          value: latest
       volumes:
         - name: runner
           emptyDir: {}

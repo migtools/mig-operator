@@ -1,0 +1,169 @@
+---
+- name: Build Operator in Kubernetes docker container
+  hosts: k8s
+  gather_facts: no
+  collections:
+    - community.kubernetes
+
+  vars:
+    image: quay.io/konveyor/mig-operator-container:latest
+
+  tasks:
+    # using command so we don't need to install any dependencies
+    - name: Get existing image hash
+      command: docker images -q {{ image }}
+      register: prev_hash_raw
+      changed_when: false
+
+
+    - name: Build Operator Image
+      command: docker build -f /build/build/Dockerfile -t {{ image }} /build
+      register: build_cmd
+      changed_when: not hash or (hash and hash not in cmd_out)
+      vars:
+        hash: '{{ prev_hash_raw.stdout }}'
+        cmd_out: '{{ "".join(build_cmd.stdout_lines[-2:]) }}'
+
+    - name: Get new image hash
+      command: docker images -q {{ image }}
+      register: hash_raw
+      changed_when: false
+
+    - name: Set localhost hash fact
+      set_fact:
+        hash: '{{ hash_raw.stdout }}'
+      delegate_to: localhost
+      delegate_facts: true
+
+- name: Converge
+  hosts: localhost
+  connection: local
+  vars:
+    ansible_python_interpreter: '{{ ansible_playbook_python }}'
+    deploy_dir: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/molecule/deploy"
+    pull_policy: Never
+    custom_resource: "{{ lookup('file', '/'.join([deploy_dir, 'migration_v1alpha1_migration_cr.yaml'])) | from_yaml }}"
+  tasks:
+  - block:
+    - name: Delete the Operator Deployment
+      k8s:
+        state: absent
+        namespace: '{{ controller_namespace }}'
+        definition: "{{ lookup('template', '/'.join([deploy_dir, 'operator.yaml'])) }}"
+      register: delete_deployment
+      when: hostvars[groups.k8s.0].build_cmd.changed
+
+    - name: Wait 30s for Operator Deployment to terminate
+      k8s_facts:
+        api_version: '{{ definition.apiVersion }}'
+        kind: '{{ definition.kind }}'
+        namespace: '{{ controller_namespace }}'
+        name: '{{ definition.metadata.name }}'
+      vars:
+        definition: "{{ lookup('template', '/'.join([deploy_dir, 'operator.yaml'])) | from_yaml }}"
+      register: deployment
+      until: not deployment.resources
+      delay: 3
+      retries: 10
+      when: delete_deployment.changed
+
+    - name: "Replace latest image with {{ test_image }}"
+      replace:
+        path: "{{ deploy_dir }}/operator.yaml"
+        regexp: '^(.*)image:( *)quay.io/ocpmigrate/mig-operator(.*)$'
+        replace: "\\1image:\\2{{ test_image }}"
+
+    - name: create CRDs
+      k8s:
+        definition: "{{ lookup('file', item) }}"
+      with_items:
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/migration_v1alpha1_miganalytic.yaml"
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/migration_v1alpha1_migcluster.yaml"
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/migration_v1alpha1_mighook.yaml"
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/migration_v1alpha1_migmigration.yaml"
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/migration_v1alpha1_migplan.yaml"
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/migration_v1alpha1_migstorage.yaml"
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/backup.crd.yaml"
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/backupstoragelocation.crd.yaml"
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/deletebackuprequest.crd.yaml"
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/downloadrequest.crd.yaml"
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/podvolumebackup.crd.yaml"
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/podvolumerestore.crd.yaml"
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/resticrepository.crd.yaml"
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/restore.crd.yaml"
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/schedule.crd.yaml"
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/serverstatusrequest.crd.yaml"
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/volumesnapshotlocation.crd.yaml"
+
+    - name: Make temp directory
+      tempfile:
+        state: directory
+        suffix: operator
+      register: tmp_dir
+
+    - name: Copy operator.yml
+      copy:
+        src: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/non-olm/latest/operator.yml"
+        dest: "{{ tmp_dir.path }}/operator.yml"
+
+    - name: Updat Deployment
+      lineinfile:
+        path: "{{ tmp_dir.path }}/operator.yml"
+        regexp: 'apiVersion: apps/v1beta1'
+        line: 'apiVersion: apps/v1'
+
+    - name: Create the Operator Deployment
+      k8s:
+        namespace: '{{ controller_namespace }}'
+        definition: "{{ lookup('file', item) }}"
+      with_items:
+      - "{{ tmp_dir.path }}/operator.yml"
+
+    - name: Create the migration.openshift.io/v1alpha1.MigrationController
+      k8s:
+        state: present
+        namespace: '{{ controller_namespace }}'
+        definition: '{{ custom_resource }}'
+    rescue:
+    - name: debug cr
+      ignore_errors: yes
+      failed_when: false
+      debug:
+        var: debug_cr
+      vars:
+        debug_cr: '{{ lookup("k8s",
+          kind=custom_resource.kind,
+          api_version=custom_resource.apiVersion,
+          namespace=controller_namespace,
+          resource_name=custom_resource.metadata.name
+        )}}'
+
+    - name: debug migration operator lookup
+      ignore_errors: yes
+      failed_when: false
+      debug:
+        var: deploy
+      vars:
+        deploy: '{{ lookup("k8s",
+          kind="Deployment",
+          api_version="apps/v1",
+          namespace=controller_namespace,
+          label_selector="app=migration"
+        )}}'
+
+    - name: get operator logs
+      ignore_errors: yes
+      failed_when: false
+      command: kubectl logs deployment/{{ definition.metadata.name }} -n {{ controller_namespace }}
+      environment:
+        KUBECONFIG: '{{ lookup("env", "KUBECONFIG") }}'
+      vars:
+        definition: "{{ lookup('template', '/'.join([deploy_dir, 'operator.yaml'])) | from_yaml }}"
+      register: log
+
+    - debug: var=log.stdout_lines
+
+    - fail:
+        msg: "Failed on action: converge"
+
+- import_playbook: '{{ playbook_dir }}/../default/asserts.yml'

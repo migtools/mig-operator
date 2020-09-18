@@ -8,3 +8,5 @@ spec:
   migration_controller: true
   migration_ui: false
   mig_ui_cluster_api_endpoint: https://nowhere.localhost:8443/api
+  olm_managed: true
+#ui uses openshift specific types that won't work in molecules kubernetes container

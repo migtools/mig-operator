@@ -200,12 +200,12 @@
       state: "present"
       src: "{{ role_path }}/files/{{ item }}"
     with_items:
-      - "migration_v1alpha1_migcluster.yaml"
-      - "migration_v1alpha1_migmigration.yaml"
-      - "migration_v1alpha1_migplan.yaml"
-      - "migration_v1alpha1_mighook.yaml"
-      - "migration_v1alpha1_migstorage.yaml"
-      - "migration_v1alpha1_miganalytic.yaml"
+    - "migration_v1alpha1_migcluster.yaml"
+    - "migration_v1alpha1_migmigration.yaml"
+    - "migration_v1alpha1_migplan.yaml"
+    - "migration_v1alpha1_mighook.yaml"
+    - "migration_v1alpha1_migstorage.yaml"
+    - "migration_v1alpha1_miganalytic.yaml"
     when: not olm_managed
 
   - name: "Set up mig controller RBAC"
@@ -232,19 +232,26 @@
     - monitoring-role.yml.j2
     - monitoring-rolebinding.yml.j2
 
+  - set_fact:
+      api_groups: "{{ lookup('k8s', cluster_info='api_groups') }}"
+
   - name: Check if mig ui route exists already so we don't update it
     k8s_facts:
       api_version: "route.openshift.io/v1"
       kind: Route
       name: migration
       namespace: "{{ mig_namespace }}"
+    when: "'route.openshift.io' in api_groups"
     register: route_status
 
   - name: "Set up mig ui route"
     k8s:
       state: "{{ ui_state }}"
       definition: "{{ lookup('template', 'ui-route.yml.j2') }}"
-    when: (route_status.resources|length) == 0 or ui_state == "absent"
+    when:
+    - route_status.resources is defined
+    - (route_status.resources|length) == 0 or ui_state == "absent"
+    - "'route.openshift.io' in api_groups"
 
   - when: migration_ui
     block:
@@ -264,9 +271,9 @@
     - name: Configure CORS allowed origins for UI install
       set_fact:
         cors_origins:
-          - "{{ mig_ui_cors_url }}"
-          - "{{ mig_ui_cors_loopback }}"
-          - "{{ mig_ui_cors_localhost }}"
+        - "{{ mig_ui_cors_url }}"
+        - "{{ mig_ui_cors_loopback }}"
+        - "{{ mig_ui_cors_localhost }}"
 
     - name: "Set up discovery service and route"
       k8s:
@@ -368,10 +375,10 @@
           name: "{{ ansible_operator_meta.name }}"
           namespace: "{{ ansible_operator_meta.namespace }}"
           conditions:
-            - type: Critical
-              status: True
-              reason: "DepricatedCorsMisConfigured"
-              message: "Unexpected CORS configuration for apiserver"
+          - type: Critical
+            status: True
+            reason: "DepricatedCorsMisConfigured"
+            message: "Unexpected CORS configuration for apiserver"
         when: olm_managed and
               deprecated_cors_configuration and
               apiserver.resources[0].spec.additionalCORSAllowedOrigins is defined and
@@ -384,10 +391,10 @@
           name: "{{ ansible_operator_meta.name }}"
           namespace: "{{ ansible_operator_meta.namespace }}"
           conditions:
-            - type: Critical
-              status: True
-              reason: "CorsMisConfigured"
-              message: "Unexpected CORS configuration for kubeapiserver"
+          - type: Critical
+            status: True
+            reason: "CorsMisConfigured"
+            message: "Unexpected CORS configuration for kubeapiserver"
         when: olm_managed and
               not deprecated_cors_configuration and
               kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is defined and

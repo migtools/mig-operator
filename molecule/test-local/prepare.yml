@@ -1,34 +1,34 @@
 ---
 - import_playbook: ../default/prepare.yml
+- import_playbook: ../cluster/prepare.yml
 
-- name: Prepare operator resources
+- name: Dump the dev image
   hosts: localhost
   connection: local
-  vars:
-    ansible_python_interpreter: '{{ ansible_playbook_python }}'
-    deploy_dir: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy"
+  gather_facts: no
+
   tasks:
-  - name: Create Custom Resource Definition
-    k8s:
-      definition: "{{ lookup('file', '/'.join([deploy_dir, 'crds/migration_v1alpha1_migration_crd.yaml'])) }}"
+  - name: Dump the dev image
+    command: docker save -o /tmp/dev-operator.tar quay.io/konveyor/mig-operator-container:latest
 
-  - name: Ensure controller namespace is present
-    k8s:
-      api_version: v1
-      kind: Namespace
-      name: '{{ controller_namespace }}'
+  - name: Copy the image to the kind container
+    command: docker cp /tmp/dev-operator.tar kind-test-local:/dev-operator.tar
 
-  - name: Ensure migration namespace is present
-    k8s:
-      api_version: v1
-      kind: Namespace
-      name: '{{ migration_namespace }}'
+- name: Make dev operator image available for Molecule Test
+  hosts: k8s
+  gather_facts: no
 
-  - name: Create RBAC resources
-    k8s:
-      definition: "{{ lookup('template', '/'.join([deploy_dir, item])) }}"
-      namespace: '{{ controller_namespace }}'
-    with_items:
-      - role.yaml
-      - role_binding.yaml
-      - service_account.yaml
+  tasks:
+  - name: Make dev operator available
+    command: docker load -i /dev-operator.tar
+
+- name: Clean up for Molecule Test
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+  - name: remove dev-operator.tar
+    file:
+      path: /tmp/dev-operator.tar
+      state: absent

@@ -3,6 +3,7 @@ dist: xenial
 services: docker
 language: python
 install:
-  - pip install docker 'molecule==2.22' openshift jmespath
+  - pip install docker 'molecule==3.05' openshift jmespath
+  - docker pull quay.io/konveyor/mig-operator-container:latest
 script:
   - molecule test -s test-local

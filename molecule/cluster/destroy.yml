@@ -1,0 +1,22 @@
+---
+- name: Destroy
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+  - name: Delete namespace
+    k8s:
+      api_version: v1
+      kind: Namespace
+      name: '{{ namespace }}'
+      state: absent
+      wait: yes
+
+  - name: Delete Custom Resource Definitions
+    k8s:
+      definition: "{{ lookup('file', item) }}"
+      state: absent
+      wait: yes
+    with_items:
+    - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/migrationcontroller.crd.yaml"

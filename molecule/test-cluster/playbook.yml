@@ -7,12 +7,12 @@
     ansible_python_interpreter: '{{ ansible_playbook_python }}'
     deploy_dir: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy"
     image_name: migration.openshift.io/mig-operator:testing
-    custom_resource: "{{ lookup('file', '/'.join([deploy_dir, 'crds/migration_v1alpha1_migration_cr.yaml'])) | from_yaml }}"
+    custom_resource: "{{ lookup('file', '/'.join([deploy_dir, 'migration_v1alpha1_migration_cr.yaml'])) | from_yaml }}"
   tasks:
   - name: Create the migration.openshift.io/v1alpha1.MigrationController
     k8s:
       namespace: '{{ controller_namespace }}'
-      definition: "{{ lookup('file', '/'.join([deploy_dir, 'crds/migration_v1alpha1_migration_cr.yaml'])) }}"
+      definition: "{{ lookup('file', '/'.join([deploy_dir, 'migration_v1alpha1_migration_cr.yaml'])) }}"
 
   - name: Get the newly created Custom Resource
     debug:
