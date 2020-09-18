@@ -387,13 +387,6 @@ spec:
           - migclusters
           verbs:
           - '*'
-        - apiGroups:
-          - config.openshift.io
-          resources:
-          - infrastructures
-          - clusterversions
-          verbs:
-          - get
       - serviceAccountName: migration-controller
         rules:
         - apiGroups:
