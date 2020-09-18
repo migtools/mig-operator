@@ -96,6 +96,8 @@ velero_azure_plugin_repo: "{{ lookup( 'env', 'VELERO_AZURE_PLUGIN_REPO') }}"
 velero_azure_plugin_version: "{{ snapshot_tag | default(lookup( 'env', 'VELERO_AZURE_PLUGIN_TAG')) }}"
 velero_azure_plugin_fqin: "{{ velero_azure_plugin_image }}:{{ velero_azure_plugin_version }}"
 velero_state: absent
+velero_qps: 100
+velero_burst: 1000
 
 # MCG integration
 noobaa: false
