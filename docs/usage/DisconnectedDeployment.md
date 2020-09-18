@@ -52,12 +52,10 @@ podman cp $(podman create registry.redhat.io/rhcam-1-1/openshift-migration-rhel7
 podman cp $(podman create registry.redhat.io/rhcam-1-1/openshift-migration-rhel7-operator:v1.1):/controller-3.yml ./
 ```
 
-First you must to set the operator image value itself editing the two image
+First you must to set the operator image value itself editing the image
 fields on the deployment to the fully qualified image name in your self-hosted registry:
 
-https://github.com/konveyor/mig-operator/blob/master/deploy/non-olm/v1.1.2/operator.yml#L196
-
-https://github.com/konveyor/mig-operator/blob/master/deploy/non-olm/v1.1.2/operator.yml#L203
+https://github.com/konveyor/mig-operator/blob/master/deploy/non-olm/latest/operator.yml#L290
 
 To get the correct value, when you ran the `oc adm mirror` command for the OCP4
 cluster, next to the imagecontentsourcepolicy file, there should be a mapping.txt file.
@@ -76,7 +74,7 @@ last thing you need to do is to override the REGISTRY value in the environment v
 This tells the operator to deploy all of its operands out of your shared registry
 instead of the default `registry.redhat.io`:
 
-https://github.com/konveyor/mig-operator/blob/master/deploy/non-olm/v1.1.2/operator.yml#L220
+https://github.com/konveyor/mig-operator/blob/master/deploy/non-olm/latest/operator.yml#L307
 
 Continuing the above example, I would set this value to: `registry-nsk-discon-test.apps.example.com`
 
