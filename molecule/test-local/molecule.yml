@@ -59,6 +59,5 @@ scenario:
     - create
     - prepare
     - converge
-    - side_effect
     - verify
     - destroy

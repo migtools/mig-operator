@@ -4,17 +4,14 @@
   gather_facts: no
   collections:
     - community.kubernetes
-
   vars:
     image: quay.io/konveyor/mig-operator-container:latest
-
   tasks:
     # using command so we don't need to install any dependencies
     - name: Get existing image hash
       command: docker images -q {{ image }}
       register: prev_hash_raw
       changed_when: false
-
 
     - name: Build Operator Image
       command: docker build -f /build/build/Dockerfile -t {{ image }} /build
@@ -43,6 +40,7 @@
     deploy_dir: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/molecule/deploy"
     pull_policy: Never
     custom_resource: "{{ lookup('file', '/'.join([deploy_dir, 'migration_v1alpha1_migration_cr.yaml'])) | from_yaml }}"
+    mig_namespace: "{{ namespace }}"
   tasks:
   - block:
     - name: Delete the Operator Deployment
@@ -73,7 +71,7 @@
         regexp: '^(.*)image:( *)quay.io/ocpmigrate/mig-operator(.*)$'
         replace: "\\1image:\\2{{ test_image }}"
 
-    - name: create CRDs
+    - name: Create CRDs
       k8s:
         definition: "{{ lookup('file', item) }}"
       with_items:
@@ -95,6 +93,12 @@
       - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/serverstatusrequest.crd.yaml"
       - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/volumesnapshotlocation.crd.yaml"
 
+    - name: Create RBAC
+      k8s:
+        definition: "{{ lookup('template', item) }}"
+      with_items:
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/roles/migrationcontroller/templates/mig_rbac.yml.j2"
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/roles/migrationcontroller/templates/velero_supporting.yml.j2"
     - name: Make temp directory
       tempfile:
         state: directory
@@ -106,11 +110,17 @@
         src: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/non-olm/latest/operator.yml"
         dest: "{{ tmp_dir.path }}/operator.yml"
 
-    - name: Updat Deployment
+    - name: Update Deployment
       lineinfile:
         path: "{{ tmp_dir.path }}/operator.yml"
         regexp: 'apiVersion: apps/v1beta1'
         line: 'apiVersion: apps/v1'
+
+    - name: Update Pull Policy so we use the image we just finished building
+      lineinfile:
+        path: "{{ tmp_dir.path }}/operator.yml"
+        regexp: '        imagePullPolicy: Always'
+        line: '        imagePullPolicy: Never'
 
     - name: Create the Operator Deployment
       k8s:
