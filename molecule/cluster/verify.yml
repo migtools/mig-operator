@@ -3,6 +3,7 @@
   hosts: localhost
   vars:
     custom_resource: "{{ lookup('file', '/'.join([deploy_dir, 'migration_v1alpha1_migration_cr.yaml'])) | from_yaml }}"
+    deploy_dir: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/molecule/deploy"
   connection: local
   gather_facts: no
   tasks:
