@@ -19,7 +19,7 @@
       msg: "{{ lookup('k8s', group='migration.openshift.io', api_version='v1alpha1', kind='MigrationController', namespace=controller_namespace, resource_name=custom_resource.metadata.name) }}"
 
   - name: Wait 40s for reconciliation to run
-    k8s_facts:
+    k8s_info:
       api_version: 'v1alpha1'
       kind: 'MigrationController'
       namespace: '{{ controller_namespace }}'
