@@ -3,12 +3,13 @@
   hosts: localhost
   vars:
     custom_resource: "{{ lookup('file', '/'.join([deploy_dir, 'migration_v1alpha1_migration_cr.yaml'])) | from_yaml }}"
+    deploy_dir: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/molecule/deploy"
   connection: local
   gather_facts: no
   tasks:
   - block:
     - name: Wait 240s for reconciliation to run
-      k8s_facts:
+      k8s_info:
         api_version: '{{ custom_resource.apiVersion }}'
         kind: '{{ custom_resource.kind }}'
         namespace: '{{ controller_namespace }}'

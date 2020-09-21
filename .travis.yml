@@ -4,6 +4,5 @@ services: docker
 language: python
 install:
   - pip install docker 'molecule==3.0.5' openshift jmespath
-  - docker pull quay.io/konveyor/mig-operator-container:latest
 script:
   - molecule test -s test-local

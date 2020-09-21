@@ -6,7 +6,13 @@ spec:
   cluster_name: host
   migration_velero: true
   migration_controller: true
+  #discovery requires a route, ui requires a route, oauth, openshift configs for cors, etc.
+  #we'd have to strip out most of the ansible with conditionals at which point we wouldn't
+  #be testing it either way.
   migration_ui: false
   mig_ui_cluster_api_endpoint: https://nowhere.localhost:8443/api
   olm_managed: true
-#ui uses openshift specific types that won't work in molecules kubernetes container
+  #Below fakes openshift 4 restic will be configured correctly
+  infrastructures:
+    resources:
+    - whatever
