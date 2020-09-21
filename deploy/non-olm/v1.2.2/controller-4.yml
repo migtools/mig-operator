@@ -15,7 +15,5 @@ spec:
   mig_pod_limit: 100
   mig_namespace_limit: 10
 
-  mig_failure_rollback: false
-
   #Uncomment the following line for OpenShift 4.1
   #deprecated_cors_configuration: true

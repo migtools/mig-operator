@@ -59,47 +59,16 @@ The default limits are:
   - 100 Persistent Volumes per MigPlan
 
 Resource limits can be adjusted by configuring the MigrationController resource responsible for deploying mig-controller.
-
-```
-oc edit MigrationController -n openshift-migration
-```
-
 ```
   [...]
   migration_controller: true
   
-  # Resource limit configuration is loaded into mig-controller, and should be set on the
+  # This configuration is loaded into mig-controller, and should be set on the
   # cluster where `migration_controller: true`
   mig_pv_limit: 100
   mig_pod_limit: 100
   mig_namespace_limit: 10
   [...]
-```
-
-#### Adjusting Rollback on Migration Failure
-If an unexpected error causes a migration to fail, you can control migration behavior according to your needs.
-
-Automatic rollback is disabled by default, but can be enabled by configuring the MigrationController resource responsible for deploying mig-controller.
-
-```
-oc edit MigrationController -n openshift-migration
-```
-
-```
- [...]
- 
- # Rollback configuration is loaded into mig-controller, and should be set on the
- # cluster where `migration_controller: true`
- migration_controller: true
-
- # [Default] Setting 'mig_failure_rollback: false' leaves the partially migrated workloads 
- # in place on the target cluster.
- mig_failure_rollback: false
-
- # Setting 'mig_failure_rollback: true' removes the partially migrated workloads from the
- # target cluster and scales them back up on the source cluster.
- mig_failure_rollback: true
- [...]
 ```
 
 ## CORS (Cross-Origin Resource Sharing) Configuration
