@@ -29,6 +29,12 @@ spec:
       labels:
         component: velero
       annotations:
+{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int < 9 %}
+        pod.alpha.kubernetes.io/init-containers: >-
+          [{"name":"velero-plugin","image":"{{ velero_plugin_fqin }}","resources":{},"volumeMounts":[{"name":"plugins","mountPath":"/target"}],"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"{{ image_pull_policy }}"},{"name":"velero-plugin-for-aws","image":"{{ velero_aws_plugin_fqin }}","resources":{},"volumeMounts":[{"name":"plugins","mountPath":"/target"}],"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"{{ image_pull_policy }}"},{"name":"velero-plugin-for-gcp","image":"{{ velero_gcp_plugin_fqin }}","resources":{},"volumeMounts":[{"name":"plugins","mountPath":"/target"}],"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"{{ image_pull_policy }}"},{"name":"velero-plugin-for-microsoft-azure","image":"{{ velero_azure_plugin_fqin }}","resources":{},"volumeMounts":[{"name":"plugins","mountPath":"/target"}],"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"{{ image_pull_policy }}"},{"name":"setup-certificate-secret","image":"{{ velero_image_fqin }}","command":["sh","-ec","cp -f /etc/ssl/certs/* /certs/; ln -sf /credentials/ca_bundle.pem /certs/ca_bundle.pem;"],"resources":{},"volumeMounts":[{"name":"certs","mountPath":"/certs"},{"name":"cloud-credentials","mountPath":"/credentials"}],"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"{{ image_pull_policy }}"}]
+        pod.beta.kubernetes.io/init-containers: >-
+          [{"name":"velero-plugin","image":"{{ velero_plugin_fqin }}","resources":{},"volumeMounts":[{"name":"plugins","mountPath":"/target"}],"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"{{ image_pull_policy }}"},{"name":"velero-plugin-for-aws","image":"{{ velero_aws_plugin_fqin }}","resources":{},"volumeMounts":[{"name":"plugins","mountPath":"/target"}],"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"{{ image_pull_policy }}"},{"name":"velero-plugin-for-gcp","image":"{{ velero_gcp_plugin_fqin }}","resources":{},"volumeMounts":[{"name":"plugins","mountPath":"/target"}],"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"{{ image_pull_policy }}"},{"name":"velero-plugin-for-microsoft-azure","image":"{{ velero_azure_plugin_fqin }}","resources":{},"volumeMounts":[{"name":"plugins","mountPath":"/target"}],"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"{{ image_pull_policy }}"},{"name":"setup-certificate-secret","image":"{{ velero_image_fqin }}","command":["sh","-ec","cp -f /etc/ssl/certs/* /certs/; ln -sf /credentials/ca_bundle.pem /certs/ca_bundle.pem;"],"resources":{},"volumeMounts":[{"name":"certs","mountPath":"/certs"},{"name":"cloud-credentials","mountPath":"/credentials"}],"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"{{ image_pull_policy }}"}]
+{% endif %}
         prometheus.io/scrape: "true"
         prometheus.io/port: "8085"
         prometheus.io/path: "/metrics"
@@ -180,6 +186,13 @@ spec:
     type: RollingUpdate
   template:
     metadata:
+{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int < 9 %}
+      annotations:
+        pod.alpha.kubernetes.io/init-containers: >-
+          [{"name":"setup-certificate-secret","image":"{{ velero_image_fqin }}","command":["sh","-ec","cp /etc/ssl/certs/* /certs/; ln -sf /credentials/ca_bundle.pem /certs/ca_bundle.pem;"],"resources":{},"volumeMounts":[{"name":"certs","mountPath":"/certs"},{"name":"cloud-credentials","mountPath":"/credentials"}],"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"{{ image_pull_policy }}"}]
+        pod.beta.kubernetes.io/init-containers: >-
+          [{"name":"setup-certificate-secret","image":"{{ velero_image_fqin }}","command":["sh","-ec","cp /etc/ssl/certs/* /certs/; ln -sf /credentials/ca_bundle.pem /certs/ca_bundle.pem;"],"resources":{},"volumeMounts":[{"name":"certs","mountPath":"/certs"},{"name":"cloud-credentials","mountPath":"/credentials"}],"terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","imagePullPolicy":"{{ image_pull_policy }}"}]
+{% endif %}
       labels:
         name: restic
     spec:
