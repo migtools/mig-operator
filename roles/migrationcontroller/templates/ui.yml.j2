@@ -50,6 +50,9 @@ spec:
           volumeMounts:
             - name: "{{ mig_ui_configmap_name }}"
               mountPath: /etc/mig-ui
+          env:
+            - name: BRAND_TYPE
+              value: Konveyor
       volumes:
         - name: "{{ mig_ui_configmap_name }}"
           configMap:
