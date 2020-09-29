@@ -1,0 +1,86 @@
+- hosts: localhost
+  vars:
+    org: konveyor
+    repos:
+    - mig-operator
+    - mig-controller
+    - mig-ui
+    - must-gather
+    - hook-runner
+    - openshift-velero-plugin
+    - velero
+    - velero-plugin-for-gcp
+    - velero-plugin-for-aws
+    - velero-plugin-for-microsoft-azure
+    - restic
+    gh_token: "{{ lookup( 'env', 'GH_TOKEN') }}"
+  vars_prompt:
+  - name: sprint 
+    prompt: "Sprint number"
+    private: no
+
+  - name: release
+    prompt: "Release attempt"
+    private: no
+  tasks:
+  - name: Get current master SHAs
+    uri:
+      url: https://api.github.com/repos/{{ org }}/{{ item }}/git/refs/heads/master
+      method: GET
+      headers:
+        Authorization: token {{ gh_token }}
+    register: repo_info
+    with_items: "{{ repos }}"
+
+  - name: Create spring tags
+    uri:
+      url: https://api.github.com/repos/{{ org }}/{{ item.item }}/git/refs
+      body: '{ "ref": "refs/heads/sprint{{ sprint }}.{{ release }}", "sha": "{{ item.json.object.sha }}"  }'
+      body_format: json
+      method: POST
+      headers:
+        Authorization: token {{ gh_token }}
+        Content-Type: application/json
+      status_code: 201
+    register: 
+    with_items: "{{ repo_info.results }}"
+    loop_control:
+      label: "repo: {{ item.item }}, sha: {{ item.json.object.sha }}, tag: sprint{{ sprint }}.{{ release }}"
+
+  - name: Make temp directory
+    tempfile:
+      state: directory
+      suffix: "sprint{{ sprint }}.{{ release }}"
+    register: tmp_dir
+
+  - name: Clone mig-operator
+    git:
+      repo: https://github.com/jmontleon/mig-operator.git
+      dest: "{{ tmp_dir.path }}/mig-operator"
+      version: bundle
+
+  - name: Replace operator tags in CSV
+    replace:
+      path:  "{{ tmp_dir.path }}/mig-operator/deploy/olm-catalog/bundle/manifests/konveyor-operator.v99.0.0.clusterserviceversion.yaml"
+      regexp: ':latest'
+      replace: ":sprint{{ sprint }}.{{ release }}"
+
+  - name: Replace operand in CSV
+    replace:
+      path:  "{{ tmp_dir.path }}/mig-operator/deploy/olm-catalog/bundle/manifests/konveyor-operator.v99.0.0.clusterserviceversion.yaml"
+      regexp: 'value: latest'
+      replace: "value: sprint{{ sprint }}.{{ release }}"
+
+  - name: Build bundle
+    shell: podman build -f build/Dockerfile.bundle -t quay.io/konveyor/mig-operator-bundle:sprint{{ sprint }}.{{ release }} .
+    args:
+      chdir: "{{ tmp_dir.path }}/mig-operator"
+
+  - name: Push bundle
+    shell: podman push quay.io/konveyor/mig-operator-bundle:sprint{{ sprint }}.{{ release }}
+
+  - name: Build sprint index image
+    shell: opm index add -p docker --bundles quay.io/konveyor/mig-operator-bundle:sprint{{ sprint }}.{{ release }} --tag quay.io/konveyor/mig-operator-index:sprint{{ sprint }}.{{ release }}
+ 
+  - name: Push sprint index image
+    shell: podman push quay.io/konveyor/mig-operator-index:sprint{{ sprint }}.{{ release }} 
