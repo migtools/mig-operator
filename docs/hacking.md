@@ -36,35 +36,48 @@ echo $(curl -sH "Content-Type: application/json" -XPOST https://quay.io/cnr/api/
 Finally, determine which Quay organization you will push the metadata to in order to test. This can be your personal Quay organization, or any other you have access to push to.
 
 ## Pushing OLM metadata to Quay
+Notes:
+* Pushing an index file requires the `opm` utility which can be obtained from `https://github.com/operator-framework/operator-registry`.
+* `opm` requires `podman`.
+* The first time you push your bundle to quay.io you will need to browse to the repo make it public before trying to build the index.
+* After pushing your index image for the first time you will also need to make the repo public
+
 1. `export ORG=$organization`
 1. `git clone https://github.com/konveyor/mig-operator`
 1. `cd mig-operator`
-1. `operator-courier --verbose push deploy/olm-catalog/konveyor-operator/ $ORG konveyor-operator 1.0.0 "$QUAY_TOKEN"`
-
-Notes:
-* The first time you push your metadata to quay.io you will need to browse to the [application](https://quay.io/application/) and make it public.
-* The version refers only to the metadata version and must be incremented each time you push.
+1. `docker build -f build/Dockerfile.bundle . -t quay.io/$ORG/mig-operator-bundle:latest && docker push quay.io/$ORG/mig-operator-bundle:latest`
+1. `opm index add --bundles docker push quay.io/$ORG/mig-operator-bundle:latest --tag quay.io/$ORG/mig-operator-index:latest`
+1. `podman push quay.io/konveyor/mig-operator-index:latest`
 
 ## Updating OLM to access your metadata
-One of the methods use to tell OLM how to retrieve metadata is an OperatorSource.
+This requires creating a CatalogSource to point at your new index image.
 
 To write the mig-operator-source.yaml and create the resource run the following:
 ```
-cat << EOF > mig-operator-source.yaml
-apiVersion: operators.coreos.com/v1
-kind: OperatorSource
+cat << EOF > mig-operator-bundle.yaml
+apiVersion: operators.coreos.com/v1alpha1
+kind: CatalogSource
 metadata:
-  name: migration-operator
-  namespace: openshift-marketplace
+  name: konveyor-for-containers-bundle
+  namespace: openshift-migration
 spec:
-  type: appregistry
-  endpoint: https://quay.io/cnr
-  registryNamespace: $ORG
-  displayName: "Migration Operator"
-  publisher: "ocp-migrate-team@redhat.com"
+  sourceType: grpc
+  image: quay.io/$ORG/mig-operator-index:latest
+
 EOF
 
-oc create -f mig-operator-source.yaml
+oc create -f mig-operator-bundle.yaml
+```
+
+Note that CatalogSources will not ever pull updated images.
+https://github.com/operator-framework/operator-lifecycle-manager/issues/903
+
+To get around this you can script the creation of mig-operator-bundle.yaml to always use the latest SHA.
+```
+#!/bin/bash
+export BUNDLEDIGEST=$(docker pull quay.io/$ORG/mig-operator-index:latest | grep Digest | awk '{ print $2 }')
+
+sed "s/:latest/@$BUNDLEDIGEST/" mig-operator-bundle.yaml | oc create -f -
 ```
 
 ## Disabling default OperatorSources

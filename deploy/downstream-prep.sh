@@ -1,19 +1,11 @@
 #!/bin/bash
 
-#Remove latest as option
-if grep -q development deploy/olm-catalog/konveyor-operator/konveyor-operator.package.yaml; then
-  sed -i 3,4d deploy/olm-catalog/konveyor-operator/konveyor-operator.package.yaml
-fi
-sed -i s,konveyor-operator,mtc-operator,g deploy/olm-catalog/konveyor-operator/konveyor-operator.package.yaml
-rm -rf deploy/non-olm/latest/ deploy/olm-catalog/konveyor-operator/latest
-
 #Find most recent version
-export MTCVERSION=$(grep currentCSV deploy/olm-catalog/konveyor-operator/konveyor-operator.package.yaml | head -1 | awk -F '.' '{out=""; for(i=2;i<NF;i++){out=out$i"."}{out=out$NF}; print out}')
+export MTCVERSION=$(ls deploy/olm-catalog/bundle/manifests/konveyor-operator.v* | awk -F '.' '{out=""; for(i=2;i<4;i++){out=out$i"."}{out=out$4}; print out}')
 #Checkout all the old operator.ymls and CSVs
 git checkout origin/$(git branch --show-current) -- Dockerfile
 git checkout origin/$(git branch --show-current) -- .gitignore
 for i in $(ls -1d deploy/non-olm/v* | grep -v $MTCVERSION); do git checkout origin/$(git branch --show-current) $i; done
-for i in $(ls -1d deploy/olm-catalog/konveyor-operator/v* | grep -v $MTCVERSION); do git checkout origin/$(git branch --show-current) $i; done
 
 #deal with k8s_status change upstream/downstream
 sed -i "s,ansible_operator_meta,meta,g" roles/migrationcontroller/tasks/main.yml
@@ -84,7 +76,7 @@ for i in ${IMAGES[@]}; do
 done
 
 # Make Downstream CSV Changes
-for f in deploy/olm-catalog/konveyor-operator/${MTCVERSION}/konveyor-operator.${MTCVERSION}.clusterserviceversion.yaml \
+for f in deploy/olm-catalog/bundle/manifests/konveyor-operator.${MTCVERSION}.clusterserviceversion.yaml \
          deploy/non-olm/${MTCVERSION}/operator.yml
   do
   if [[ "$f" =~ .*clusterserviceversion.* ]]; then

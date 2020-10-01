@@ -19,4 +19,4 @@
       state: absent
       wait: yes
     with_items:
-    - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/konveyor-operator/latest/migrationcontroller.crd.yaml"
+    - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migrationcontroller.crd.yaml"
