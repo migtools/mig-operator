@@ -35,7 +35,7 @@
   - name: Create spring tags
     uri:
       url: https://api.github.com/repos/{{ org }}/{{ item.item }}/git/refs
-      body: '{ "ref": "refs/heads/sprint{{ sprint }}.{{ release }}", "sha": "{{ item.json.object.sha }}"  }'
+      body: '{ "ref": "refs/heads/sprint-{{ sprint }}.{{ release }}", "sha": "{{ item.json.object.sha }}"  }'
       body_format: json
       method: POST
       headers:
@@ -45,12 +45,12 @@
     register: 
     with_items: "{{ repo_info.results }}"
     loop_control:
-      label: "repo: {{ item.item }}, sha: {{ item.json.object.sha }}, tag: sprint{{ sprint }}.{{ release }}"
+      label: "repo: {{ item.item }}, sha: {{ item.json.object.sha }}, tag: sprint-{{ sprint }}.{{ release }}"
 
   - name: Make temp directory
     tempfile:
       state: directory
-      suffix: "sprint{{ sprint }}.{{ release }}"
+      suffix: "sprint-{{ sprint }}.{{ release }}"
     register: tmp_dir
 
   - name: Clone mig-operator
@@ -63,24 +63,24 @@
     replace:
       path:  "{{ tmp_dir.path }}/mig-operator/deploy/olm-catalog/bundle/manifests/konveyor-operator.v99.0.0.clusterserviceversion.yaml"
       regexp: ':latest'
-      replace: ":sprint{{ sprint }}.{{ release }}"
+      replace: ":sprint-{{ sprint }}.{{ release }}"
 
   - name: Replace operand in CSV
     replace:
       path:  "{{ tmp_dir.path }}/mig-operator/deploy/olm-catalog/bundle/manifests/konveyor-operator.v99.0.0.clusterserviceversion.yaml"
       regexp: 'value: latest'
-      replace: "value: sprint{{ sprint }}.{{ release }}"
+      replace: "value: sprint-{{ sprint }}.{{ release }}"
 
   - name: Build bundle
-    shell: podman build -f build/Dockerfile.bundle -t quay.io/konveyor/mig-operator-bundle:sprint{{ sprint }}.{{ release }} .
+    shell: podman build -f build/Dockerfile.bundle -t quay.io/konveyor/mig-operator-bundle:sprint-{{ sprint }}.{{ release }} .
     args:
       chdir: "{{ tmp_dir.path }}/mig-operator"
 
   - name: Push bundle
-    shell: podman push quay.io/konveyor/mig-operator-bundle:sprint{{ sprint }}.{{ release }}
+    shell: podman push quay.io/konveyor/mig-operator-bundle:sprint-{{ sprint }}.{{ release }}
 
   - name: Build sprint index image
-    shell: opm index add -p docker --bundles quay.io/konveyor/mig-operator-bundle:sprint{{ sprint }}.{{ release }} --tag quay.io/konveyor/mig-operator-index:sprint{{ sprint }}.{{ release }}
+    shell: opm index add -p docker --bundles quay.io/konveyor/mig-operator-bundle:sprint-{{ sprint }}.{{ release }} --tag quay.io/konveyor/mig-operator-index:sprint-{{ sprint }}.{{ release }}
  
   - name: Push sprint index image
-    shell: podman push quay.io/konveyor/mig-operator-index:sprint{{ sprint }}.{{ release }} 
+    shell: podman push quay.io/konveyor/mig-operator-index:sprint-{{ sprint }}.{{ release }} 
