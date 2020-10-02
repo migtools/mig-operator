@@ -1,4 +1,8 @@
 # Upstream Release Procedures
+# Requirements
+1. podman (yum/dnf -y install podman)
+1. [opm](https://github.com/operator-framework/operator-registry)
+
 # Development
 1. Add the development bundle to the latest release index image and push
   1. `opm index add -p docker -f quay.io/konveyor/mig-operator-index:1.3.1 --bundles quay.io/konveyor/mig-operator-bundle:latest --tag quay.io/konveyor/mig-operator-index:latest`
