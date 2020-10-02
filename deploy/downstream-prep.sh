@@ -5,6 +5,8 @@ export MTCVERSION=$(ls deploy/olm-catalog/bundle/manifests/konveyor-operator.v* 
 #Checkout all the old operator.ymls and CSVs
 git checkout origin/$(git branch --show-current) -- Dockerfile
 git checkout origin/$(git branch --show-current) -- .gitignore
+git checkout origin/$(git branch --show-current) -- content_sets.yml
+git checkout origin/$(git branch --show-current) -- container.yaml
 for i in $(ls -1d deploy/non-olm/v* | grep -v $MTCVERSION); do git checkout origin/$(git branch --show-current) $i; done
 
 #deal with k8s_status change upstream/downstream
