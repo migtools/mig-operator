@@ -22,7 +22,7 @@ docker pull quay.io/operator-framework/ansible-operator:latest
 2. Run the build from the root of the mig-operator repo:
 
 ```
-export ORG="foo"
+export ORG=your-quay-org
 
 docker build -f build/Dockerfile -t quay.io/$ORG/mig-operator-container:latest . 
 docker push quay.io/$ORG/mig-operator-container:latest
@@ -63,6 +63,10 @@ docker push quay.io/$ORG/mig-operator-container:latest
         image: quay.io/your-org-here/mig-operator-container:latest
    ```
 
+2. Follow directions below to push operator metadata
+
+3. 
+
 
 ## Pushing Operator Metadata
 
@@ -92,7 +96,7 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
 
    ```
    export ORG=your-quay-org
-   export TAG=fizz
+   export TAG=latest
    ```
 
 2. Build and push the _bundle image_
@@ -165,7 +169,7 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
    }')
    ```
 
-#### Pushing metadata, updating CatalogSource
+#### Pushing metadata and updating the CatalogSource
 
 1. Set quay org
 
@@ -201,9 +205,9 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
 
 ---
 
-# Installing mig-operator after pushing metadata
+## Installing mig-operator after pushing metadata
 
-## Disabling default OperatorSources
+### Disabling default OperatorSources
 
 If you are working on an operator such as konveyor, that exists in community-operators or elsewhere you may see duplicate operators in the UI. It can be difficult to discern which copy comes from which source. To alleviate this problem you may disable the default operator sources.
 
@@ -216,7 +220,7 @@ To reverse this change simply update the value again.
 oc patch OperatorHub cluster --type json -p '[{"op": "add", "path": "/spec/disableAllDefaultSources", "value": false}]'
 ```
 
-## Creating the OperatorGroup
+### Creating the OperatorGroup
 Before creating a subscription from the CLI, you must create an OperatorGroup.
 
 ```
@@ -234,7 +238,7 @@ EOF
 oc apply -f operatorgroup.yml
 ```
 
-## Creating the Operator Subscription
+### Creating the Operator Subscription
 
 You may _Subscribe_ to an Operator via OperatorHub or from the CLI.
 
@@ -266,7 +270,7 @@ EOF
 oc create -f subscription.yml
 ```
 
-## Making iterative changes to mig-operator
+### Making iterative changes to mig-operator
 If you have made a change, deployed the operator, spotted an error and need to test another update:
 
 1. Update operator playbook and metadata
