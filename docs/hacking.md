@@ -62,12 +62,9 @@ docker push quay.io/$ORG/mig-operator-container:latest
         image: quay.io/your-org-here/mig-operator-container:latest
    ```
 
-2. Follow directions below to push operator metadata
+2. Follow steps to [push operator metadata](#pushing-operator-metadata-openshift-4x)
 
-3. Follow directions below to create:
-   1. OperatorSource
-   1. OperatorGroup
-   1. Subscription
+3. Follow steps to [install mig-operator after pushing metadata](#installing-mig-operator-after-pushing-metadata)
 
 
 ## Pushing Operator Metadata (OpenShift 4.x)
@@ -91,8 +88,6 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
 
 #### Build bundle and index images, update CatalogSource 
 
-
-* After pushing your index image for the first time you will also need to make the repo public
 
 1. Set quay org and image tag
 
