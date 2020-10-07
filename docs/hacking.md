@@ -4,9 +4,9 @@
 
 |Where is your change?|You changed|To test your changes|
 |---|---|---|
-|`./roles`| Playbook content |Build and push a new mig-operator image |
-|`./deploy/non-olm`| OpenShift 3 manifests | Apply updated manifests directly |
-|`./deploy/olm-catalog`| OpenShift 4 metadata | Build and push a new OperatorHub metadata, update OperatorSource|
+|`./roles`| Playbook content |[Build and push a new mig-operator image](#building-and-pushing-the-mig-operator-container-image) |
+|`./deploy/non-olm`| OpenShift 3 manifests | [Apply updated manifests directly](#using-a-new-mig-operator-container-image) |
+|`./deploy/olm-catalog`| OpenShift 4 metadata | [Build and push a new OperatorHub metadata, update OperatorSource](#pushing-operator-metadata-openshift-4x)|
 
 **Note**: if you build a new mig-operator image, you must reference it in `./deploy/non-olm/[...]` and `./deploy/olm-catalog/[...]`. 
 
