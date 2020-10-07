@@ -2,7 +2,7 @@
 
 ## I changed mig-operator, how do I test?
 
-|Where is your change?|You changed|To test your changes:|
+|Where is your change?|You changed|To test your changes|
 |---|---|---|
 |`./roles`| Playbook content |Build and push a new mig-operator image |
 |`./deploy/non-olm`| OpenShift 3 manifests | Apply updated manifests directly |
@@ -173,10 +173,10 @@ The tooling and steps for pushing metadata depend on the OpenShift version that 
 
 2.  Use `operator-courier` to push updated metadata, making sure to increment the version
 
-   ```
-   operator-courier --verbose push deploy/olm-catalog/konveyor-operator/ $ORG konveyor-operator 2.0.0 "$QUAY_TOKEN"`
-   # visit quay.io and make the app `$ORG/konveyor-operator` public before continuing
-   ```
+    ```
+    operator-courier --verbose push deploy/olm-catalog/konveyor-operator/ $ORG konveyor-operator 2.0.0 "$QUAY_TOKEN"`
+    # visit quay.io and make the app `$ORG/konveyor-operator` public before continuing
+    ```
    
 ---
 
