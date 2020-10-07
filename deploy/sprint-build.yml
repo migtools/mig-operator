@@ -8,6 +8,8 @@
     - must-gather
     - hook-runner
     - openshift-velero-plugin
+    - distribution
+    konveyor_repos:
     - velero
     - velero-plugin-for-gcp
     - velero-plugin-for-aws
@@ -32,7 +34,16 @@
     register: repo_info
     with_items: "{{ repos }}"
 
-  - name: Create spring tags
+  - name: Get current konveyor-dev SHAs
+    uri:
+      url: https://api.github.com/repos/{{ org }}/{{ item }}/git/refs/heads/konveyor-dev
+      method: GET
+      headers:
+        Authorization: token {{ gh_token }}
+    register: konveyor_repo_info
+    with_items: "{{ konveyor_repos }}"
+
+  - name: Create sprint branches from master
     uri:
       url: https://api.github.com/repos/{{ org }}/{{ item.item }}/git/refs
       body: '{ "ref": "refs/heads/sprint-{{ sprint }}.{{ release }}", "sha": "{{ item.json.object.sha }}"  }'
@@ -44,6 +55,21 @@
       status_code: 201
     register: 
     with_items: "{{ repo_info.results }}"
+    loop_control:
+      label: "repo: {{ item.item }}, sha: {{ item.json.object.sha }}, tag: sprint-{{ sprint }}.{{ release }}"
+
+  - name: Create sprint branches from konveyor-dev
+    uri:
+      url: https://api.github.com/repos/{{ org }}/{{ item.item }}/git/refs
+      body: '{ "ref": "refs/heads/sprint-{{ sprint }}.{{ release }}", "sha": "{{ item.json.object.sha }}"  }'
+      body_format: json
+      method: POST
+      headers:
+        Authorization: token {{ gh_token }}
+        Content-Type: application/json
+      status_code: 201
+    register:
+    with_items: "{{ konveyor_repo_info.results }}"
     loop_control:
       label: "repo: {{ item.item }}, sha: {{ item.json.object.sha }}, tag: sprint-{{ sprint }}.{{ release }}"
 
