@@ -66,11 +66,13 @@ docker push quay.io/$ORG/mig-operator-container:latest
 
 ## Pushing Operator Metadata
 
-The tooling and steps for pushing metadata depend on the OpenShift version that will consume metadata. 
+The tooling and steps for pushing metadata depend on the OpenShift version.
 |OpenShift Versions|Operator Metadata Tooling|
 |---|---|
-|4.1 - 4.5|[operator-courier](https://github.com/operator-framework/operator-courier)|
 |4.5+|[opm](https://github.com/operator-framework/operator-registry)|
+|4.1 - 4.5|[operator-courier](https://github.com/operator-framework/operator-courier)|
+|3.x| n/a |
+
 
 ---
 
@@ -178,6 +180,25 @@ The tooling and steps for pushing metadata depend on the OpenShift version that 
     # visit quay.io and make the app `$ORG/konveyor-operator` public before continuing
     ```
    
+3. Create a new _CatalogSource_ referencing the pushed metadata
+    ```
+    cat << EOF > mig-operator-source.yaml
+    apiVersion: operators.coreos.com/v1
+    kind: OperatorSource
+    metadata:
+      name: migration-operator
+      namespace: openshift-marketplace
+    spec:
+      type: appregistry
+      endpoint: https://quay.io/cnr
+      registryNamespace: $ORG
+      displayName: "Migration Operator"
+      publisher: "ocp-migrate-team@redhat.com"
+    EOF
+    
+    oc create -f mig-operator-source.yaml
+    ```
+
 ---
 
 # Installing mig-operator after pushing metadata
@@ -254,10 +275,10 @@ If you have made a change, deployed the operator, spotted an error and need to t
    1. Make changes to _operator metadata_
    1. Build and push updated _operator metadata_
    
-1. Clean up old mig-operator version
+1. Clean up 
    1. Delete the Operator Subscription `oc delete -f subscription.yml`
    1. Delete the OperatorSource `oc delete -f mig-operator-source.yaml`
    
-1. Deploy new mig-operator version
+1. Re-deploy
    1. Recreate the OperatorSource `oc create -f mig-operator-source.yaml`
    1. Recreate the Operator Subscription  `oc create -f subscription.yml`
