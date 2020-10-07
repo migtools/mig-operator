@@ -18,18 +18,19 @@
 docker pull quay.io/operator-framework/ansible-operator:latest
 ```
 
-2. Run the build from the root of the mig-operator repo:
+2. Set quay org and tag
 
 ```
 export ORG=your-quay-org
-
-docker build -f build/Dockerfile -t quay.io/$ORG/mig-operator-container:latest . 
-docker push quay.io/$ORG/mig-operator-container:latest
+export TAG=latest
 ```
 
-3. To test the pushed image:
- - On OpenShift 3, update manifests in `./deploy/non-olm` and apply them to your cluster
- - On OpenShift 4, follow instructions below to update the CSV and push it using the instructions below.
+2. Run the build from the root of the mig-operator repo:
+
+```
+docker build -f build/Dockerfile -t quay.io/$ORG/mig-operator-container:$TAG . 
+docker push quay.io/$ORG/mig-operator-container:$TAG
+```
 
 ### Using a new mig-operator container image
 
@@ -42,7 +43,7 @@ docker push quay.io/$ORG/mig-operator-container:latest
    [...]
       containers:
       - name: operator
-        image: quay.io/your-org-here/mig-operator-container:latest
+        image: quay.io/$ORG/mig-operator-container:$TAG
    ```
    
 2. Apply the updated manifest to your cluster
@@ -59,7 +60,7 @@ docker push quay.io/$ORG/mig-operator-container:latest
    [...]
       containers:
       - name: operator
-        image: quay.io/your-org-here/mig-operator-container:latest
+        image: quay.io/$ORG/mig-operator-container:$TAG
    ```
 
 2. Follow steps to [push operator metadata](#pushing-operator-metadata-openshift-4x)
