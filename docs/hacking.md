@@ -8,8 +8,7 @@
 |`./deploy/non-olm`| OpenShift 3 manifests | Apply updated manifests directly |
 |`./deploy/olm-catalog`| OpenShift 4 metadata | Build and push a new OperatorHub metadata, update OperatorSource|
 
-**Note:**  If you build a new mig-operator image, you must update `./deploy/non-olm` and `./deploy/olm-catalog` to reference it.
-
+**Note**: if you build new mig-operator image, you must reference it in `./deploy/non-olm` and `./deploy/olm-catalog`. For OpenShift 4, you also need to push new metadata.
 
 ## Building and pushing the mig-operator container image
 
