@@ -102,18 +102,16 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
    ```
    docker build -f build/Dockerfile.bundle -t quay.io/$ORG/mig-operator-bundle:$TAG .
    docker push quay.io/$ORG/mig-operator-bundle:$TAG
-
-   # visit quay.io and make `mig-operator-bundle` public before continuing
    ```
-   
+   *Note*: visit quay.io and make `mig-operator-bundle` public before continuing
+
 3. Build and push the _index image_
 
    ```   
    opm index add -p docker --bundles quay.io/$ORG/mig-operator-bundle:$TAG --tag quay.io/$ORG/mig-operator-index:$TAG
    podman push quay.io/$ORG/mig-operator-index:$TAG
-   
-   # visit quay.io and make `mig-operator-index` public before continuing
    ```
+   *Note*: visit quay.io and make `mig-operator-index` public before continuing
 
 4. Create a new _CatalogSource_ referencing the _index image_
    ```
@@ -146,8 +144,10 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
 
 #### Prerequisities
 
+ - Install `opm` from [operator-registry](https://github.com/operator-framework/operator-registry)
+ - Install `podman` from your package manager
  - Install `operator-courier`
- 
+
     ```
     dnf -y install python3-operator-courier
     ```
@@ -169,20 +169,30 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
 
 #### Pushing metadata and updating the CatalogSource
 
-1. Set quay org
+1. Set quay org and tag
 
    ```
    export ORG=your-quay-org
+   export TAG=latest
    ```
 
-2.  Use `operator-courier` to push updated metadata, making sure to increment the version
+2. Follow steps 1-3 from [build bundle and index images](#pushing-operator-metadata-with-opm-openshift-45) to build an index image.
+
+3. Use `opm` to export metadata from your index image in _appregistry format_
+
+   ```
+   opm index export -c podman -i quay.io/$ORG/mig-operator-index:$TAG -o mtc-operator
+   ```
+   *Note*: This will produce a directory called `downloaded` with _appregistry format_ metadata.
+
+4. Use `operator-courier` to push updated metadata, making sure to increment the version
 
     ```
-    operator-courier --verbose push deploy/olm-catalog/konveyor-operator/ $ORG konveyor-operator 2.0.0 "$QUAY_TOKEN"`
-    # visit quay.io and make the app `$ORG/konveyor-operator` public before continuing
+    operator-courier --verbose push downloaded $ORG mtc-operator 2.0.0 "$QUAY_TOKEN"`
     ```
-   
-3. Create a new _CatalogSource_ referencing the pushed metadata
+    *Note*: visit quay.io and make the app `$ORG/mtc-operator` public before continuing
+
+5. Create a new _CatalogSource_ referencing the pushed metadata
     ```
     cat << EOF > mig-operator-source.yaml
     apiVersion: operators.coreos.com/v1
@@ -197,7 +207,7 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
       displayName: "Migration Operator"
       publisher: "ocp-migrate-team@redhat.com"
     EOF
-    
+
     oc create -f mig-operator-source.yaml
     ```
 
@@ -276,11 +286,11 @@ If you have made a change, deployed the operator, spotted an error and need to t
    1. Build and push updated _mig-operator image_
    1. Make changes to _operator metadata_
    1. Build and push updated _operator metadata_
-   
+
 1. Clean up 
    1. Delete the Operator Subscription `oc delete -f subscription.yml`
    1. Delete the OperatorSource `oc delete -f mig-operator-source.yaml`
-   
+
 1. Re-deploy
    1. Recreate the OperatorSource `oc create -f mig-operator-source.yaml`
    1. Recreate the Operator Subscription  `oc create -f subscription.yml`
