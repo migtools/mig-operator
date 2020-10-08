@@ -17,14 +17,14 @@ See [hacking.md](./docs/hacking.md) for instructions on installing _unreleased_ 
 
 Konveyor Operator is installable on OpenShift 4 via OperatorHub.
 
-#### Installing mig-operator _stable_ 
+#### Installing _released versions_ 
 
 1. Visit the OpenShift Web Console.
 1. Navigate to _Operators => OperatorHub_.
 1. Search for _Konveyor Operator_.
 1. Install the desired _Konveyor Operator_ version.
 
-#### Installing mig-operator _latest_
+#### Installing _latest_
 
 See [hacking.md](./docs/hacking.md)
 
@@ -33,13 +33,13 @@ See [hacking.md](./docs/hacking.md)
 
 Konveyor Operator is installable on OpenShift 3 via OpenShift manifest.
 
-#### Installing mig-operator _stable_
+#### Installing _released versions_
 
 ```
 oc create -f deploy/non-olm/v1.3/operator.yml  
 ```
 
-#### Installing mig-operator _latest_
+#### Installing _latest_
 
 ```
 oc create -f deploy/non-olm/latest/operator.yml  
