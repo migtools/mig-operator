@@ -9,7 +9,7 @@ Konveyor Operator (mig-operator) installs a suite migration tools for moving wor
 
 
 ## Development
-See [hacking.md](./docs/hacking.md) for instructions on installing _unreleased_ versions of mig-operator (e.g. latest).
+See [hacking.md](./docs/hacking.md) for instructions on installing _unreleased_ versions of mig-operator.
 
 ## Konveyor Operator Installation
 
@@ -150,7 +150,7 @@ The default _rollback on failure_ setting is false.
 
 ## CORS (Cross-Origin Resource Sharing) Configuration
 
-You must follow the [CORs configuration steps]((./docs/cors.md)) _only if_:
+You must follow the [CORs configuration steps](./docs/cors.md) _only if_:
 
 - You are installing Konveyor Operator 1.1.1 or older
 - You are installing Migration Controller and Migration UI on OpenShift 3
