@@ -102,20 +102,20 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
    ```
    docker build -f build/Dockerfile.bundle -t quay.io/$ORG/mig-operator-bundle:$TAG .
    docker push quay.io/$ORG/mig-operator-bundle:$TAG
-
-   # visit quay.io and make `mig-operator-bundle` public before continuing
    ```
    
-3. Build and push the _index image_
+3. Visit quay.io and make `mig-operator-bundle` public
+
+4. Build and push the _index image_
 
    ```   
    opm index add -p docker --bundles quay.io/$ORG/mig-operator-bundle:$TAG --tag quay.io/$ORG/mig-operator-index:$TAG
    podman push quay.io/$ORG/mig-operator-index:$TAG
-   
-   # visit quay.io and make `mig-operator-index` public before continuing
    ```
+   
+5. Visit quay.io and make `mig-operator-index` public
 
-4. Create a new _CatalogSource_ referencing the _index image_
+6. Create a new _CatalogSource_ referencing the _index image_
    ```
    cat << EOF > catalogsource.yml
    apiVersion: operators.coreos.com/v1alpha1
@@ -175,22 +175,21 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
    export ORG=your-quay-org
    ```
 
-2. Use opm to export the data in appregistry format
+2. Use `opm` to export metadata in appregistry format
 
    ```
    opm index export -c podman -i quay.io/$ORG/mig-operator-index:latest -o mtc-operator
    ```
 
-   This will produce a directory called `downloaded` with appregistry format metadata if all went well.
+   This will produce a directory called `downloaded` with appregistry format metadata.
 
 3. Use `operator-courier` to push updated metadata, making sure to increment the version
 
     ```
     operator-courier --verbose push downloaded $ORG mtc-operator 2.0.0 "$QUAY_TOKEN"`
-    # visit quay.io and make the app `$ORG/mtc-operator` public before continuing
     ```
 
-4. # visit quay.io and make the `mtc-operator` application public before continuing
+4. Visit quay.io and make the app `$ORG/mtc-operator` public
 
 5. Create a new _CatalogSource_ referencing the pushed metadata
     ```
