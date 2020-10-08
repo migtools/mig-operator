@@ -167,19 +167,19 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
 
 #### Pushing metadata and updating the CatalogSource
 
-1. Set quay org
+1. Set quay org and tag
 
    ```
    export ORG=your-quay-org
+   export TAG=latest
    ```
 
 2. Use `opm` to export metadata in appregistry format
 
    ```
-   opm index export -c podman -i quay.io/$ORG/mig-operator-index:latest -o mtc-operator
+   opm index export -c podman -i quay.io/$ORG/mig-operator-index:$TAG -o mtc-operator
    ```
-
-   This will produce a directory called `downloaded` with appregistry format metadata.
+   *Note*: This will produce a directory called `downloaded` with appregistry format metadata.
 
 3. Use `operator-courier` to push updated metadata, making sure to increment the version
 
