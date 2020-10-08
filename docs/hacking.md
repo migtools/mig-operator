@@ -103,19 +103,17 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
    docker build -f build/Dockerfile.bundle -t quay.io/$ORG/mig-operator-bundle:$TAG .
    docker push quay.io/$ORG/mig-operator-bundle:$TAG
    ```
-   
-3. Visit quay.io and make `mig-operator-bundle` public
+   *Note*: visit quay.io and make `mig-operator-bundle` public before continuing
 
-4. Build and push the _index image_
+3. Build and push the _index image_
 
    ```   
    opm index add -p docker --bundles quay.io/$ORG/mig-operator-bundle:$TAG --tag quay.io/$ORG/mig-operator-index:$TAG
    podman push quay.io/$ORG/mig-operator-index:$TAG
    ```
-   
-5. Visit quay.io and make `mig-operator-index` public
+   *Note*: visit quay.io and make `mig-operator-index` public before continuing
 
-6. Create a new _CatalogSource_ referencing the _index image_
+4. Create a new _CatalogSource_ referencing the _index image_
    ```
    cat << EOF > catalogsource.yml
    apiVersion: operators.coreos.com/v1alpha1
@@ -188,10 +186,9 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
     ```
     operator-courier --verbose push downloaded $ORG mtc-operator 2.0.0 "$QUAY_TOKEN"`
     ```
+    *Note*: visit quay.io and make the app `$ORG/mtc-operator` public before continuing
 
-4. Visit quay.io and make the app `$ORG/mtc-operator` public
-
-5. Create a new _CatalogSource_ referencing the pushed metadata
+4. Create a new _CatalogSource_ referencing the pushed metadata
     ```
     cat << EOF > mig-operator-source.yaml
     apiVersion: operators.coreos.com/v1
