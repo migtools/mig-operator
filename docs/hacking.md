@@ -174,14 +174,14 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
    export TAG=latest
    ```
 
-2. Follow steps 1-3 from [build bundle and index images](#build-bundle-and-index-images)
+2. Follow steps 1-3 from [build bundle and index images](#build-bundle-and-index-images-update-catalogsource) to build an index image.
 
-3. Use `opm` to export metadata from your index image in appregistry format
+3. Use `opm` to export metadata from your index image in _appregistry format_
 
    ```
    opm index export -c podman -i quay.io/$ORG/mig-operator-index:$TAG -o mtc-operator
    ```
-   *Note*: This will produce a directory called `downloaded` with appregistry format metadata.
+   *Note*: This will produce a directory called `downloaded` with _appregistry format_ metadata.
 
 4. Use `operator-courier` to push updated metadata, making sure to increment the version
 
