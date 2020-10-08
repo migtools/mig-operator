@@ -174,21 +174,23 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
    export TAG=latest
    ```
 
-2. Use `opm` to export metadata in appregistry format
+2. Follow steps 1-3 from [build bundle and index images](#build-bundle-and-index-images)
+
+3. Use `opm` to export metadata from your index image in appregistry format
 
    ```
    opm index export -c podman -i quay.io/$ORG/mig-operator-index:$TAG -o mtc-operator
    ```
    *Note*: This will produce a directory called `downloaded` with appregistry format metadata.
 
-3. Use `operator-courier` to push updated metadata, making sure to increment the version
+4. Use `operator-courier` to push updated metadata, making sure to increment the version
 
     ```
     operator-courier --verbose push downloaded $ORG mtc-operator 2.0.0 "$QUAY_TOKEN"`
     ```
     *Note*: visit quay.io and make the app `$ORG/mtc-operator` public before continuing
 
-4. Create a new _CatalogSource_ referencing the pushed metadata
+5. Create a new _CatalogSource_ referencing the pushed metadata
     ```
     cat << EOF > mig-operator-source.yaml
     apiVersion: operators.coreos.com/v1
