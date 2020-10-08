@@ -175,14 +175,24 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
    export ORG=your-quay-org
    ```
 
-2.  Use `operator-courier` to push updated metadata, making sure to increment the version
+2. Use opm to export the data in appregistry format
+
+   ```
+   opm index export -c podman -i quay.io/$ORG/mig-operator-index:latest -o mtc-operator
+   ```
+
+   This will produce a directory called `downloaded` with appregistry format metadata if all went well.
+
+3. Use `operator-courier` to push updated metadata, making sure to increment the version
 
     ```
-    operator-courier --verbose push deploy/olm-catalog/konveyor-operator/ $ORG konveyor-operator 2.0.0 "$QUAY_TOKEN"`
-    # visit quay.io and make the app `$ORG/konveyor-operator` public before continuing
+    operator-courier --verbose push downloaded $ORG mtc-operator 2.0.0 "$QUAY_TOKEN"`
+    # visit quay.io and make the app `$ORG/mtc-operator` public before continuing
     ```
-   
-3. Create a new _CatalogSource_ referencing the pushed metadata
+
+4. # visit quay.io and make the `mtc-operator` application public before continuing
+
+5. Create a new _CatalogSource_ referencing the pushed metadata
     ```
     cat << EOF > mig-operator-source.yaml
     apiVersion: operators.coreos.com/v1
@@ -197,7 +207,7 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
       displayName: "Migration Operator"
       publisher: "ocp-migrate-team@redhat.com"
     EOF
-    
+
     oc create -f mig-operator-source.yaml
     ```
 
@@ -276,11 +286,11 @@ If you have made a change, deployed the operator, spotted an error and need to t
    1. Build and push updated _mig-operator image_
    1. Make changes to _operator metadata_
    1. Build and push updated _operator metadata_
-   
+
 1. Clean up 
    1. Delete the Operator Subscription `oc delete -f subscription.yml`
    1. Delete the OperatorSource `oc delete -f mig-operator-source.yaml`
-   
+
 1. Re-deploy
    1. Recreate the OperatorSource `oc create -f mig-operator-source.yaml`
    1. Recreate the Operator Subscription  `oc create -f subscription.yml`
