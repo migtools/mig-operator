@@ -64,9 +64,9 @@ You must install Konveyor Operator and components on all OpenShift clusters invo
 | Migrating from _OpenShift 3 => 3_ | Install _Velero_ on all clusters. Install the _Controller_ and _UI_ on the target cluster. |
 
 
-### Selecting Konveyor Components to Install
+### Customizing your Installation
 
-Component installation is handled with three parameters on the `MigrationController` CR.
+You can choose components to install by setting parameters `MigrationController` CR spec 
 
 | Parameter Name | Usage | Recommended Setting |
 |---|---|---|
