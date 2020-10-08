@@ -144,8 +144,10 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
 
 #### Prerequisities
 
+ - Install `opm` from [operator-registry](https://github.com/operator-framework/operator-registry)
+ - Install `podman` from your package manager
  - Install `operator-courier`
- 
+
     ```
     dnf -y install python3-operator-courier
     ```
@@ -174,7 +176,7 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
    export TAG=latest
    ```
 
-2. Follow steps 1-3 from [build bundle and index images](#build-bundle-and-index-images-update-catalogsource) to build an index image.
+2. Follow steps 1-3 from [build bundle and index images](#pushing-operator-metadata-with-opm-openshift-45) to build an index image.
 
 3. Use `opm` to export metadata from your index image in _appregistry format_
 
