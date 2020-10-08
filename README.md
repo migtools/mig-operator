@@ -1,5 +1,5 @@
 # Konveyor Operator
-Konveyor Operator (mig-operator) installs a suite migration tools for moving workloads from OpenShift 3 to OpenShift 4.
+Konveyor Operator (mig-operator) installs migration tools for moving workloads from OpenShift 3 to OpenShift 4.
 
 | Installable component | Repository |
 |---|---|
