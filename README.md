@@ -120,7 +120,7 @@ spec:
   mig_namespace_limit: '10'
 ```
 
-The default limits serve as a recommendation on Migration Plan size. It is recommended to break up large scale migrations into several smaller Migration Plans.
+Setting for the max allowable number of resources in a Migration Plan. The default limits serve as a recommendation to break up large scale migrations into several smaller Migration Plans.
 
 #### Rollback on Migration Failure
 
