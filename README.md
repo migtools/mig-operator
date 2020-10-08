@@ -56,7 +56,7 @@ Component installation and configuration is accomplished by creating or modifyin
 
 ### Installation Topology
 
-You must install Konveyor Operator and components on all OpenShift clusters involved in a migration. Follow the steps below to learn where to install components.
+You must install Konveyor Operator and components on all OpenShift clusters involved in a migration. 
 
 |Use Case|Recommended Topology|
 |---|---|
@@ -64,7 +64,7 @@ You must install Konveyor Operator and components on all OpenShift clusters invo
 | Migrating from _OpenShift 3 => 3_ | Install _Velero_ on all clusters. Install the _Controller_ and _UI_ components on the target cluster. |
 
 
-### Choosing Konveyor Components to Install
+### Selecting Konveyor Components to Install
 
 Component installation is handled with three parameters on the `MigrationController` CR.
 
@@ -85,18 +85,18 @@ Creating a `MigrationController` CR will tell Konveyor Operator to install Migra
 1. Click on _Konveyor Operator_.
 1. Find _MigrationController_ on the _Provided APIs_ page and click _Create Instance_.
 1. On OpenShift 4.5+, click the _Configure via: YAML view_ radio button.
-1. Customize settings (component selections, migration size limits) in the YAML editor, and click _Create_.
+1. Customize settings (_component selections_, _migration size limits_) in the YAML editor, and click _Create_.
 
 #### OpenShift 3
 
 1. Find the appropriately versioned controller-3.yml manifest in `deploy/nom-olm/<version>`.
-1. Adjust settings (component selections, migration size limits) if desired.
+1. Adjust settings (_component selections_, _migration size limits_) if desired.
 1. Set `mig_ui_cluster_api_endpoint` to point at the Controller cluster APIserver URL/Port.
 1. Run `oc create -f controller-3.yml`
 
 ### Additional Settings
 
-Configuration options can be applied by editing the `MigrationController` CR.
+Additional settings can be applied by editing the `MigrationController` CR.
 
 ```
 oc edit migrationcontroller -n openshift-migration
