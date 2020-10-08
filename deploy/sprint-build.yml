@@ -17,7 +17,7 @@
     - restic
     gh_token: "{{ lookup( 'env', 'GH_TOKEN') }}"
   vars_prompt:
-  - name: sprint 
+  - name: sprint
     prompt: "Sprint number"
     private: no
 
@@ -53,10 +53,14 @@
         Authorization: token {{ gh_token }}
         Content-Type: application/json
       status_code: 201
-    register: 
+    register:
     with_items: "{{ repo_info.results }}"
     loop_control:
       label: "repo: {{ item.item }}, sha: {{ item.json.object.sha }}, tag: sprint-{{ sprint }}.{{ release }}"
+
+  - name: Pause to split requests so we don't exceed Quay's maximum build rate and get 429's
+    pause:
+      minutes: 5
 
   - name: Create sprint branches from konveyor-dev
     uri:
@@ -107,6 +111,6 @@
 
   - name: Build sprint index image
     shell: opm index add -p docker --bundles quay.io/konveyor/mig-operator-bundle:sprint-{{ sprint }}.{{ release }} --tag quay.io/konveyor/mig-operator-index:sprint-{{ sprint }}.{{ release }}
- 
+
   - name: Push sprint index image
-    shell: podman push quay.io/konveyor/mig-operator-index:sprint-{{ sprint }}.{{ release }} 
+    shell: podman push quay.io/konveyor/mig-operator-index:sprint-{{ sprint }}.{{ release }}
