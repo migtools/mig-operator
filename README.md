@@ -52,19 +52,16 @@ See the [MTC Upgrade Documentation](./docs/usage/UpgradingCAM.md).
 
 ## Component Installation and Configuration
 
-Component installation and configuration is accomplished by creating or modifying a MigrationController CR.
+Component installation and configuration is accomplished by creating or modifying a `MigrationController` CR.
 
 ### Installation Topology
 
 You must install Konveyor Operator and components on all OpenShift clusters involved in a migration. Follow the steps below to learn where to install components.
 
-#### Topology: Migrating workloads from _OpenShift 3 => 4_
-
-We recommend installing the Controller and UI components on the OpenShift 4 cluster.
-
-#### Toplogy: Migrating workloads from _OpenShift 3 => 3_
-
-We recommend installing Controller and UI components on the target cluster. You must manually set the OpenShift API endpoint and [CORs configuration]((./docs/cors.md)).
+|Use Case|Recommended Topology|
+|---|---|
+| Migrating from _OpenShift 3 => 4_ | Install _Velero_ on all clusters. Install the _Controller_ and _UI_ on the OpenShift 4 cluster. |
+| Migrating from _OpenShift 3 => 3_ | Install _Velero_ on all clusters. Install the _Controller_ and _UI_ components on the target cluster. |
 
 
 ### Choosing Konveyor Components to Install
