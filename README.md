@@ -1,89 +1,135 @@
 # Konveyor Operator
-This operator will install velero with customized migration plugins, the migration controller, and migration UI used for migrating workloads from Openshift 3 to Openshift 4.
+Konveyor Operator (mig-operator) installs a system of migration components for moving workloads from OpenShift 3 to 4.
+
+| Installable Component | Repository |
+|---|---|
+| Velero + Custom Migration Plugins | [velero](https://github.com/konveyor/velero), [openshift-migration-plugin](https://github.com/konveyor/openshift-velero-plugin)|
+| Migration Controller | [mig-controller](https://github.com/konveyor/mig-controller) |
+| Migration UI | [mig-ui](https://github.com/konveyor/mig-ui) |
+
 
 ## Development
-See [hacking.md](./docs/hacking.md).
+See [hacking.md](./docs/hacking.md) for instructions on installing _unreleased_ versions of mig-operator.
 
-## Operator Installation on OpenShift 4 with OLM
-Konveyor Operator is available in Operator Hub. This is the recommended installation method for OpenShift 4.
-1. Browse or search for Konveyor Operator.
-1. Install the desired version.
-1. For pre-release versions see the development guide above.
+## Konveyor Operator Installation
 
-## Operator Installation on OpenShift 3 without OLM
-The same versions are available for use without OLM. Run the command corresponding to the version you wish to use:
+### OpenShift 4
 
-`oc create -f deploy/non-olm/latest/operator.yml`  
-`oc create -f deploy/non-olm/v1.2/operator.yml`  
-`oc create -f deploy/non-olm/v1.1/operator.yml`  
+Konveyor Operator is installable on OpenShift 4 via OperatorHub.
 
-## Operator Upgrade Procedure
-See the [CAM Upgrade Documentation](./docs/usage/UpgradingCAM.md).
+#### Installing _released versions_ 
+
+1. Visit the OpenShift Web Console.
+1. Navigate to _Operators => OperatorHub_.
+1. Search for _Konveyor Operator_.
+1. Install the desired _Konveyor Operator_ version.
+
+#### Installing _latest_
+
+See [hacking.md](./docs/hacking.md)
+
+
+### OpenShift 3
+
+Konveyor Operator is installable on OpenShift 3 via OpenShift manifest.
+
+#### Installing _released versions_
+
+```
+oc create -f deploy/non-olm/v1.3/operator.yml  
+```
+
+#### Installing _latest_
+
+```
+oc create -f deploy/non-olm/latest/operator.yml  
+```
+
+#### Konveyor Operator Upgrades
+
+See the [MTC Upgrade Documentation](./docs/usage/UpgradingCAM.md).
+
 
 ## Component Installation and Configuration
-Component installation and configuration is accomplished by creating or modifying a MigrationController CR.
 
-### Topology
-In a typical migration there will be at least one source cluster and one destination cluster. In the event that both OpenShift 3 and OpenShift 4 clusters are involved in migrations we recommend installing the Controller and UI components on the OpenShift 4 cluster. Installing the Controller on OpenShift 3 will require manually setting the api endpoint and CORS configuration.
+Component installation and configuration is accomplished by creating or modifying a `MigrationController` CR.
 
-### Component Installation Parameters
-Component installation is handled with three parameters
-- `migration_velero`: If set to true this will install velero and restic, which are required on all source and destination clusters.
-- `migration_controller`:  This will install the migration controller and is required on one cluster.
-- `migration_ui`: This will install the migration UI and should be installed on the same cluster as the controller if desired.
+### Installation Topology
 
-### MigrationController CR Creation
+You must install Konveyor Operator and components on all OpenShift clusters involved in a migration. 
+
+|Use Case|Recommended Topology|
+|---|---|
+| Migrating from _OpenShift 3 => 4_ | Install _Velero_ on all clusters. Install the _Controller_ and _UI_ on the OpenShift 4 cluster. |
+| Migrating from _OpenShift 3 => 3_ | Install _Velero_ on all clusters. Install the _Controller_ and _UI_ on the target cluster. |
+
+
+### Customizing your Installation
+
+You can choose components to install by setting parameters `MigrationController` CR spec 
+
+| Parameter Name | Usage | Recommended Setting |
+|---|---|---|
+| `migration_velero` | Set to `true` to install Velero and Restic. | Set to `true` on all clusters. |
+| `migration_controller` | Set to `true` to install the Migration Controller | Set to `true` only on one cluster, preferably OpenShift 4. |
+| `migration_ui` | Set to `true` to install the Migration UI | Set to `true` only where `migration_controller: true`. |
+
+
+### Installing Konveyor Components
+
+Creating a `MigrationController` CR will tell Konveyor Operator to install Migration Components.
+
 #### OpenShift 4
-1. In the OpenShift console navigate to Operators>Installed Operators.
-1. Click on Application Migration Operator.
-1. Scroll the top menu until you see MigrationController and click on it.
-1. Click Create MigrationController, adjust settings if desired, and click Creare.
+
+1. In the OpenShift console navigate to _Operators => Installed Operators_.
+1. Click on _Konveyor Operator_.
+1. Find _MigrationController_ on the _Provided APIs_ page and click _Create Instance_.
+1. On OpenShift 4.5+, click the _Configure via: YAML view_ radio button.
+1. Customize settings (_component selections_, _migration size limits_) in the YAML editor, and click _Create_.
 
 #### OpenShift 3
-1. Retrieve on of the example controller-3.yml files in the `deploy/nom-olm/latest`, `v1.2`, and `v1.1` directories.
-1. Adjust settings if desired.
-1. If installing the controller on OpenShift 3 set the `mig_ui_cluster_api_endpoint` to point at the clusters API URL/Port.
+
+1. Find the appropriately versioned controller-3.yml manifest in `deploy/nom-olm/<version>`.
+1. Adjust settings (_component selections_, _migration size limits_) if desired.
+1. Set `mig_ui_cluster_api_endpoint` to point at the Controller cluster APIserver URL/Port.
 1. Run `oc create -f controller-3.yml`
 
-### Additional Component Configuration
+### Additional Settings
+
+Additional settings can be applied by editing the `MigrationController` CR.
+
+```
+oc edit migrationcontroller -n openshift-migration
+```
 
 #### Restic Timeout
+
+```
+spec:
+  restic_timeout: 1h
+```
+
 The default `restic_timeout` is 1 hour, specified as `1h`. You can increase this if you anticipate doing large backups that will take longer than 1 hour so that your backups will succeed. The downside to increasing this value is that it may delay returning from unanticipated errors in some scenarios. Valid units are s, m, and h, which stand for second, minute, and hour.
 
-#### Adjusting Limits
-Several limits have been put in place on a per MigPlan basis to serve as guidance when begining to perform migrations at scale.  
-
-The default limits are:
-  - 10 namespaces per MigPlan
-  - 100 Pods per MigPlan
-  - 100 Persistent Volumes per MigPlan
-
-Resource limits can be adjusted by configuring the MigrationController resource responsible for deploying mig-controller.
+#### Migration Limits
 
 ```
-oc edit MigrationController -n openshift-migration
+spec:
+  mig_pv_limit: '100'
+  mig_pod_limit: '100'
+  mig_namespace_limit: '10'
 ```
 
-```
-  [...]
-  migration_controller: true
-  
-  # Resource limit configuration is loaded into mig-controller, and should be set on the
-  # cluster where `migration_controller: true`
-  mig_pv_limit: 100
-  mig_pod_limit: 100
-  mig_namespace_limit: 10
-  [...]
-```
+Setting for the max allowable number of resources in a Migration Plan. The default limits serve as a recommendation to break up large scale migrations into several smaller Migration Plans.
 
-#### Adjusting Rollback on Migration Failure
-If an unexpected error causes a migration to fail, you can control migration behavior according to your needs.
-
-Automatic rollback is disabled by default, but can be enabled by configuring the MigrationController resource responsible for deploying mig-controller.
+#### Rollback on Migration Failure
 
 ```
-oc edit MigrationController -n openshift-migration
+spec:
+  mig_failure_rollback: false
 ```
+
+The default _rollback on failure_ setting is false.
 
 ```
  [...]
@@ -103,87 +149,14 @@ oc edit MigrationController -n openshift-migration
 ```
 
 ## CORS (Cross-Origin Resource Sharing) Configuration
-These steps are only required if you are using a Konveyor version older than 1.1.1 OR are installing the controller/UI on OpenShift 3.
 
-### OpenShift 4
-If installing the controller/UI on a 4.x cluster using a version older than Konveyor 1.1.1 CORS will be configured on the cluster automatically. 
+You must follow the [CORs configuration steps](./docs/cors.md) _only if_:
 
-If you are installing a controller older than 1.1.1 on OpenShift 4.1 you will need to add this to the MigrationController CR spec section: `deprecated_cors_configuration: true`
-
-
-### Manual CORS Configuration
-
-#### Openshift 3
-OpenShift 3 CORS configuration needs to be done manually.
-
-In order to enable the UI to talk to an Openshift 3 cluster (whether local or remote) it is necessary to edit the master-config.yaml and restart the Openshift master nodes. 
-
-To determine the CORS URL that needs to be added retrieve the route URL after installing the controller, run the following command (NOTE: This must be run on the cluster that is serving your web UI):  
-`oc get -n openshift-migration route/migration -o go-template='(?i)//{{ .spec.host }}(:|\z){{ println }}' | sed 's,\.,\\.,g'`
-
-Output from this command will look something like this, but will be different for every cluster:  
-`(?i}//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)`
-
-Add the output to /etc/origin/master/master-config.yaml under corsAllowedOrigins, for instance:
-```
-corsAllowedOrigins:
-- (?i}//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)
-```
-
-After making these changes on 3.x you'll need to restart OpenShift components to pick up the changed config values. The process for restarting 3.x control plane components [differs based on the OpenShift version](https://docs.openshift.com/container-platform/3.10/architecture/infrastructure_components/kubernetes_infrastructure.html#control-plane-static-pods).
-
-```
-# In OpenShift 3.7-3.9, the control plane runs within systemd services
-$ systemctl restart atomic-openshift-master-api
-$ systemctl restart atomic-openshift-master-controllers
+- You are installing Konveyor Operator 1.1.1 or older
+- You are installing Migration Controller and Migration UI on OpenShift 3
 
 
-# In OpenShift 3.10-3.11, the control plane runs in 'Static Pods'
-$ /usr/local/bin/master-restart api
-$ /usr/local/bin/master-restart controllers
-```
-
-#### Openshift 4.3+
-On Openshift 4 cluster resources are modified by the operator if the controller is installed there and you can skip these steps. If you chose not to install the controller on your Openshift 4 cluster you will need to perform these steps manually.
-
-If you haven't already, determine the CORS URL that needs to be added retrieve the route URL:  
-`oc get -n openshift-migration route/migration -o go-template='(?i)//{{ .spec.host }}(:|\z){{ println }}' | sed 's,\.,\\.,g'`
-
-Output from this command will look something like this, but will be different for every cluster:  
-`(?i)//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)`
-
-#### Openshift 4.2
-On Openshift 4 cluster resources are modified by the operator if the controller is installed there and you can skip these steps. If you chose not to install the controller on your Openshift 4 cluster you will need to perform these steps manually.
-
-`oc edit apiserver cluster` and ensure the following exist:
-```
-spec:
-  additionalCORSAllowedOrigins:
-  - (?i)//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)
-```
-
-#### OpenShift 4.1
-On Openshift 4 cluster resources are modified by the operator if the controller is installed there and you can skip these steps. If you chose not to install the controller on your Openshift 4 cluster you will need to perform these steps manually.
-
-`oc edit authentication.operator cluster` and ensure the following exist:
-```
-spec:
-  unsupportedConfigOverrides:
-    corsAllowedOrigins:
-    - //localhost(:|$)
-    - //127.0.0.1(:|$)
-    - (?i)//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)
-```
-
-`oc edit kubeapiserver.operator cluster` and ensure the following exist:
-```
-spec:
-  unsupportedConfigOverrides:
-    corsAllowedOrigins:
-    - (?i)//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)
-```
-
-## Cleanup
+## Removing Konveyor Operator 
 To clean up all the resources created by the operator you can do the following:
 ```
 oc delete namespace openshift-migration
