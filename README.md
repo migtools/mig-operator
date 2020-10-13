@@ -7,6 +7,25 @@ Konveyor Operator (mig-operator) installs a system of migration components for m
 | Migration Controller | [mig-controller](https://github.com/konveyor/mig-controller) |
 | Migration UI | [mig-ui](https://github.com/konveyor/mig-ui) |
 
+---
+
+## Contents
+
+* [Development](#development)
+* [Konveyor Operator Installation](#konveyor-operator-installation)
+	* [Konveyor Operator Upgrades](#konveyor-operator-upgrades)
+* [Component Installation and Configuration](#component-installation-and-configuration)
+	* [Installation Topology](#installation-topology)
+	* [Customizing your Installation](#customizing-your-installation)
+	* [Installing Konveyor Components](#installing-konveyor-components)
+	* [Additional Settings](#additional-settings)
+		* [Restic Timeout](#restic-timeout)
+		* [Migration Limits](#migration-limits)
+		* [Rollback on Migration Failure](#rollback-on-migration-failure)
+* [CORS (Cross-Origin Resource Sharing) Configuration](#cors-cross-origin-resource-sharing-configuration)
+* [Removing Konveyor Operator](#removing-konveyor-operator)
+
+---
 
 ## Development
 See [hacking.md](./docs/hacking.md) for instructions on installing _unreleased_ versions of mig-operator.
