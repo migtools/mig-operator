@@ -23,11 +23,14 @@
   1. `podman push quay.io/konveyor/mig-operator-index:latest`
 
 # Sprint
+1. Export GH_TOKEN with your Github Token, as an example `export GH_TOKEN=1234567890abcdef1234567890abcdef01234567`.
+1. Ensure you can log in to quay, build, and push containers with podman.
 1. Determine the sprint you'd like to release for and what attempt this is. The easiest way to do this is look at one of the quay repos for `sprint-xxx.y` [tags](https://quay.io/repository/konveyor/mig-operator-container?tab=tags)
 1. You can only run a sprint/attempt combination once. Attempting to recreate branches will fail.
 1. Run `ansible-playbook deploy/sprint-build.yml`
 1. When prompted enter the sprint number
 1. When prompted enter the release attempt number.
+1. Note that there is a 5 minute pause built into the branch creation process. This is because quay will ignore build triggers if too many are sent at once.
 
 Once the playbook finishes you will have a sprint index image ready for testing. To test create a catalog source definition using the example below and replacing xxx.y with the values corresponding to the release you wish to use.
 ```
@@ -39,5 +42,4 @@ metadata:
 spec:
   sourceType: grpc
   image: quay.io/konveyor/mig-operator-index:sprint-xxx.y
-
 ```
