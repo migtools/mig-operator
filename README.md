@@ -11,19 +11,19 @@ Konveyor Operator (mig-operator) installs a system of migration components for m
 
 ## Contents
 
-* [Development](#Development)
-* [Konveyor Operator Installation](#KonveyorOperatorInstallation)
-	* [Konveyor Operator Upgrades](#KonveyorOperatorUpgrades)
-* [Component Installation and Configuration](#ComponentInstallationandConfiguration)
-	* [Installation Topology](#InstallationTopology)
-	* [Customizing your Installation](#CustomizingyourInstallation)
-	* [Installing Konveyor Components](#InstallingKonveyorComponents)
-	* [Additional Settings](#AdditionalSettings)
-		* [Restic Timeout](#ResticTimeout)
-		* [Migration Limits](#MigrationLimits)
-		* [Rollback on Migration Failure](#RollbackonMigrationFailure)
-* [CORS (Cross-Origin Resource Sharing) Configuration](#CORSCross-OriginResourceSharingConfiguration)
-* [Removing Konveyor Operator](#RemovingKonveyorOperator)
+* [Development](#development)
+* [Konveyor Operator Installation](#konveyor-operator-installation)
+	* [Konveyor Operator Upgrades](#konveyor-operator-upgrades)
+* [Component Installation and Configuration](#component-installation-and-configuration)
+	* [Installation Topology](#installation-topology)
+	* [Customizing your Installation](#customizing-your-installation)
+	* [Installing Konveyor Components](#installing-konveyor-components)
+	* [Additional Settings](#additional-settings)
+		* [Restic Timeout](#restic-timeout)
+		* [Migration Limits](#migration-limits)
+		* [Rollback on Migration Failure](#rollback-on-migration-failure)
+* [CORS (Cross-Origin Resource Sharing) Configuration](#cors-cross-origin-resource-sharing-configuration)
+* [Removing Konveyor Operator](#removing-konveyor-operator)
 
 ---
 
