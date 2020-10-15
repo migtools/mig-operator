@@ -16,6 +16,9 @@ spec:
   - JSONPath: .spec.stage
     name: Stage
     type: string
+  - JSONPath: .spec.rollback
+    name: Rollback
+    type: string
   - JSONPath: .status.itinerary
     name: Itinerary
     type: string
@@ -54,6 +57,8 @@ spec:
             migPlanRef:
               type: object
             quiescePods:
+              type: boolean
+            rollback:
               type: boolean
             stage:
               type: boolean
