@@ -141,32 +141,6 @@ spec:
 
 Setting for the max allowable number of resources in a Migration Plan. The default limits serve as a recommendation to break up large scale migrations into several smaller Migration Plans.
 
-#### Rollback on Migration Failure
-
-```
-spec:
-  mig_failure_rollback: false
-```
-
-The default _rollback on failure_ setting is false.
-
-```
- [...]
- 
- # Rollback configuration is loaded into mig-controller, and should be set on the
- # cluster where `migration_controller: true`
- migration_controller: true
-
- # [Default] Setting 'mig_failure_rollback: false' leaves the partially migrated workloads 
- # in place on the target cluster.
- mig_failure_rollback: false
-
- # Setting 'mig_failure_rollback: true' removes the partially migrated workloads from the
- # target cluster and scales them back up on the source cluster.
- mig_failure_rollback: true
- [...]
-```
-
 ## CORS (Cross-Origin Resource Sharing) Configuration
 
 You must follow the [CORs configuration steps](./docs/cors.md) _only if_:
