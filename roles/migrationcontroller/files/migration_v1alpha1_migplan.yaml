@@ -133,6 +133,21 @@ spec:
           type: object
         status:
           properties:
+            destStorageClasses:
+              items:
+                properties:
+                  accessModes:
+                    items:
+                      type: string
+                    type: array
+                  default:
+                    type: boolean
+                  name:
+                    type: string
+                  provisioner:
+                    type: string
+                type: object
+              type: array
             excludedResources:
               items:
                 type: string
@@ -164,6 +179,21 @@ spec:
               type: array
             observedDigest:
               type: string
+            srcStorageClasses:
+              items:
+                properties:
+                  accessModes:
+                    items:
+                      type: string
+                    type: array
+                  default:
+                    type: boolean
+                  name:
+                    type: string
+                  provisioner:
+                    type: string
+                type: object
+              type: array
           type: object
   version: v1alpha1
 status:
