@@ -75,6 +75,8 @@ spec:
               type: object
             backupStorageProvider:
               type: string
+            refresh:
+              type: boolean
             volumeSnapshotConfig:
               properties:
                 awsRegion:

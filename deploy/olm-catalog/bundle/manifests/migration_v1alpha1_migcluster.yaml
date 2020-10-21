@@ -50,25 +50,12 @@ spec:
               type: boolean
             isHostCluster:
               type: boolean
+            refresh:
+              type: boolean
             restartRestic:
               type: boolean
             serviceAccountSecretRef:
               type: object
-            storageClasses:
-              items:
-                properties:
-                  accessModes:
-                    items:
-                      type: string
-                    type: array
-                  default:
-                    type: boolean
-                  name:
-                    type: string
-                  provisioner:
-                    type: string
-                type: object
-              type: array
             url:
               type: string
           required:
