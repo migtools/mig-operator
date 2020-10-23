@@ -8,6 +8,9 @@ Konveyor Operator (mig-operator) installs a system of migration components for m
 | Migration UI | [mig-ui](https://github.com/konveyor/mig-ui) |
 
 ---
+## Demos
+* [MTC Getting Started 1: Installation and Configuration](https://www.youtube.com/watch?v=uQ7VhpYEU5U&list=PL4aUFFbk56EN8bEPbpTVC3RAoUY--_MVf&index=1)
+* [MTC Getting Started 2: Migrating an Example Workload](https://www.youtube.com/watch?v=p8V4YxBdA4s&list=PL4aUFFbk56EN8bEPbpTVC3RAoUY--_MVf&index=2)
 
 ## Contents
 
