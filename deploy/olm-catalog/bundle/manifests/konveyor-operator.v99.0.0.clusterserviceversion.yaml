@@ -600,6 +600,7 @@ spec:
           - delete
         - apiGroups:
           - apps.openshift.io
+          - route.openshift.io
           resources:
           - '*'
           verbs:
