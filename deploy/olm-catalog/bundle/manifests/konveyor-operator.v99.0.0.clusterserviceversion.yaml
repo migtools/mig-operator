@@ -135,6 +135,24 @@ metadata:
         },
         {
             "apiVersion": "migration.openshift.io/v1alpha1",
+            "kind": "DirectImageMigration",
+            "metadata": {
+              "name": "directimagemigration",
+              "namespace": "openshift-migration"
+            },
+            "spec": {}
+        },
+        {
+            "apiVersion": "migration.openshift.io/v1alpha1",
+            "kind": "DirectImageStreamMigration",
+            "metadata": {
+              "name": "directimagestreammigration",
+              "namespace": "openshift-migration"
+            },
+            "spec": {}
+        },
+        {
+            "apiVersion": "migration.openshift.io/v1alpha1",
             "kind": "MigAnalytic",
             "metadata": {
               "name": "host",
@@ -823,6 +841,16 @@ spec:
       kind: DownloadRequest
       displayName: DownloadRequest
       description: A download request for velero
+    - name: directimagemigrations.migration.openshift.io
+      version: v1alpha1
+      kind: DirectImageMigration
+      displayName: DirectImageMigration
+      description: a request to migrate local images from a set of namespaces directly to a target
+    - name: directimagestreammigrations.migration.openshift.io
+      version: v1alpha1
+      kind: DirectImageStreamMigration
+      displayName: DirectImageStreamMigration
+      description: a request to migrate local images from a single imagestream directly to a target
     - name: miganalytics.migration.openshift.io
       version: v1alpha1
       kind: MigAnalytic
