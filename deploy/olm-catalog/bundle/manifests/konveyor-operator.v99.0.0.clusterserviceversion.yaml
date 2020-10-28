@@ -161,6 +161,15 @@ metadata:
         },
         {
             "apiVersion": "migration.openshift.io/v1alpha1",
+            "kind": "DirectVolumeMigration",
+            "metadata": {
+              "name": "direct",
+              "namespace": "openshift-migration"
+            },
+            "spec": {}
+        },
+        {
+            "apiVersion": "migration.openshift.io/v1alpha1",
             "kind": "MigPlan",
             "metadata": {
               "name": "migplan",
@@ -842,6 +851,11 @@ spec:
       kind: MigCluster
       displayName: MigCluster
       description: A cluster defined for migration
+    - name: directvolumemigrations.migration.openshift.ioa
+      version: v1alpha1
+      kind: DirectVolumeMigration
+      displayName: DirectVolumeMigration
+      description: A request to migrate a set of PVCs directly to a target
     - name: migmigrations.migration.openshift.io
       version: v1alpha1
       kind: MigMigration
