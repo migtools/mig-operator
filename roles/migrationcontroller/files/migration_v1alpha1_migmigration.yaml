@@ -69,6 +69,29 @@ spec:
           type: object
         status:
           properties:
+            pipeline:
+              type: array
+              items:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  name:
+                    type: string
+                  phase:
+                    type: string
+                  completed:
+                    type: string
+                    format: date-time
+                  started:
+                    type: string
+                    format: date-time
+                  failed:
+                    type: boolean
+                  progress:
+                    type: array
+                    items:
+                      type: string
             errors:
               items:
                 type: string
