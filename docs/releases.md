@@ -9,18 +9,19 @@
   1. `podman push quay.io/konveyor/mig-operator-index:latest`
 
 # Stable
-1. Create a release branch, for example `release-1.3.1)
-1. Update the skips list in the master branch CSV [example](https://github.com/konveyor/mig-operator/pull/460)
-1. Create a PR for the new release branch [example](https://github.com/konveyor/mig-operator/pull/461)
-  1. Update the CSV with the correct version and new image labels
-  1. Copy the latest non-olm files and update the image labels with the operator.yml
-  1. Update the stable link to point to the new version
-  1. Update channel information in annotations.yml [example](https://github.com/konveyor/mig-operator/pull/463)
+1. Create a PR for the master branch.
+   1. Update the skips list in the master branch CSV [example](https://github.com/konveyor/mig-operator/pull/460)
+   1. Copy the latest non-olm files and update the image labels with the operator.yml
+   1. Update the stable link to point to the new version
+1. Create the new release branch, for example `release-1.3.1`
+1. Create a PR for the new release branch
+   1. Update channel information in annotations.yml and Dockerfile.bundle [example](https://github.com/konveyor/mig-operator/pull/463) / [example](https://github.com/konveyor/mig-operator/pull/461)
+   1. Update the CSV with the correct version and new image labels [example](https://github.com/konveyor/mig-operator/pull/461)
 1. Once the release is ready add it to the index image
-  1. `opm index add -p docker -f quay.io/konveyor/mig-operator-index:1.3.0 --bundles quay.io/konveyor/mig-operator-bundle:release-1.3.0 --tag quay.io/konveyor/mig-operator-index:1.3.1`
-  1. `podman push quay.io/konveyor/mig-operator-index:1.3.1`
-  1. `opm index add -p docker -f quay.io/konveyor/mig-operator-index:1.3.1 --bundles quay.io/konveyor/mig-operator-bundle:latest --tag quay.io/konveyor/mig-operator-index:latest`
-  1. `podman push quay.io/konveyor/mig-operator-index:latest`
+   1. `opm index add -p docker -f quay.io/konveyor/mig-operator-index:1.3.0 --bundles quay.io/konveyor/mig-operator-bundle:release-1.3.0 --tag quay.io/konveyor/mig-operator-index:1.3.1`
+   1. `podman push quay.io/konveyor/mig-operator-index:1.3.1`
+   1. `opm index add -p docker -f quay.io/konveyor/mig-operator-index:1.3.1 --bundles quay.io/konveyor/mig-operator-bundle:latest --tag quay.io/konveyor/mig-operator-index:latest`
+   1. `podman push quay.io/konveyor/mig-operator-index:latest`
 
 # Sprint
 1. Export GH_TOKEN with your Github Token, as an example `export GH_TOKEN=1234567890abcdef1234567890abcdef01234567`.

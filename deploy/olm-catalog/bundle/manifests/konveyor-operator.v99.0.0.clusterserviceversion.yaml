@@ -192,6 +192,7 @@ metadata:
     operatorframework.io/suggested-namespace: openshift-migration
 spec:
   skips:
+  - konveyor-operator.v1.3.2
   - konveyor-operator.v1.3.1
   - konveyor-operator.v1.3.0
   - konveyor-operator.v1.2.5
