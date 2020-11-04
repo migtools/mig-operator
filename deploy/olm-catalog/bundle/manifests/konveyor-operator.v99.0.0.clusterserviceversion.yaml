@@ -851,7 +851,7 @@ spec:
       kind: MigCluster
       displayName: MigCluster
       description: A cluster defined for migration
-    - name: directvolumemigrations.migration.openshift.ioa
+    - name: directvolumemigrations.migration.openshift.io
       version: v1alpha1
       kind: DirectVolumeMigration
       displayName: DirectVolumeMigration
