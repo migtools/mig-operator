@@ -119,7 +119,7 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
    apiVersion: operators.coreos.com/v1alpha1
    kind: CatalogSource
    metadata:
-     name: konveyor-for-containers-bundle
+     name: migration-operator
      namespace: openshift-marketplace
    spec:
      sourceType: grpc
@@ -192,7 +192,7 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
     ```
     *Note*: visit quay.io and make the app `$ORG/mtc-operator` public before continuing
 
-5. Create a new _CatalogSource_ referencing the pushed metadata
+5. Create a new _OperatorSource_ referencing the pushed metadata
     ```
     cat << EOF > mig-operator-source.yaml
     apiVersion: operators.coreos.com/v1
@@ -243,7 +243,7 @@ spec:
   - openshift-migration
 EOF
 
-oc apply -f operatorgroup.yml
+oc create -f operatorgroup.yml
 ```
 
 ### Creating the Operator Subscription
