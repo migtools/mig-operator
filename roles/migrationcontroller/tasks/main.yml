@@ -463,6 +463,11 @@
     - set_fact:
         discovery_api_url: "https://{{discovery_route.resources[0].spec.host}}"
 
+    - when: discovery_api_url_override
+      name: Set override discovery_api_url for local mig-controller
+      set_fact:
+        discovery_api_url: "{{ discovery_api_url_override }}"
+
     - name: Check if migration ui configmap exists already so we don't update it
       k8s_facts:
         api_version: v1
