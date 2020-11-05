@@ -46,6 +46,8 @@ spec:
             caBundle:
               format: byte
               type: string
+            exposedRegistryPath:
+              type: string
             insecure:
               type: boolean
             isHostCluster:

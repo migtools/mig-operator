@@ -4,25 +4,14 @@ metadata:
   creationTimestamp: null
   labels:
     controller-tools.k8s.io: "1.0"
-  name: migclusters.migration.openshift.io
+  name: directimagestreammigrations.migration.openshift.io
 spec:
-  additionalPrinterColumns:
-  - JSONPath: .status.conditions[?(@.type=='Ready')].status
-    name: Ready
-    type: string
-  - JSONPath: .spec.url
-    name: URL
-    type: string
-  - JSONPath: .spec.isHostCluster
-    name: Host
-    type: boolean
-  - JSONPath: .metadata.creationTimestamp
-    name: Age
-    type: date
   group: migration.openshift.io
   names:
-    kind: MigCluster
-    plural: migclusters
+    kind: DirectImageStreamMigration
+    plural: directimagestreammigrations
+    shortNames:
+    - dism
   scope: Namespaced
   validation:
     openAPIV3Schema:
@@ -41,31 +30,29 @@ spec:
           type: object
         spec:
           properties:
-            azureResourceGroup:
-              type: string
-            caBundle:
-              format: byte
-              type: string
-            exposedRegistryPath:
-              type: string
-            insecure:
-              type: boolean
-            isHostCluster:
-              type: boolean
-            refresh:
-              type: boolean
-            restartRestic:
-              type: boolean
-            serviceAccountSecretRef:
+            destMigClusterRef:
               type: object
-            url:
+            destNamespace:
               type: string
-          required:
-          - isHostCluster
+            imageStreamRef:
+              type: object
+            srcMigClusterRef:
+              type: object
           type: object
         status:
           properties:
+            errors:
+              items:
+                type: string
+              type: array
+            itinerary:
+              type: string
             observedDigest:
+              type: string
+            phase:
+              type: string
+            startTimestamp:
+              format: date-time
               type: string
           type: object
   version: v1alpha1

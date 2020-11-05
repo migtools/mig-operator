@@ -200,6 +200,8 @@
       state: "present"
       src: "{{ role_path }}/files/{{ item }}"
     with_items:
+    - "migration_v1alpha1_directimagemigration.yaml"
+    - "migration_v1alpha1_directimagestreammigration.yaml"
     - "migration_v1alpha1_migcluster.yaml"
     - "migration_v1alpha1_migmigration.yaml"
     - "migration_v1alpha1_migplan.yaml"
