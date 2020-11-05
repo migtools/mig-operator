@@ -170,6 +170,15 @@ metadata:
         },
         {
             "apiVersion": "migration.openshift.io/v1alpha1",
+                "kind": "DirectVolumeMigrationProgress",
+                "metadata": {
+                  "name": "direct-progress",
+                  "namespace": "openshift-migration"
+                },
+                "spec": {}
+        },
+        {
+            "apiVersion": "migration.openshift.io/v1alpha1",
             "kind": "MigPlan",
             "metadata": {
               "name": "migplan",

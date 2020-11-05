@@ -78,6 +78,7 @@
       - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration_v1alpha1_miganalytic.yaml"
       - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration_v1alpha1_migcluster.yaml"
       - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration_v1alpha1_directvolumemigration.yaml"
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration_v1alpha1_directvolumemigrationprogress.yaml"
       - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration_v1alpha1_mighook.yaml"
       - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration_v1alpha1_migmigration.yaml"
       - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration_v1alpha1_migplan.yaml"
