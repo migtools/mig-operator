@@ -211,6 +211,7 @@ rules:
   - migration.openshift.io
   - velero.io
   - packages.operators.coreos.com
+  - route.openshift.io
   resources:
   - '*'
   verbs:
