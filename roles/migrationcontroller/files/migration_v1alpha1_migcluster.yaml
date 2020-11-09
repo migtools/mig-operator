@@ -67,6 +67,8 @@ spec:
           properties:
             observedDigest:
               type: string
+            registryPath:
+              type: string
           type: object
   version: v1alpha1
 status:
