@@ -209,6 +209,7 @@
     - "migration_v1alpha1_migstorage.yaml"
     - "migration_v1alpha1_miganalytic.yaml"
     - "migration_v1alpha1_directvolumemigration.yaml"
+    - "migration_v1alpha1_directvolumemigrationprogress.yaml"
     when: not olm_managed
 
   - name: "Set up mig controller RBAC"
