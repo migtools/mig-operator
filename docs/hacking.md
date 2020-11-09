@@ -179,14 +179,14 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
 3. Use `opm` to export metadata from your index image in _appregistry format_
 
    ```
-   opm index export --container-tool docker -i quay.io/$ORG/mig-operator-index:$TAG -o mtc-operator
+   opm index export --container-tool docker -i quay.io/$ORG/mig-operator-index:$TAG mtc-operator
    ```
    *Note*: This will produce a directory called `downloaded` with _appregistry format_ metadata.
 
 4. Use `operator-courier` to push updated metadata, making sure to increment the version
 
     ```
-    operator-courier --verbose push downloaded $ORG mtc-operator 2.0.0 "$QUAY_TOKEN"`
+    operator-courier --verbose push downloaded/mtc-operator $ORG mtc-operator 2.0.0 "$QUAY_TOKEN"
     ```
     *Note*: visit quay.io and make the app `$ORG/mtc-operator` public before continuing
 
