@@ -85,7 +85,6 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
 #### Prerequisities
 
 - Install `opm` from [operator-registry](https://github.com/operator-framework/operator-registry)
-- Install `podman` from your package manager
 
 #### Build bundle and index images, update CatalogSource 
 
@@ -108,8 +107,8 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
 3. Build and push the _index image_
 
    ```   
-   opm index add -p docker --bundles quay.io/$ORG/mig-operator-bundle:$TAG --tag quay.io/$ORG/mig-operator-index:$TAG
-   podman push quay.io/$ORG/mig-operator-index:$TAG
+   opm index add --container-tool docker --bundles quay.io/$ORG/mig-operator-bundle:$TAG --tag quay.io/$ORG/mig-operator-index:$TAG
+   docker push quay.io/$ORG/mig-operator-index:$TAG
    ```
    *Note*: visit quay.io and make `mig-operator-index` public before continuing
 
@@ -145,7 +144,6 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
 #### Prerequisities
 
  - Install `opm` from [operator-registry](https://github.com/operator-framework/operator-registry)
- - Install `podman` from your package manager
  - Install `operator-courier`
 
     ```
@@ -181,7 +179,7 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
 3. Use `opm` to export metadata from your index image in _appregistry format_
 
    ```
-   opm index export -c podman -i quay.io/$ORG/mig-operator-index:$TAG -o mtc-operator
+   opm index export --container-tool docker -i quay.io/$ORG/mig-operator-index:$TAG -o mtc-operator
    ```
    *Note*: This will produce a directory called `downloaded` with _appregistry format_ metadata.
 
