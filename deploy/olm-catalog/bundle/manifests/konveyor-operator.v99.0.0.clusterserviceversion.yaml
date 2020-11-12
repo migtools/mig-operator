@@ -502,6 +502,7 @@ spec:
           resources:
           - serviceaccounts
           - configmaps
+          - events
           verbs:
           - get
           - list
