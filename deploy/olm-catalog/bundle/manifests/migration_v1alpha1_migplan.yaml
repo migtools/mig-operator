@@ -66,6 +66,10 @@ spec:
                 - serviceAccount
                 type: object
               type: array
+            indirectImageMigration:
+              type: boolean
+            indirectVolumeMigration:
+              type: boolean
             migStorageRef:
               type: object
             namespaces:

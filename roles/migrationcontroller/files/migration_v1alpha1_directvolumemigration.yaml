@@ -32,15 +32,25 @@ spec:
           properties:
             createDestinationNamespaces:
               type: boolean
+            deleteProgressReportingCRs:
+              type: boolean
             destMigClusterRef:
               type: object
             persistentVolumeClaims:
               items:
+                properties:
+                  targetAccessModes:
+                    items:
+                      type: string
+                    type: array
+                  targetStorageClass:
+                    type: string
+                required:
+                - targetStorageClass
+                - targetAccessModes
                 type: object
               type: array
             srcMigClusterRef:
-              type: object
-            storageClassMapping:
               type: object
           type: object
         status:
@@ -49,15 +59,32 @@ spec:
               items:
                 type: string
               type: array
+            failedPods:
+              items:
+                type: object
+              type: array
             itinerary:
               type: string
             observedDigest:
               type: string
             phase:
               type: string
+            runningPods:
+              items:
+                properties:
+                  lastObservedProgressPercent:
+                    type: string
+                  lastObservedTransferRate:
+                    type: string
+                type: object
+              type: array
             startTimestamp:
               format: date-time
               type: string
+            successfulPods:
+              items:
+                type: object
+              type: array
           required:
           - observedDigest
           type: object
