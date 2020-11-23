@@ -316,6 +316,8 @@ spec:
           value: mig-controller
         - name: MIG_UI_REPO
           value: mig-ui
+        - name: MIG_LOG_READER_REPO
+        value: mig-log-reader
         - name: MIGRATION_REGISTRY_REPO
           value: registry
         - name: MIGRATION_REGISTRY_TAG
@@ -347,6 +349,8 @@ spec:
         - name: MIG_UI_TAG
           value: latest
         - name: MIG_CONTROLLER_TAG
+          value: latest
+        - name: MIG_LOG_READER_TAG
           value: latest
       volumes:
         - name: runner
