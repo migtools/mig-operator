@@ -6,7 +6,8 @@ apiVersion: apps/v1
 {% endif %}
 kind: Deployment
 metadata:
-  name: log-reader
+  name: migration-log-reader
+  namespace: {{ mig_namespace }}
   labels:
     app: migration
 spec:
