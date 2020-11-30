@@ -9,6 +9,7 @@ spec:
   migration_velero: true
   migration_controller: true
   migration_ui: true
+  migration_log_reader: true
   restic_timeout: 1h
 
   mig_pv_limit: 100

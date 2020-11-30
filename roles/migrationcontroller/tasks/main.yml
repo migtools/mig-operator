@@ -37,6 +37,9 @@
   - set_fact: velero_state="present"
     when: migration_velero
 
+  - set_fact: log_reader_state="present"
+    when: migration_log_reader
+
   - set_fact:
       all_excluded_resources: "{{ excluded_resources }}"
 
@@ -449,6 +452,11 @@
       k8s:
         state: "{{ controller_state }}"
         definition: "{{ lookup('template', 'controller.yml.j2') }}"
+
+  - name: "Set up mig log reader"
+    k8s:
+      state: "{{ log_reader_state }}"
+      definition: "{{ lookup('template', 'log_reader.yml.j2') }}"
 
   - name: Check if discovery route exists
     k8s_facts:

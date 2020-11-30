@@ -27,6 +27,7 @@ metadata:
               "migration_velero": true,
               "migration_controller": true,
               "migration_ui": true,
+              "migration_log_reader": true,
               "olm_managed": true,
               "restic_timeout": "1h",
               "mig_pv_limit": "100",
@@ -258,6 +259,8 @@ spec:
     image: quay.io/konveyor/registry:latest
   - name: hook_runner
     image: quay.io/konveyor/hook-runner:latest
+  - name: mig_log_reader
+    image: quay.io/konveyor/mig-log-reader:latest
   displayName: Konveyor Operator for Containers
   description: |
     The Konveyor Operator enables installation of the application migration tool components.
@@ -814,6 +817,10 @@ spec:
                 - name: MIG_UI_REPO
                   value: mig-ui
                 - name: MIG_UI_TAG
+                  value: latest
+                - name: MIG_LOG_READER_REPO
+                  value: mig-log-reader
+                - name: MIG_LOG_READER_TAG
                   value: latest
                 - name: MIGRATION_REGISTRY_REPO
                   value: registry

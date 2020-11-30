@@ -1,0 +1,54 @@
+---
+{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int < 9 %}
+apiVersion: apps/v1beta1
+{% else %}
+apiVersion: apps/v1
+{% endif %}
+kind: Deployment
+metadata:
+  name: migration-log-reader
+  namespace: {{ mig_namespace }}
+  labels:
+    app: migration
+spec:
+  selector:
+    matchLabels:
+      logreader: mig
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: migration
+        logreader: mig
+    spec:
+      containers:
+        - name: color
+          image: {{ mig_log_reader_image_fqin }}
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /var/cache/sa2kubeconfig
+              name: kubeconfig
+          env:
+            - name: STERN_COLOR
+              value: always
+            - name: KSUFFIX
+              value: color
+
+        - name: plain
+          image: {{ mig_log_reader_image_fqin }}
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /var/cache/sa2kubeconfig
+              name: kubeconfig
+          env:
+            - name: STERN_COLOR
+              value: never
+            - name: KSUFFIX
+              value: plain
+
+      serviceAccountName: migration-controller
+      volumes:
+      - emptyDir: {}
+        name: kubeconfig
