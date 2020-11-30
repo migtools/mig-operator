@@ -317,7 +317,7 @@ spec:
         - name: MIG_UI_REPO
           value: mig-ui
         - name: MIG_LOG_READER_REPO
-        value: mig-log-reader
+          value: mig-log-reader
         - name: MIGRATION_REGISTRY_REPO
           value: registry
         - name: MIGRATION_REGISTRY_TAG
