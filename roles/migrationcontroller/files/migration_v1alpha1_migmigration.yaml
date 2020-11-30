@@ -88,6 +88,8 @@ spec:
                     format: date-time
                   failed:
                     type: boolean
+                  skipped:
+                    type: boolean
                   progress:
                     type: array
                     items:
