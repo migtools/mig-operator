@@ -196,6 +196,9 @@ spec:
       labels:
         name: restic
     spec:
+{% if daemonset_node_selector is defined %}
+      nodeSelector: {{ daemonset_node_selector }}
+{% endif %}
       serviceAccountName: velero
       securityContext:
         runAsUser: 0
