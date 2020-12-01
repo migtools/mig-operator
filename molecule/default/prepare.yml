@@ -9,10 +9,10 @@
         flat: yes
         src: /root/.kube/config
 
-    - name: Change the kubeconfig port to the proper value
+    - name: Change the kubeconfig server/port to the proper value
       replace:
-        regexp: '8443'
-        replace: "{{ lookup('env', 'KIND_PORT') }}"
+        regexp: 'https://.*:8443'
+        replace: "https://localhost:{{ lookup('env', 'KIND_PORT') }}"
         path: '{{ kubeconfig_file }}'
       delegate_to: localhost
 
