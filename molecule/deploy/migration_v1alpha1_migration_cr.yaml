@@ -16,3 +16,4 @@ spec:
   infrastructures:
     resources:
     - whatever
+  migration_log_reader: true
