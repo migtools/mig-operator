@@ -57,6 +57,7 @@ mig_log_reader_repo: "{{ lookup( 'env', 'MIG_LOG_READER_REPO') }}"
 mig_log_reader_image: "{{ registry }}/{{ project }}/{{ mig_log_reader_repo }}"
 mig_log_reader_version: "{{ snapshot_tag | default(lookup( 'env', 'MIG_LOG_READER_TAG')) }}"
 mig_log_reader_image_fqin: "{{ mig_log_reader_image }}:{{ mig_log_reader_version }}"
+migration_log_reader: true
 migration_registry_image: "{{ registry }}/{{ project }}/{{ migration_registry_repo }}"
 migration_registry_repo: "{{ lookup( 'env', 'MIGRATION_REGISTRY_REPO') }}"
 migration_registry_version: "{{ lookup( 'env', 'MIGRATION_REGISTRY_TAG') }}"
