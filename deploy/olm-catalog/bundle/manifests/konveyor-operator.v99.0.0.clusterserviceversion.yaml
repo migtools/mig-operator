@@ -878,6 +878,16 @@ spec:
       kind: DownloadRequest
       displayName: DownloadRequest
       description: A download request for velero
+    - name: directvolumemigrations.migration.openshift.io
+      version: v1alpha1
+      kind: DirectVolumeMigration
+      displayName: DirectVolumeMigration
+      description: a request to migrate PVCs from a set of namespaces directly to a target
+    - name: directvolumemigrationprogresses.migration.openshift.io
+      version: v1alpha1
+      kind: DirectVolumeMigrationProgress
+      displayName: DirectVolumeMigrationProgress
+      description: a request to migrate watch the progress of rsync pod migrating a PVC to a target
     - name: directimagemigrations.migration.openshift.io
       version: v1alpha1
       kind: DirectImageMigration
