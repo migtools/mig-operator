@@ -11,7 +11,7 @@ spec:
     kind: DirectVolumeMigrationProgress
     plural: directvolumemigrationprogresses
     shortNames:
-    - dmvp
+    - dvmp
   scope: Namespaced
   validation:
     openAPIV3Schema:
