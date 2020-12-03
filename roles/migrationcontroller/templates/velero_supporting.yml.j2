@@ -15,7 +15,7 @@ spec:
     singular: backup
   preserveUnknownFields: false
   scope: Namespaced
-{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 10 %}
+{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 11 %}
   validation:
     openAPIV3Schema:
       description: Backup is a Velero resource that respresents the capture of Kubernetes
@@ -448,7 +448,7 @@ spec:
     singular: schedule
   preserveUnknownFields: false
   scope: Namespaced
-{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 10 %}
+{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 11 %}
   validation:
     openAPIV3Schema:
       description: Schedule is a Velero resource that represents a pre-scheduled or
@@ -838,7 +838,7 @@ spec:
     singular: restore
   preserveUnknownFields: false
   scope: Namespaced
-{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 10 %}
+{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 11 %}
   validation:
     openAPIV3Schema:
       description: Restore is a Velero resource that represents the application of
@@ -2591,7 +2591,7 @@ spec:
     singular: downloadrequest
   preserveUnknownFields: false
   scope: Namespaced
-{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 10 %}
+{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 11 %}
   validation:
     openAPIV3Schema:
       description: DownloadRequest is a request to download an artifact from backup
@@ -2686,7 +2686,7 @@ spec:
     singular: deletebackuprequest
   preserveUnknownFields: false
   scope: Namespaced
-{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 10 %}
+{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 11 %}
   validation:
     openAPIV3Schema:
       description: DeleteBackupRequest is a request to delete one or more backups.
@@ -2760,7 +2760,7 @@ spec:
     singular: podvolumebackup
   preserveUnknownFields: false
   scope: Namespaced
-{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 10 %}
+{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 11 %}
   validation:
     openAPIV3Schema:
       properties:
@@ -2923,7 +2923,7 @@ spec:
     singular: podvolumerestore
   preserveUnknownFields: false
   scope: Namespaced
-{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 10 %}
+{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 11 %}
   validation:
     openAPIV3Schema:
       properties:
@@ -3084,7 +3084,7 @@ spec:
     singular: resticrepository
   preserveUnknownFields: false
   scope: Namespaced
-{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 10 %}
+{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 11 %}
   validation:
     openAPIV3Schema:
       properties:
@@ -3191,7 +3191,7 @@ spec:
   scope: Namespaced
   subresources:
     status: {}
-{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 10 %}
+{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 11 %}
   validation:
     openAPIV3Schema:
       description: BackupStorageLocation is a location where Velero stores backup
@@ -3328,7 +3328,7 @@ spec:
     singular: volumesnapshotlocation
   preserveUnknownFields: false
   scope: Namespaced
-{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 10 %}
+{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 11 %}
   validation:
     openAPIV3Schema:
       description: VolumeSnapshotLocation is a location where Velero stores volume
@@ -3407,7 +3407,7 @@ spec:
   scope: Namespaced
   subresources:
     status: {}
-{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 10 %}
+{% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int > 11 %}
   validation:
     openAPIV3Schema:
       description: ServerStatusRequest is a request to access current status information
