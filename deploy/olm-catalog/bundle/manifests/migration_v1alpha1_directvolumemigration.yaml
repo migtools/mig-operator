@@ -10,6 +10,7 @@ spec:
   names:
     kind: DirectVolumeMigration
     plural: directvolumemigrations
+    singular: directvolumemigration
     shortNames:
     - dvm
   scope: Namespaced
