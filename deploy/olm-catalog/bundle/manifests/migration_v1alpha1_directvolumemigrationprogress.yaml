@@ -10,6 +10,7 @@ spec:
   names:
     kind: DirectVolumeMigrationProgress
     plural: directvolumemigrationprogresses
+    singular: directvolumemigrationprogress
     shortNames:
     - dvmp
   scope: Namespaced
