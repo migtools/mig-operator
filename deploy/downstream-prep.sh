@@ -30,6 +30,7 @@ IMAGES=(
   "registry"
   "mustgather"
   "hookrunner"
+  "logreader"
 )
 
 declare -A IMG_MAP
@@ -45,6 +46,7 @@ IMG_MAP[azureplugin_repo]="openshift-migration-velero-plugin-for-microsoft-azure
 IMG_MAP[registry_repo]="openshift-migration-registry"
 IMG_MAP[mustgather_repo]="openshift-migration-must-gather"
 IMG_MAP[hookrunner_repo]="openshift-migration-hook-runner"
+IMG_MAP[logreader_repo]="openshift-migration-log-reader"
 
 #Get latest images
 for i in ${IMAGES[@]}; do
@@ -99,6 +101,7 @@ for f in deploy/olm-catalog/bundle/manifests/konveyor-operator.${MTCVERSION}.clu
   sed -i "s,/velero-plugin-for-gcp:.*,/openshift-migration-velero-plugin-for-gcp-rhel8@sha256:${IMG_MAP[gcpplugin_sha]},g"                                           ${f}
   sed -i "s,/registry:.*,/openshift-migration-registry-rhel8@sha256:${IMG_MAP[registry_sha]},g"                                                                      ${f}
   sed -i "s,/hook-runner:.*,/openshift-migration-hook-runner-rhel7@sha256:${IMG_MAP[hookrunner_sha]},g"                                                              ${f}
+  sed -i "s,/mig-log-reader:.*,/openshift-migration-log-reader-rhel8@sha256:${IMG_MAP[logreader_sha]},g"                                                             ${f}
   sed -i "s,rhel7-operator@sha256:.*,rhel7-operator@sha256:${IMG_MAP[operator_sha]},g"                                                                               ${f}
   sed -i "s,controller-rhel8@sha256:.*,controller-rhel8@sha256:${IMG_MAP[controller_sha]},g"                                                                         ${f}
   sed -i "s,ui-rhel8@sha256:.*,ui-rhel8@sha256:${IMG_MAP[ui_sha]},g"                                                                                                 ${f}
@@ -111,6 +114,8 @@ for f in deploy/olm-catalog/bundle/manifests/konveyor-operator.${MTCVERSION}.clu
   sed -i "s,registry-rhel8@sha256:.*,registry-rhel8@sha256:${IMG_MAP[registry_sha]},g"                                                                               ${f}
   sed -i "s,hook-runner-rhel7@sha256:.*,hook-runner-rhel7@sha256:${IMG_MAP[hookrunner_sha]},g"                                                                       ${f}
   sed -i 's,value: hook-runner,value: openshift-migration-hook-runner-rhel7@sha256,g'                                                                                ${f}
+  sed -i "s,log-reader-rhel8@sha256:.*,log-reader-rhel8@sha256:${IMG_MAP[logreader_sha]},g"                                                                          ${f}
+  sed -i 's,value: mig-log-reader,value: openshift-migration-log-reader-rhel8@sha256,g'                                                                              ${f}
   sed -i 's,value: mig-controller,value: openshift-migration-controller-rhel8@sha256,g'                                                                              ${f}
   sed -i 's,value: mig-ui,value: openshift-migration-ui-rhel8@sha256,g'                                                                                              ${f}
   sed -i 's,value: velero-restic-restore-helper,value: openshift-migration-velero-restic-restore-helper-rhel8@sha256,g'                                              ${f}
@@ -134,6 +139,7 @@ for f in deploy/olm-catalog/bundle/manifests/konveyor-operator.${MTCVERSION}.clu
   sed -i "/VELERO_AZURE_PLUGIN_TAG/,/^ *[^:]*:/s/value: .*/value: ${IMG_MAP[azureplugin_sha]}/"                                                                      ${f}
   sed -i "/MIGRATION_REGISTRY_TAG/,/^ *[^:]*:/s/value: .*/value: ${IMG_MAP[registry_sha]}/"                                                                          ${f}
   sed -i "/HOOK_RUNNER_TAG/,/^ *[^:]*:/s/value: .*/value: ${IMG_MAP[hookrunner_sha]}/"                                                                               ${f}
+  sed -i "/MIG_LOG_READER_TAG/,/^ *[^:]*:/s/value: .*/value: ${IMG_MAP[logreader_sha]}/"                                                                             ${f}
   sed -i "/name: Documentation/,/^ *[^:]*:/s/url: .*/url: https:\/\/docs.openshift.com\/container-platform\/latest\/migration\/migrating_3_4\/about-migration.html/" ${f}
 if [[ "$f" =~ .*clusterserviceversion.* ]] && ! grep -q infrastructure-features ${f}; then
   sed -i '/^spec:/i\ \ \ \ operators.openshift.io/infrastructure-features: \x27[\"Disconnected\"]\x27'                                                               ${f}
