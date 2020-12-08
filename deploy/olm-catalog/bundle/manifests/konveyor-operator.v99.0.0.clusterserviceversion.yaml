@@ -227,6 +227,7 @@ metadata:
     certified: "false"
     support: Red Hat
     operatorframework.io/suggested-namespace: openshift-migration
+    operators.openshift.io/infrastructure-features: '["Disconnected"]'
 spec:
   skips:
   - konveyor-operator.v1.4.0
