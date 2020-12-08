@@ -80,7 +80,7 @@
       - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration.openshift.io_miganalytics.yaml"
       - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration.openshift.io_migclusters.yaml"
       - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration.openshift.io_directvolumemigrations.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration.openshift.io_directvolumemigrationprogresss.yaml"
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration.openshift.io_directvolumemigrationprogresses.yaml"
       - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration.openshift.io_mighooks.yaml"
       - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration.openshift.io_migmigrations.yaml"
       - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration.openshift.io_migplans.yaml"
