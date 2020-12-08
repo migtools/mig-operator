@@ -176,8 +176,6 @@ spec:
             startTimestamp:
               format: date-time
               type: string
-          required:
-          - conditions
           type: object
       type: object
   version: v1alpha1
