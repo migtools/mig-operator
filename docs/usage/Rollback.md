@@ -1,6 +1,6 @@
 # Rollback
 
-MTC allows for rollback of Migration Plans. Rollback can be used to revert an application back to its original state.
+MTC allows for rollback of Migration Plans. Rollback can be used to revert namespaces migrated by MTC Migration Plans back to their original states.
 
 ## Effects of rollback
 
