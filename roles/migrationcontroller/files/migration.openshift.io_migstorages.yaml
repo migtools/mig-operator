@@ -212,8 +212,6 @@ spec:
               type: array
             observedDigest:
               type: string
-          required:
-          - conditions
           type: object
       type: object
   version: v1alpha1
