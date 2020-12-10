@@ -8,15 +8,35 @@ metadata:
   creationTimestamp: null
   name: directvolumemigrationprogresses.migration.openshift.io
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.clusterRef.name
+    name: Cluster
+    type: string
+  - JSONPath: .spec.podRef.name
+    name: Pod Name
+    type: string
+  - JSONPath: .spec.podRef.namespace
+    name: Pod Namespace
+    type: string
+  - JSONPath: .status.lastObservedProgressPercent
+    name: Progress Percent
+    type: string
+  - JSONPath: .status.lastObservedTransferRate
+    name: Transfer Rate
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: age
+    type: date
   group: migration.openshift.io
   names:
     kind: DirectVolumeMigrationProgress
     listKind: DirectVolumeMigrationProgressList
     plural: directvolumemigrationprogresses
     shortNames:
-    - dmvp
+    - dvmp
     singular: directvolumemigrationprogress
   scope: Namespaced
+  subresources: {}
   validation:
     openAPIV3Schema:
       description: DirectVolumeMigrationProgress is the Schema for the directvolumemigrationprogresses
@@ -160,8 +180,6 @@ spec:
               description: PodPhase is a label for the condition of a pod at the current
                 time.
               type: string
-          required:
-          - conditions
           type: object
       type: object
   version: v1alpha1

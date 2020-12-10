@@ -196,6 +196,8 @@ spec:
                     items:
                       type: string
                     type: array
+                  skipped:
+                    type: boolean
                 required:
                 - name
                 type: object
@@ -203,8 +205,6 @@ spec:
             startTimestamp:
               format: date-time
               type: string
-          required:
-          - conditions
           type: object
       type: object
   version: v1alpha1
