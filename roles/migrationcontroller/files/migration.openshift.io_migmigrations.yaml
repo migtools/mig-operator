@@ -184,6 +184,10 @@ spec:
               items:
                 description: Step defines a task in a step of migration
                 properties:
+                  completed:
+                    description: Completed timestamp.
+                    format: date-time
+                    type: string
                   failed:
                     type: boolean
                   message:
@@ -198,6 +202,10 @@ spec:
                     type: array
                   skipped:
                     type: boolean
+                  started:
+                    description: Started timestamp.
+                    format: date-time
+                    type: string
                 required:
                 - name
                 type: object
