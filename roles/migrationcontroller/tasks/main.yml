@@ -438,12 +438,52 @@
             definition: "{{ lookup('file', '/tmp/authentication.yaml') | from_yaml }}"
 
   - block:
+    - name: "Set old_controller_detected to false"
+      set_fact:
+        old_controller_detected: false
+
+    - name: "Set Deployment version for OpenShift 3.9+"
+      set_fact:
+        deployment_version: apps/v1
+
+    - name: "Set Deployment version for OpenShift 3.7"
+      set_fact:
+        deployment_version: apps/v1beta1
+      when: lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int < 9
+
+    - name: "Get migration-controller deployment"
+      k8s_facts:
+        api_version: "{{ deployment_version }}"
+        kind: Deployment
+        name: migration-controller
+        namespace: "{{ mig_namespace }}"
+      register: migration_controller_deployment
+
+    - name: "Get migration-controller containers"
+      set_fact:
+        migration_deployment_containers: "{{ migration_controller_deployment.resources[0].spec.template.spec.containers }}"
+      when: migration_controller_deployment.resources|length > 0
+
+    - name: "Detect old migration-controller container"
+      set_fact:
+        old_controller_detected: true
+      with_items: "{{ migration_deployment_containers }}"
+      when:
+      - migration_deployment_containers is defined
+      - item.name == "cam"
+
+    - name: "Remove mig controller"
+      k8s:
+        state: absent
+        definition: "{{ lookup('template', 'controller.yml.j2') }}"
+      when: old_controller_detected
+
     - name: "Set up mig controller"
       k8s:
         state: "{{ controller_state }}"
         definition: "{{ lookup('template', 'controller.yml.j2') }}"
     rescue:
-    - name: "Set up mig controller"
+    - name: "Remove mig controller"
       k8s:
         state: absent
         definition: "{{ lookup('template', 'controller.yml.j2') }}"
