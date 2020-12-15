@@ -212,7 +212,7 @@
     - "migration.openshift.io_migstorages.yaml"
     - "migration.openshift.io_miganalytics.yaml"
     - "migration.openshift.io_directvolumemigrations.yaml"
-    - "migration.openshift.io_directvolumemigrationprogresss.yaml"
+    - "migration.openshift.io_directvolumemigrationprogresses.yaml"
     when: not olm_managed
 
   - name: "Set up mig controller RBAC"
