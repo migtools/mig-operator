@@ -21,13 +21,20 @@ spec:
 
 ## Viewing logs
 
+Find the `migration-log-reader` Pod name.
+
+```
+oc -n openshift-migration get pods -l logreader=mig
+```
+
+
 Colorized logs:
 ```
-oc logs -f --selector logreader=mig -n openshift-migration -c color
+oc logs -f <migration-log-reader-pod-name> -n openshift-migration -c color
 ```
 
 Plain logs:
 ```
-oc logs -f --selector logreader=mig -n openshift-migration -c plain
+oc logs -f <migration-log-reader-pod-name> -n openshift-migration -c plain
 ```
 
