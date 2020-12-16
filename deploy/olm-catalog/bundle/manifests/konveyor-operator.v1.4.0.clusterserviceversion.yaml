@@ -806,6 +806,10 @@ spec:
                   value: quay.io
                 - name: PROJECT
                   value: konveyor
+                - name: RSYNC_TRANSFER_REPO
+                  value: rsync-transfer
+                - name: RSYNC_TRANSFER_TAG
+                  value: latest
                 - name: HOOK_RUNNER_REPO
                   value: hook-runner
                 - name: HOOK_RUNNER_TAG
