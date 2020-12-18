@@ -262,6 +262,8 @@ spec:
     image: quay.io/konveyor/hook-runner:latest
   - name: mig_log_reader
     image: quay.io/konveyor/mig-log-reader:latest
+  - name: rsync_transfer
+    image: quay.io/konveyor/rsync-transfer:latest
   displayName: Konveyor Operator for Containers
   description: |
     The Konveyor Operator enables installation of the application migration tool components.
