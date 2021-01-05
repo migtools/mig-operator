@@ -44,3 +44,14 @@ spec:
   sourceType: grpc
   image: quay.io/konveyor/mig-operator-index:sprint-xxx.y
 ```
+
+Starting with sprint 195 to use OCP 3.x you can run the commands below. Ensure you replace xxx.y with the values corresponding to the release you wish to use.
+```
+export SPRINT=sprint-xxx.y
+podman cp $(podman create quay.io/konveyor/mig-operator-container:$SPRINT):/operator.yml ./
+podman cp $(podman create quay.io/konveyor/mig-operator-container:$SPRINT):/controller-3.yml ./
+sed -i "s/value: latest/value: $SPRINT/g" operator.yml
+oc create -f operator.yml
+```
+
+Modify settings in the controller-3.yml as desired and `oc create -f controller-3.yml` as you normally would.
