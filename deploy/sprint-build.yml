@@ -1,15 +1,17 @@
 - hosts: localhost
   vars:
     org: konveyor
-    repos:
+    repos1:
     - mig-operator
     - mig-controller
     - mig-ui
     - must-gather
     - hook-runner
+    repos2:
     - openshift-velero-plugin
     - distribution
     - mig-log-reader
+    - rsync-transfer
     konveyor_repos:
     - velero
     - velero-plugin-for-gcp
@@ -26,14 +28,23 @@
     prompt: "Release attempt"
     private: no
   tasks:
-  - name: Get current master SHAs
+  - name: Get current master SHAs for first set
     uri:
       url: https://api.github.com/repos/{{ org }}/{{ item }}/git/refs/heads/master
       method: GET
       headers:
         Authorization: token {{ gh_token }}
-    register: repo_info
-    with_items: "{{ repos }}"
+    register: repo_info1
+    with_items: "{{ repos1 }}"
+
+  - name: Get current master SHAs for second set
+    uri:
+      url: https://api.github.com/repos/{{ org }}/{{ item }}/git/refs/heads/master
+      method: GET
+      headers:
+        Authorization: token {{ gh_token }}
+    register: repo_info2
+    with_items: "{{ repos2 }}"
 
   - name: Get current konveyor-dev SHAs
     uri:
@@ -44,7 +55,7 @@
     register: konveyor_repo_info
     with_items: "{{ konveyor_repos }}"
 
-  - name: Create sprint branches from master
+  - name: Create sprint branches from master for repo set 1
     uri:
       url: https://api.github.com/repos/{{ org }}/{{ item.item }}/git/refs
       body: '{ "ref": "refs/heads/sprint-{{ sprint }}.{{ release }}", "sha": "{{ item.json.object.sha }}"  }'
@@ -55,7 +66,26 @@
         Content-Type: application/json
       status_code: 201
     register:
-    with_items: "{{ repo_info.results }}"
+    with_items: "{{ repo_info1.results }}"
+    loop_control:
+      label: "repo: {{ item.item }}, sha: {{ item.json.object.sha }}, tag: sprint-{{ sprint }}.{{ release }}"
+
+  - name: Pause to split requests so we don't exceed Quay's maximum build rate and get 429's
+    pause:
+      minutes: 5
+
+  - name: Create sprint branches from master for repo set 2
+    uri:
+      url: https://api.github.com/repos/{{ org }}/{{ item.item }}/git/refs
+      body: '{ "ref": "refs/heads/sprint-{{ sprint }}.{{ release }}", "sha": "{{ item.json.object.sha }}"  }'
+      body_format: json
+      method: POST
+      headers:
+        Authorization: token {{ gh_token }}
+        Content-Type: application/json
+      status_code: 201
+    register:
+    with_items: "{{ repo_info2.results }}"
     loop_control:
       label: "repo: {{ item.item }}, sha: {{ item.json.object.sha }}, tag: sprint-{{ sprint }}.{{ release }}"
 
