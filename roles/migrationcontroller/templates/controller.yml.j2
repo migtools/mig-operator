@@ -46,6 +46,27 @@ data:
   STUNNEL_POD_MEMORY_LIMIT: "{{ stunnel_pod_mem_limits }}"
   STUNNEL_POD_CPU_REQUEST: "{{ stunnel_pod_cpu_requests }}"
   STUNNEL_POD_MEMORY_REQUEST: "{{ stunnel_pod_mem_requests }}"
+{% if rsync_opt_bwlimit is defined and rsync_opt_bwlimit|int > 0 %}
+  RSYNC_OPT_BWLIMIT: "{{ rsync_opt_bwlimit }}"
+{% endif %}
+{% if rsync_opt_partial is defined %}
+  RSYNC_OPT_PARTIAL: "{{ rsync_opt_partial }}"
+{% endif %}
+{% if rsync_opt_archive is defined %}
+  RSYNC_OPT_ARCHIVE: "{{ rsync_opt_archive }}"
+{% endif %}
+{% if rsync_opt_delete is defined %}
+  RSYNC_OPT_DELETE: "{{ rsync_opt_delete }}"
+{% endif %}
+{% if rsync_opt_hardlinks is defined %}
+  RSYNC_OPT_HARDLINKS: "{{ rsync_opt_hardlinks }}"
+{% endif %}
+{% if rsync_opt_info is defined %}
+  RSYNC_OPT_INFO: "{{ rsync_opt_info }}"
+{% endif %}
+{% if rsync_opt_extras is defined %}
+  RSYNC_OPT_EXTRAS: "{{ rsync_opt_extras }}"
+{% endif %}
 ---
 {% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int < 9 %}
 apiVersion: apps/v1beta1
