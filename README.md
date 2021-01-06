@@ -56,15 +56,15 @@ See [hacking.md](./docs/hacking.md)
 Konveyor Operator is installable on OpenShift 3 via OpenShift manifest.
 
 #### Installing _released versions_
+Obtain the operator.yml and controller-3.yml for the desired version. Visit [Quay](https://quay.io/repository/konveyor/mig-operator-container?tab=tags) for a list of valid tags. Stable releases are tagged as release-x.y.z. Latest is used for development and may be unstable.
 
 ```
-oc create -f deploy/non-olm/v1.3/operator.yml  
+podman cp $(podman create quay.io/konveyor/mig-operator-container:<tag>):/operator.yml ./
+podman cp $(podman create quay.io/konveyor/mig-operator-container:<tag>):/controller-3.yml ./
 ```
 
-#### Installing _latest_
-
 ```
-oc create -f deploy/non-olm/latest/operator.yml  
+oc create -f operator.yml
 ```
 
 #### Konveyor Operator Upgrades
@@ -111,7 +111,7 @@ Creating a `MigrationController` CR will tell Konveyor Operator to install Migra
 
 #### OpenShift 3
 
-1. Find the appropriately versioned controller-3.yml manifest in `deploy/nom-olm/<version>`.
+1. Review the controller-3.yml retrieved earlier.
 1. Adjust settings (_component selections_, _migration size limits_) if desired.
 1. Set `mig_ui_cluster_api_endpoint` to point at the Controller cluster APIserver URL/Port.
 1. Run `oc create -f controller-3.yml`
