@@ -111,7 +111,7 @@
 
     - name: Copy operator.yml
       copy:
-        src: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/non-olm/latest/operator.yml"
+        src: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/non-olm/operator.yml"
         dest: "{{ tmp_dir.path }}/operator.yml"
 
     - name: Update Deployment

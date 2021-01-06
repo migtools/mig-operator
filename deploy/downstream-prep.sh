@@ -2,12 +2,10 @@
 
 #Find most recent version
 export MTCVERSION=$(ls deploy/olm-catalog/bundle/manifests/konveyor-operator.v* | awk -F '.' '{out=""; for(i=2;i<4;i++){out=out$i"."}{out=out$4}; print out}')
-#Checkout all the old operator.ymls and CSVs
 git checkout origin/$(git branch --show-current) -- Dockerfile
 git checkout origin/$(git branch --show-current) -- .gitignore
 git checkout origin/$(git branch --show-current) -- content_sets.yml
 git checkout origin/$(git branch --show-current) -- container.yaml
-for i in $(ls -1d deploy/non-olm/v* | grep -v $MTCVERSION); do git checkout origin/$(git branch --show-current) $i; done
 
 #deal with k8s_status change upstream/downstream
 sed -i "s,ansible_operator_meta,meta,g" roles/migrationcontroller/tasks/main.yml
@@ -83,7 +81,7 @@ done
 
 # Make Downstream CSV Changes
 for f in deploy/olm-catalog/bundle/manifests/konveyor-operator.${MTCVERSION}.clusterserviceversion.yaml \
-         deploy/non-olm/${MTCVERSION}/operator.yml
+         deploy/non-olm/operator.yml
   do
   if [[ "$f" =~ .*clusterserviceversion.* ]]; then
     sed -i "s,mig-operator-container:.*,openshift-migration-rhel7-operator@sha256:${IMG_MAP[operator_sha]},g"                                                        ${f}
