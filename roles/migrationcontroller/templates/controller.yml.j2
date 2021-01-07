@@ -34,18 +34,18 @@ data:
   NAMESPACE_LIMIT: "{{ mig_namespace_limit }}"
   CORS_ALLOWED_ORIGINS: {{ cors_origins | join(' ') }}
   WORKING_DIR: {{ discovery_volume_path }}
-  CLIENT_POD_CPU_LIMIT: "{{ source_pod_cpu_limit }}"
-  CLIENT_POD_MEMORY_LIMIT: "{{ source_pod_memory_limit }}"
-  CLIENT_POD_CPU_REQUEST: "{{ source_pod_cpu_request }}"
-  CLIENT_POD_MEMORY_REQUEST: "{{ source_pod_memory_request }}"
-  TRANSFER_POD_CPU_LIMIT: "{{ target_pod_cpu_limits }}"
-  TRANSFER_POD_MEMORY_LIMIT: "{{ target_pod_mem_limits }}"
-  TRANSFER_POD_CPU_REQUEST: "{{ target_pod_cpu_requests }}"
-  TRANSFER_POD_MEMORY_REQUEST: "{{ target_pod_mem_requests }}"
+  CLIENT_POD_CPU_LIMIT: "{{ source_rsync_pod_cpu_limits }}"
+  CLIENT_POD_MEMORY_LIMIT: "{{ source_rsync_pod_memory_limits }}"
+  CLIENT_POD_CPU_REQUEST: "{{ source_rsync_pod_cpu_requests }}"
+  CLIENT_POD_MEMORY_REQUEST: "{{ source_rsync_pod_memory_requests }}"
+  TRANSFER_POD_CPU_LIMIT: "{{ target_rsync_pod_cpu_limits }}"
+  TRANSFER_POD_MEMORY_LIMIT: "{{ target_rsync_pod_memory_limits }}"
+  TRANSFER_POD_CPU_REQUEST: "{{ target_rsync_pod_cpu_requests }}"
+  TRANSFER_POD_MEMORY_REQUEST: "{{ target_rsync_pod_memory_requests }}"
   STUNNEL_POD_CPU_LIMIT: "{{ stunnel_pod_cpu_limits }}"
-  STUNNEL_POD_MEMORY_LIMIT: "{{ stunnel_pod_mem_limits }}"
+  STUNNEL_POD_MEMORY_LIMIT: "{{ stunnel_pod_memory_limits }}"
   STUNNEL_POD_CPU_REQUEST: "{{ stunnel_pod_cpu_requests }}"
-  STUNNEL_POD_MEMORY_REQUEST: "{{ stunnel_pod_mem_requests }}"
+  STUNNEL_POD_MEMORY_REQUEST: "{{ stunnel_pod_memory_requests }}"
 {% if rsync_opt_bwlimit is defined and rsync_opt_bwlimit|int > 0 %}
   RSYNC_OPT_BWLIMIT: "{{ rsync_opt_bwlimit }}"
 {% endif %}
