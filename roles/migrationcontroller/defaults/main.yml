@@ -28,18 +28,18 @@ rsync_transfer_image: "{{ registry }}/{{ project }}/{{ rsync_transfer_repo }}"
 rsync_transfer_repo: "{{ lookup( 'env', 'RSYNC_TRANSFER_REPO') }}"
 rsync_transfer_version: "{{ snapshot_tag | default(lookup( 'env', 'RSYNC_TRANSFER_TAG')) }}"
 rsync_transfer_image_fqin: "{{ rsync_transfer_image }}:{{ rsync_transfer_version }}"
-client_pod_cpu_limit: "1"
-client_pod_memory_limit: "1Gi"
-client_pod_cpu_request: "400m"
-client_pod_memory_request: "1Gi"
+source_rsync_pod_cpu_limits: "1"
+source_rsync_pod_memory_limits: "1Gi"
+source_rsync_pod_cpu_requests: "400m"
+source_rsync_pod_memory_requests: "1Gi"
 stunnel_pod_cpu_limits: '1'
 stunnel_pod_cpu_requests: '400m'
-stunnel_pod_mem_limits: '1Gi'
-stunnel_pod_mem_requests: '1Gi'
-transfer_pod_cpu_limits: '1'
-transfer_pod_cpu_requests: '400m'
-transfer_pod_mem_limits: '1Gi'
-transfer_pod_mem_requests: '1Gi'
+stunnel_pod_memory_limits: '1Gi'
+stunnel_pod_memory_requests: '1Gi'
+target_rsync_pod_cpu_limits: '1'
+target_rsync_pod_cpu_requests: '400m'
+target_rsync_pod_memory_limits: '1Gi'
+target_rsync_pod_memory_requests: '1Gi'
 hook_runner_image: "{{ registry }}/{{ project }}/{{ hook_runner_repo }}"
 hook_runner_repo: "{{ lookup( 'env', 'HOOK_RUNNER_REPO') }}"
 hook_runner_version: "{{ snapshot_tag | default(lookup( 'env', 'HOOK_RUNNER_TAG')) }}"
