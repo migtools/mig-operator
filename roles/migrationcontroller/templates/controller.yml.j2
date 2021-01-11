@@ -175,6 +175,10 @@ spec:
         - name: NO_PROXY
           value: {{ no_proxy }}
 {% endif %}
+{% if ingress_controller_name|length >0 %}
+        - name: INGRESS_CONTROLLER_NAME
+          value: {{ ingress_controller_name }}
+{% endif %}
         envFrom:
         - configMapRef:
             name: migration-controller

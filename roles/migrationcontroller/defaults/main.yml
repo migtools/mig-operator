@@ -121,6 +121,8 @@ velero_state: absent
 velero_qps: 100
 velero_burst: 1000
 
+ingress_controller_name: default
+
 # MCG integration
 noobaa: false
 noobaa_expected_crds:

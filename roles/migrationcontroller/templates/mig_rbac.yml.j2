@@ -227,6 +227,12 @@ rules:
   - '*'
   verbs:
   - '*'
+- apiGroups:
+  - operator.openshift.io
+  resources:
+  - ingresscontrollers
+  verbs:
+  - '*'
 ---
 apiVersion: v1
 kind: ServiceAccount

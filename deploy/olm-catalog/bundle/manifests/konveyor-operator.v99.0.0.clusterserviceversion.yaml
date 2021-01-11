@@ -450,6 +450,7 @@ spec:
           resources:
           - kubeapiservers
           - authentications
+          - ingresscontrollers
           verbs:
           - '*'
         - apiGroups:
@@ -551,6 +552,12 @@ spec:
           - get
           - update
           - patch
+        - apiGroups:
+          - operator.openshift.io
+          resources:
+          - ingresscontrollers
+          verbs:
+          - '*'
         - apiGroups:
           - migration.openshift.io
           - velero.io
