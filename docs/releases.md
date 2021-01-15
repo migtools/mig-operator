@@ -15,7 +15,7 @@
 1. Create a PR for the new release branch
    1. Update channel information in annotations.yml and Dockerfile.bundle [example](https://github.com/konveyor/mig-operator/pull/463) / [example](https://github.com/konveyor/mig-operator/pull/461)
    1. Update the CSV  and non-olm operator.yml with the correct version and new image labels [example](https://github.com/konveyor/mig-operator/pull/461)
-1. Once the release is ready add it to the index image and push
+1. Once the release is ready add it to the index image and push. In these steps you are appending the new bundle to the old index and pushing it to a new location. The steps are repeated to add development to this new index and push it to latest. This is the index image used when creating the catalogsource. In the examples below `1.4.0` is the prior version, `1.4.1` is the new version, and you will need to adjust accordingly. It is OK to overwrite the current version if an error needs to be corrected.
    1. `opm index add -p docker -f quay.io/konveyor/mig-operator-index:1.4.0 --bundles quay.io/konveyor/mig-operator-bundle:release-1.4.1 --tag quay.io/konveyor/mig-operator-index:1.4.1`
    1. `podman push quay.io/konveyor/mig-operator-index:1.4.1`
    1. `opm index add -p docker -f quay.io/konveyor/mig-operator-index:1.4.1 --bundles quay.io/konveyor/mig-operator-bundle:latest --tag quay.io/konveyor/mig-operator-index:latest`
@@ -23,6 +23,7 @@
 1. Push the appregistry metadata
    1. `mkdir tmp && cd tmp`
    1. `opm index export -c podman -i quay.io/konveyor/mig-operator-index:latest -o mtc-operator -f .`
+   1. `cd mtc-operator`
    1. `sed -i 's/mtc-operator/konveyor-operator/g' package.yaml`
    1. `operator-courier --verbose push . konveyor konveyor-operator 47.0.0 "$QUAY_TOKEN"`. Ensure you increment the [app version](https://quay.io/application/konveyor/konveyor-operator)
 
