@@ -41,6 +41,7 @@
     pull_policy: Never
     custom_resource: "{{ lookup('file', '/'.join([deploy_dir, 'migration_v1alpha1_migration_cr.yaml'])) | from_yaml }}"
     mig_namespace: "{{ namespace }}"
+    migration_rsync_privileged: false
   tasks:
   - block:
     - name: Delete the Operator Deployment
