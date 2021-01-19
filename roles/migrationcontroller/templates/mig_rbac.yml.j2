@@ -68,7 +68,11 @@ rules:
   verbs:
   - use
   resourceNames:
+{% if migration_rsync_privileged %}
   - privileged
+{% else %}
+  - anyuid
+{% endif %}
 - apiGroups:
   - ""
   resources:

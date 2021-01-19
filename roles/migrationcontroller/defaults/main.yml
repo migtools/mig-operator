@@ -82,6 +82,7 @@ migration_stage_image: "{{ registry }}/{{ project }}/{{ velero_restic_restore_he
 migration_stage_repo: "{{ lookup( 'env', 'VELERO_RESTIC_RESTORE_HELPER_REPO') }}"
 migration_stage_version: "{{ snapshot_tag | default(lookup( 'env', 'VELERO_RESTIC_RESTORE_HELPER_TAG')) }}"
 migration_stage_image_fqin: "{{ migration_stage_image }}:{{ migration_stage_version }}"
+migration_rsync_privileged: false
 olm_managed: false
 registry: "{{ lookup( 'env', 'REGISTRY') }}"
 project: "{{ lookup( 'env', 'PROJECT') }}"
