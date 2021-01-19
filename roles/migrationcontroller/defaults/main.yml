@@ -24,6 +24,7 @@ http_proxy: "{{ lookup( 'env', 'HTTP_PROXY') }}"
 https_proxy: "{{ lookup( 'env', 'HTTPS_PROXY') }}"
 no_proxy: "{{ lookup( 'env', 'NO_PROXY') }}"
 image_pull_policy: Always
+cluster_subdomain: ""
 rsync_transfer_image: "{{ registry }}/{{ project }}/{{ rsync_transfer_repo }}"
 rsync_transfer_repo: "{{ lookup( 'env', 'RSYNC_TRANSFER_REPO') }}"
 rsync_transfer_version: "{{ snapshot_tag | default(lookup( 'env', 'RSYNC_TRANSFER_TAG')) }}"
