@@ -472,6 +472,11 @@
       - migration_deployment_containers is defined
       - item.name == "cam"
 
+    - name: "Set up mig controller configmap"
+      k8s:
+        state: present
+        definition: "{{ lookup('template', 'controller_config.yml.j2') }}"
+
     - name: "Remove mig controller"
       k8s:
         state: absent
