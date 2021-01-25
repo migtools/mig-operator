@@ -27,6 +27,7 @@ Konveyor Operator (mig-operator) installs a system of migration components for m
 		* [Rollback on Migration Failure](#rollback-on-migration-failure)
 * [CORS (Cross-Origin Resource Sharing) Configuration](#cors-cross-origin-resource-sharing-configuration)
 * [Removing Konveyor Operator](#removing-konveyor-operator)
+* [Resources Migrated By Konveyor Operator](#resource-migrated-by-konveyor-operator)
 
 ---
 
@@ -165,3 +166,8 @@ oc delete clusterrolebindings migration-operator velero mig-cluster-admin migrat
 
 oc delete oauthclient migration
 ```
+
+## Resources Migrated By Konveyor Operator
+
+Please refer [Resources Migrated By Konveyor Operator](./docs/resources_migrated.md) in order to gain insights regarding what kind of objects/resources
+get migrated by the Konveyor Operator.
