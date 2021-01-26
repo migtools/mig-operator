@@ -25,6 +25,7 @@ data:
   STUNNEL_POD_MEMORY_LIMIT: "{{ stunnel_pod_memory_limits }}"
   STUNNEL_POD_CPU_REQUEST: "{{ stunnel_pod_cpu_requests }}"
   STUNNEL_POD_MEMORY_REQUEST: "{{ stunnel_pod_memory_requests }}"
+  RSYNCD_ROUTE_LABELS: "{{ migration_rsyncd_route_labels | to_json }}"
 {% if rsync_opt_bwlimit is defined and rsync_opt_bwlimit|int > 0 %}
   RSYNC_OPT_BWLIMIT: "{{ rsync_opt_bwlimit }}"
 {% endif %}

@@ -52,6 +52,7 @@ spec:
         | join(mig_pod_limit | string)
         | join(mig_namespace_limit | string)
         | join(discovery_volume_path | string)
+        | join(migration_rsyncd_route_labels | to_json)
         | hash('sha1') }}"
     spec:
       serviceAccountName: migration-controller
