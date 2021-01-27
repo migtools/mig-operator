@@ -8,7 +8,7 @@ if [[ $(basename ${MIG_OPERATOR_REPO}) != "mig-operator" ]]; then
 fi
 
 if [[ ! -d ${MIG_OPERATOR_REPO} ]]; then
-  echo "Please define MIG_OPERATOR_REPO var..."
+  echo "Define MIG_OPERATOR_REPO var"
 fi
 
 pushd ${MIG_OPERATOR_REPO} &> /dev/null
@@ -44,10 +44,11 @@ if [[ ${push_docker} =~ ^[Yy]$ ]]; then
     echo "Image pushed"
   else
     echo "Please login to quay.io using 'docker login quay.io'"
+    exit 1
   fi
 fi
 
-echo "Build bundle and index images?"
+echo "Build bundle and index images? (Y/N)"
 read build_bundle
 
 if [[ ${build_bundle} =~ ^[Yy]$ ]]; then
@@ -58,14 +59,14 @@ if [[ ${build_bundle} =~ ^[Yy]$ ]]; then
   docker push quay.io/$ORG/mig-operator-index:$TAG
 fi
 
-echo "Disable default catalog sources?"
+echo "Disable default catalog sources? (Y/N)"
 read disable_def_sources
 
 if [[ ${disable_def_sources} =~ ^[Yy]$ ]]; then
     oc patch OperatorHub cluster --type json -p '[{"op": "add", "path": "/spec/disableAllDefaultSources", "value": true}]'
 fi
 
-echo "Create CatalogSource?"
+echo "Create CatalogSource? (Y/N)"
 read create_catalogsource
 
 if [[ ${create_catalogsource} =~ ^[Yy]$ ]]; then
@@ -85,7 +86,7 @@ EOF
   rm catalogsource.yml
 fi
 
-echo "Create OperatorGroup?"
+echo "Create OperatorGroup? (Y/N)"
 read create_opg
 
 if [[ ${create_opg} =~ ^[Yy]$ ]]; then
@@ -106,7 +107,7 @@ EOF
   rm opg.yaml
 fi
 
-echo "Create subscription?"
+echo "Create Subscription? (Y/N)"
 read create_sub
 
 if [[ ${create_sub} =~ ^[Yy]$ ]]; then
