@@ -21,3 +21,6 @@ the `spec.exposedRegistryPath` field or via the MTC UI.
 
 7. The two spec flags in MigPlan CR - `indirectImageMigration` and `indirectVolumeMigration` , both of these flags need to
 be set to `false` for Direct Migration to be executed.
+
+**Note:** The Direct Migration feature of MTC uses Rsync utility, for more details pertaining to its usage, configuration and
+know issues please refer the [Rsync Configuration](usage/RsyncConfiguration.md) document.
