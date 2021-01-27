@@ -6,6 +6,7 @@ metadata:
   creationTimestamp: null
   name: migclusters.migration.openshift.io
 spec:
+  preserveUnknownFields: false
   additionalPrinterColumns:
   - JSONPath: .status.conditions[?(@.type=='Ready')].status
     name: Ready
@@ -47,19 +48,26 @@ spec:
           description: MigClusterSpec defines the desired state of MigCluster
           properties:
             azureResourceGroup:
+              description: AzureResourceGroup is for azure clusters -- it's the resource group that in-cluster volumes use.
               type: string
             caBundle:
+              description: If the migcluster needs SSL verification for connections a user can supply a custom CA bundle.
               format: byte
               type: string
             exposedRegistryPath:
+              description: Stores the path of registry route when using direct migration.
               type: string
             insecure:
+              description: Insecure stores the status of the connection with source cluster. True signifies the connection is insecure.
               type: boolean
             isHostCluster:
+              description: IsHostCluster specifies if the cluster is host (where the controller is installed) or not. This is a required field.
               type: boolean
             refresh:
+              description: Refresh True forces the controller to run a connection test on migcluster.
               type: boolean
             restartRestic:
+              description: RestartRestic is an override setting to tell the controller that the source cluster restic needs to be restarted after stage pod creation.
               type: boolean
             serviceAccountSecretRef:
               description: ObjectReference contains enough information to let you
@@ -99,6 +107,7 @@ spec:
                   type: string
               type: object
             url:
+              description: URL stores the url of the source cluster. The field is only required for the source cluster object.
               type: string
           required:
           - isHostCluster

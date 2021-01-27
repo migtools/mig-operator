@@ -151,8 +151,7 @@ spec:
     namespace: openshift-migration
 ```
 
-- spec.analyzeImageCount: 
-     It is a boolean flag to enable analysis of image count. This is a required field.
+- spec.analyzeImageCount: It is a boolean flag to enable analysis of image count. This is a required field.
 
 - spec.analyzeK8SResources: It is a boolean flag to enable analysis of k8s resources. This is a required field.
 
@@ -209,19 +208,19 @@ spec:
   # [!] Change refresh to 'true' to force a manual reconcile
   refresh: false
   ```
-- spec.azureResourceGroup: AzureResourceGroup is for azure clusters -- it's the resource group that in-cluster volumes use
+- spec.azureResourceGroup: AzureResourceGroup is for azure clusters -- it's the resource group that in-cluster volumes use.
 
-- spec.caBundle: if the migcluster needs SSL verification for connections a user can supply a custom CA bundle
+- spec.caBundle: If the migcluster needs SSL verification for connections a user can supply a custom CA bundle.
 
-- spec.exposedRegistryPath: Stores the path of registry route when using direct migration
+- spec.exposedRegistryPath: Stores the path of registry route when using direct migration.
 
 - spec.insecure: Insecure stores the status of the connection with source cluster. True signifies the connection is insecure
 
 - spec.isHostCluster: IsHostCluster specifies if the cluster is host (where the controller is installed) or not. This is a required field.
 
-- spec.refresh: Refresh True forces the controller to run a connection test on migcluster
+- spec.refresh: Refresh True forces the controller to run a connection test on migcluster.
 
-- spec.restartRestic: RestartRestic is an override setting to tell the controller that the source cluster restic needs to be restarted after stage pod creation
+- spec.restartRestic: RestartRestic is an override setting to tell the controller that the source cluster restic needs to be restarted after stage pod creation.
 
 - spec.serviceAccountSecretRef: ObjectReference contains enough information to let you inspect or modify the referred object.
 
@@ -317,6 +316,18 @@ spec:
   destMigClusterRef:
     name: migcluster-remote
     namespace: openshift-migration
+  
+  hooks:
+    - executionNamespace: openshift-migration
+      phase: PreBackup
+      reference:
+        name: test-6h58j
+        namespace: openshift-migration
+      serviceAccount: migration-controller
+
+  indirectImageMigration: true
+
+  indirectVolumeMigration: false
 
   migStorageRef:
     name: migstorage-sample
@@ -330,11 +341,13 @@ spec:
   refresh: false
 ```
 
-- spec.closed: If the migration was successful for a migplan, controller sets this value to True indicating that after one successful migration no new migrations can be carried out for this migplan
+- spec.closed: If the migration was successful for a migplan, controller sets this value to True indicating that after one successful migration no new migrations can be carried out for this migplan.
 
 - spec.destMigClusterRef: ObjectReference contains enough information to let you inspect or modify the referred object.
 
 - spec.hooks: MigPlanHook hold a reference to a MigHook along with the desired phase to run it in.
+    -   spec.hooks.executionNamespace: ExecutionNamespace holds the name of the namespace where hooks should be implemented.
+    -   spec.hooks.phase: Phase indicates the phase when the hooks should be executed.
 
 - spec.indirectImageMigration: If set True, disables direct image migrations.
 
