@@ -16,7 +16,8 @@ of Persistent Volume Claims (PVC) and Persistent Volumes (PV) is handled by the 
 if the namespace is selected by the user for migration. Consequently, the Konveyor operator will also migrate the CRDs associated with the CRs for migration.
 
 - **Excluded Resources:** Some objects/resources are excluded by default from the migration by the Konveyor operator. These resources are 
-service catalog resources or OLM resources, OLM migration is not handled by Konveyor operator. The excluded resources are:
+service catalog resources or OLM resources, OLM migration is not handled by Konveyor operator. The excluded resources are (Please refer the
+[Excluded Resources](usage/ExcludeResources.md) document for more details) :
 
 ```
   - imagetags
