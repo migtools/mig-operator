@@ -13,10 +13,10 @@ will automatically go and find any SCCs that are applied to this SA and include 
 of Persistent Volume Claims (PVC) and Persistent Volumes (PV) is handled by the operator. 
 
 - **Custom Resources(CR) and Custom Resource Definitions(CRD):** Any namespace scoped CRs will automatically be included in the migration
-if the namespace is selected by the user for migration. Consequently, the Konveyor operator will grab the CRDs associated with the CRs for migration.
+if the namespace is selected by the user for migration. Consequently, the Konveyor operator will also migrate the CRDs associated with the CRs for migration.
 
-- **Blocklisted Resources:** Some objects/resources are blocklisted by default and not migrated by the Konveyor operator. These resources are 
-service catalog resources or OLM resources, OLM migration is not handled by Konveyor operator. The blocklisted resources are:
+- **Excluded Resources:** Some objects/resources are excluded by default from the migration by the Konveyor operator. These resources are 
+service catalog resources or OLM resources, OLM migration is not handled by Konveyor operator. The excluded resources are:
 
 ```
   - imagetags
