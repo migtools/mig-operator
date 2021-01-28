@@ -47,7 +47,7 @@ spec:
   serviceAccountSecretRef:
     name: src-ocp-3-cluster-k2vnk
     namespace: openshift-config
-  url: 'https://master.shubham-ocp3.mg.dog8code.com/'
+  url: 'https://master.ocp3.mycluster.com/'
 ```
 Command to create source MigCluster instance:
 ``` 

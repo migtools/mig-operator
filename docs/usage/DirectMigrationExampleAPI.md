@@ -12,7 +12,7 @@ The steps to perform a Direct Migration using Migration Toolkit for Containers (
 This step involves addition and configuration of the source as well as the destination clusters 
 involved in the migration.
 
-- At first, let's create a MigCluster instance in order to add the destination cluster. 
+At first, let's create a MigCluster instance in order to add the destination cluster. 
 In our case this cluster is also the host cluster where Migration controller resides and is
 already configured, you do not need to add this cluster. 
 
@@ -32,7 +32,7 @@ Command to create destination MigCluster instance:
 oc create -f destination-migcluster.yaml
 ```
 
-- Now let's add the second cluster, that is the source cluster.
+Now let's add the second cluster, that is the source cluster.
 
 Store the source MigCluster yaml manifest in `source-migcluster.yaml`:
 ``` 
@@ -42,13 +42,13 @@ metadata:
   name: src-ocp-3-cluster
   namespace: openshift-migration
 spec:
-  exposedRegistryPath: docker-registry-default.apps.shubham-ocp3.mg.dog8code.com
+  exposedRegistryPath: docker-registry-default.apps.mycluster-ocp3.mg.dog8code.com
   insecure: true
   isHostCluster: false
   serviceAccountSecretRef:
     name: src-ocp-3-cluster-k2vnk
     namespace: openshift-config
-  url: 'https://master.shubham-ocp3.mg.dog8code.com/'
+  url: 'https://master.ocp3.mycluster.com/'
 ```
 Command to create source MigCluster instance:
 ``` 
