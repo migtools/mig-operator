@@ -48,6 +48,10 @@
     when: disable_image_migration|bool and 'imagestreams' not in excluded_resources
 
   - set_fact:
+      all_excluded_resources: "{{ all_excluded_resources + ['imagestreamtags'] }}"
+    when: disable_image_migration|bool and 'imagestreamtags' not in excluded_resources
+
+  - set_fact:
       all_excluded_resources: "{{ all_excluded_resources + ['persistentvolumes'] }}"
     when: disable_pv_migration|bool and 'persistentvolumes' not in excluded_resources
 
