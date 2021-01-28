@@ -7,6 +7,7 @@ metadata:
   creationTimestamp: null
   name: miganalytics.migration.openshift.io
 spec:
+  preserveUnknownFields: false
   additionalPrinterColumns:
   - JSONPath: .status.conditions[?(@.type=='Ready')].status
     name: Ready
@@ -63,14 +64,19 @@ spec:
           description: MigAnalyticSpec defines the desired state of MigAnalytic
           properties:
             analyzeImageCount:
+              description:  A boolean flag to enable analysis of image count. This is a required field.
               type: boolean
             analyzeK8SResources:
+              description: A boolean flag to enable analysis of k8s resources. This is a required field.
               type: boolean
             analyzePVCapacity:
+              description: A boolean flag to enable analysis of persistent volume capacity. This is a required field.
               type: boolean
             listImages:
+              description: A boolean flag to enable used in analysis of image count.
               type: boolean
             listImagesLimit:
+              description:  An integer representing limit on image counts.
               type: integer
             migPlanRef:
               description: ObjectReference contains enough information to let you

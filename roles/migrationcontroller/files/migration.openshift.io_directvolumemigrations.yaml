@@ -7,6 +7,7 @@ metadata:
   creationTimestamp: null
   name: directvolumemigrations.migration.openshift.io
 spec:
+  preserveUnknownFields: false
   group: migration.openshift.io
   names:
     kind: DirectVolumeMigration
@@ -37,12 +38,14 @@ spec:
           description: DirectVolumeMigrationSpec defines the desired state of DirectVolumeMigration
           properties:
             createDestinationNamespaces:
+              description: A boolean flag that is set True to create namespaces in destination cluster.
               type: boolean
             deleteProgressReportingCRs:
+              description:  A boolean flag to specify if progress reporting CRs needs to be deleted or not.
               type: boolean
             destMigClusterRef:
               description: ObjectReference contains enough information to let you
-                inspect or modify the referred object.
+                inspect or modify the referred object. Contains name and namespace of the destination mig cluster where the operator is installed.
               properties:
                 apiVersion:
                   description: API version of the referent.
@@ -78,6 +81,7 @@ spec:
                   type: string
               type: object
             persistentVolumeClaims:
+              description: A list of all the PVCs that are to be migrated with direct volume migration.
               items:
                 properties:
                   apiVersion:
@@ -128,7 +132,7 @@ spec:
               type: array
             srcMigClusterRef:
               description: ObjectReference contains enough information to let you
-                inspect or modify the referred object.
+                inspect or modify the referred object. Contains name and namespace of the source mig cluster where the operator is installed.
               properties:
                 apiVersion:
                   description: API version of the referent.
