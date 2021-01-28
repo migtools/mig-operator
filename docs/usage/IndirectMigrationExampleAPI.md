@@ -75,7 +75,7 @@ metadata:
   namespace: openshift-migration
 spec:
   backupStorageConfig:
-    awsBucketName: shubbam-6109f5e9711c8c58131acdd2f490f451
+    awsBucketName: mybucket-6109f5e9711c8c58131acdd2f490f451
     credsSecretRef:
       name: aws-s3-jg74j
       namespace: openshift-config
