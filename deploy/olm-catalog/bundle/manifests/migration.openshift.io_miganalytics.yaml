@@ -63,19 +63,19 @@ spec:
           description: MigAnalyticSpec defines the desired state of MigAnalytic
           properties:
             analyzeImageCount:
-              description:  It is a boolean flag to enable analysis of image count. This is a required field.
+              description:  A boolean flag to enable analysis of image count. This is a required field.
               type: boolean
             analyzeK8SResources:
-              description: It is a boolean flag to enable analysis of k8s resources. This is a required field.
+              description: A boolean flag to enable analysis of k8s resources. This is a required field.
               type: boolean
             analyzePVCapacity:
-              description: It is a boolean flag to enable analysis of persistent volume capacity. This is a required field.
+              description: A boolean flag to enable analysis of persistent volume capacity. This is a required field.
               type: boolean
             listImages:
-              description: It is a boolean flag to enable used in analysis of image count.
+              description: A boolean flag to enable used in analysis of image count.
               type: boolean
             listImagesLimit:
-              description:  It is an integer representing limit on image counts.
+              description:  An integer representing limit on image counts.
               type: integer
             migPlanRef:
               description: ObjectReference contains enough information to let you

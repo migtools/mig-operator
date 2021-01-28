@@ -75,7 +75,7 @@ spec:
                   type: string
               type: object
             destNamespace:
-              description: DestNamespaces is a string holding the name of the namespace on destination cluster where imagestreams should be migrated.
+              description: A string holding the name of the namespace on destination cluster where imagestreams should be migrated.
               type: string
             imageStreamRef:
               description: ObjectReference contains enough information to let you inspect or modify the referred object. Contains name and namespace of the source mig cluster where the imagesstream is present.

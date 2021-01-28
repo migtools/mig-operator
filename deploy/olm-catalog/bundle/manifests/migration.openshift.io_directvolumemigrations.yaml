@@ -37,10 +37,10 @@ spec:
           description: DirectVolumeMigrationSpec defines the desired state of DirectVolumeMigration
           properties:
             createDestinationNamespaces:
-              description: CreateDestinationNamespaces is a boolean flag that is set True to create namespaces in destination cluster.
+              description: A boolean flag that is set True to create namespaces in destination cluster.
               type: boolean
             deleteProgressReportingCRs:
-              description:  DeleteProgressReportingCRs is a boolean flag to specify if progress reporting CRs needs to be deleted or not.
+              description:  A boolean flag to specify if progress reporting CRs needs to be deleted or not.
               type: boolean
             destMigClusterRef:
               description: ObjectReference contains enough information to let you
@@ -80,7 +80,7 @@ spec:
                   type: string
               type: object
             persistentVolumeClaims:
-              description:  PersistentVolumeClaims holds the list of all the PVCs that are to be migrated with direct volume migration.
+              description: A list of all the PVCs that are to be migrated with direct volume migration.
               items:
                 properties:
                   apiVersion:

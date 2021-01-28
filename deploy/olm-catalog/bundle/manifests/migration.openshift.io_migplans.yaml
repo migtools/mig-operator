@@ -51,7 +51,7 @@ spec:
           description: MigPlanSpec defines the desired state of MigPlan
           properties:
             closed:
-              description: If the migration was successful for a migplan, controller sets this value to True indicating that after one successful migration no new migrations can be carried out for this migplan.
+              description: If the migration was successful for a migplan, this value can be set True indicating that after one successful migration no new migrations can be carried out for this migplan.
               type: boolean
             destMigClusterRef:
               description: ObjectReference contains enough information to let you
@@ -91,12 +91,13 @@ spec:
                   type: string
               type: object
             hooks:
+              description: Holds a reference to a MigHook along with the desired phase to run it in.
               items:
-                description: MigPlanHook hold a reference to a MigHook along with
+                description: Hold a reference to a MigHook along with
                   the desired phase to run it in
                 properties:
                   executionNamespace:
-                    description: ExecutionNamespace holds the name of the namespace where hooks should be implemented.
+                    description: Holds the name of the namespace where hooks will be implemented.
                     type: string
                   phase:
                     description: Phase indicates the phase when the hooks should be executed.
@@ -191,12 +192,12 @@ spec:
                   type: string
               type: object
             namespaces:
-              description: Namespaces is a list of string of all the namespaces to be included in migration.
+              description: A list of string of all the namespaces to be included in migration.
               items:
                 type: string
               type: array
             persistentVolumes:
-              description: PersistentVolumes holds list of all the persistent volumes found for the namespaces included in migplan. Each entry in the list is a persistent volume with the information. Name - The PV name. Capacity - The PV storage capacity. StorageClass - The PV storage class name. Supported - Lists of what is supported. Selection - Choices made from supported. PVC - Associated PVC. NFS - NFS properties. staged - A PV has been explicitly added/updated.
+              description: A list of all the persistent volumes found for the namespaces included in migplan. Each entry in the list is a persistent volume with the information. Name - The PV name. Capacity - The PV storage capacity. StorageClass - The PV storage class name. Supported - Lists of what is supported. Selection - Choices made from supported. PVC - Associated PVC. NFS - NFS properties. staged - A PV has been explicitly added/updated.
               items:
                 description: Name - The PV name. Capacity - The PV storage capacity.
                   StorageClass - The PV storage class name. Supported - Lists of what
