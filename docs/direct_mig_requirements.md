@@ -8,19 +8,15 @@ There are some requirements which are to be satisfied before you can use the Dir
 1. The clusters (source as well as destination) involved in the migration should expose their respective internal registries
 for external traffic.
 
-2. The remote source and destination clusters should be able to communicate via the OpenShift routes on port 443.
+2. The remote source and destination clusters should be able to communicate via OpenShift routes on port 443.
 
 3. The exposed registry route must be configured in the source and destination MigClusters, this can be done by specifying
-the `spec.exposedRegistryPath` field or via the MTC UI.
+the `spec.exposedRegistryPath` field or via the MTC UI. Please keep in mind that if the destination cluster is same as the 
+host cluster (where migration controller exists), in such a scenario there is need to configure the exposed registry 
+route for that particular MigCluster.
 
-4. The source as well the destination clusters must be free of all the `Critical` conditions and be in `Ready` state.
+4. The two spec flags in MigPlan CR - `indirectImageMigration` and `indirectVolumeMigration` , both of these flags need to
+be set to `false` for Direct Migration to be executed. Default value for these flags is `false`.
 
-5. The Persistent Volumes selected for migration should be valid and exist with a bound state on the source cluster.
-
-6. The Namespaces selected for migration should exist as well as they should be non-empty.
-
-7. The two spec flags in MigPlan CR - `indirectImageMigration` and `indirectVolumeMigration` , both of these flags need to
-be set to `false` for Direct Migration to be executed.
-
-**Note:** The Direct Migration feature of MTC uses Rsync utility, for more details pertaining to its usage, configuration and
+**Note:** The Direct Migration feature of MTC uses the Rsync utility, for more details pertaining to its usage, configuration and
 know issues please refer the [Rsync Configuration](usage/RsyncConfiguration.md) document.
