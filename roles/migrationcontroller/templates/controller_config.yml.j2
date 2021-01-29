@@ -51,3 +51,7 @@ data:
   STUNNEL_TCP_PROXY: "{{ stunnel_tcp_proxy }}"
   STUNNEL_VERIFY_CA: "{{ stunnel_verify_ca }}"
   STUNNEL_VERIFY_CA_LEVEL: "{{ stunnel_verify_ca_level }}"
+{% if disable_image_copy is defined %}
+  DISABLE_IMAGE_COPY: "{{ disable_image_copy }}"
+{% endif %}
+
