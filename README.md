@@ -169,5 +169,5 @@ oc delete oauthclient migration
 
 ## Resources Migrated By Konveyor Operator
 
-Please refer [Resources Migrated By Konveyor Operator](./docs/resources_migrated.md) in order to gain insights regarding what kind of objects/resources
+Please refer to [Resources Migrated By Konveyor Operator](./docs/resources_migrated.md) in order to gain insights regarding what kind of objects/resources
 get migrated by the Konveyor Operator.
