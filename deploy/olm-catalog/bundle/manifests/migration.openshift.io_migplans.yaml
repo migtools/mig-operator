@@ -6,7 +6,6 @@ metadata:
   creationTimestamp: null
   name: migplans.migration.openshift.io
 spec:
-  preserveUnknownFields: false
   additionalPrinterColumns:
   - JSONPath: .status.conditions[?(@.type=='Ready')].status
     name: Ready
@@ -51,7 +50,6 @@ spec:
           description: MigPlanSpec defines the desired state of MigPlan
           properties:
             closed:
-              description: If the migration was successful for a migplan, this value can be set True indicating that after one successful migration no new migrations can be carried out for this migplan.
               type: boolean
             destMigClusterRef:
               description: ObjectReference contains enough information to let you
@@ -91,16 +89,13 @@ spec:
                   type: string
               type: object
             hooks:
-              description: Holds a reference to a MigHook along with the desired phase to run it in.
               items:
-                description: Hold a reference to a MigHook along with
+                description: MigPlanHook hold a reference to a MigHook along with
                   the desired phase to run it in
                 properties:
                   executionNamespace:
-                    description: Holds the name of the namespace where hooks will be implemented.
                     type: string
                   phase:
-                    description: Phase indicates the phase when the hooks should be executed.
                     type: string
                   reference:
                     description: ObjectReference contains enough information to let
@@ -149,10 +144,8 @@ spec:
                 type: object
               type: array
             indirectImageMigration:
-              description: If set True, disables direct image migrations.
               type: boolean
             indirectVolumeMigration:
-              description: If set True, disables direct volume migrations.
               type: boolean
             migStorageRef:
               description: ObjectReference contains enough information to let you
@@ -192,12 +185,10 @@ spec:
                   type: string
               type: object
             namespaces:
-              description: A list of string of all the namespaces to be included in migration.
               items:
                 type: string
               type: array
             persistentVolumes:
-              description: A list of all the persistent volumes found for the namespaces included in migplan. Each entry in the list is a persistent volume with the information. Name - The PV name. Capacity - The PV storage capacity. StorageClass - The PV storage class name. Supported - Lists of what is supported. Selection - Choices made from supported. PVC - Associated PVC. NFS - NFS properties. staged - A PV has been explicitly added/updated.
               items:
                 description: Name - The PV name. Capacity - The PV storage capacity.
                   StorageClass - The PV storage class name. Supported - Lists of what
@@ -270,7 +261,6 @@ spec:
                 type: object
               type: array
             refresh:
-              description: If set True, the controller is forces to check if the migplan is in Ready state or not.
               type: boolean
             srcMigClusterRef:
               description: ObjectReference contains enough information to let you

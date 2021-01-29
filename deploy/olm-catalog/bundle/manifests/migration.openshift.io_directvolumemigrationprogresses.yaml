@@ -6,7 +6,6 @@ metadata:
   creationTimestamp: null
   name: directvolumemigrationprogresses.migration.openshift.io
 spec:
-  preserveUnknownFields: false
   additionalPrinterColumns:
   - JSONPath: .spec.clusterRef.name
     name: Cluster

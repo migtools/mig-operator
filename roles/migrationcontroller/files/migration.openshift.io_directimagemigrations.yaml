@@ -7,7 +7,6 @@ metadata:
   creationTimestamp: null
   name: directimagemigrations.migration.openshift.io
 spec:
-  preserveUnknownFields: false
   group: migration.openshift.io
   names:
     kind: DirectImageMigration
@@ -39,7 +38,7 @@ spec:
           properties:
             destMigClusterRef:
               description: ObjectReference contains enough information to let you
-                inspect or modify the referred object. Contains name and namespace of the destination mig cluster where the operator is installed.
+                inspect or modify the referred object.
               properties:
                 apiVersion:
                   description: API version of the referent.
@@ -75,13 +74,12 @@ spec:
                   type: string
               type: object
             namespaces:
-              description: A list of all namespaces to run DIM to get all the imagestreams in these namespaces.
               items:
                 type: string
               type: array
             srcMigClusterRef:
               description: ObjectReference contains enough information to let you
-                inspect or modify the referred object.  Contains name and namespace of the source mig cluster where the operator is installed.
+                inspect or modify the referred object.
               properties:
                 apiVersion:
                   description: API version of the referent.
