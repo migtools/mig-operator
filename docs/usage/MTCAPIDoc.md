@@ -292,7 +292,7 @@ spec:
 
 - spec.rollback: Invokes the rollback migration operation, when set to true the migration controller switches to rollback itinerary.
 
-- spec.stage:Invokes the stage operation, when set to true the migration controller switches to stage itinerary. This is a required field.
+- spec.stage: Invokes the stage operation, when set to true the migration controller switches to stage itinerary. This is a required field.
 
 - spec.verify: Specifies whether to verify the health of the migrated pods or not.
 
@@ -348,6 +348,7 @@ spec:
 - spec.hooks: Holds a reference to a MigHook along with the desired phase to run it in.
     -   spec.hooks.executionNamespace: Holds the name of the namespace where hooks should be implemented.
     -   spec.hooks.phase: Indicates the phase when the hooks will be executed.
+    -   spec.hooks.serviceAccount: Holds the name of the service account to be used for running hooks.
 
 - spec.indirectImageMigration: If set True, disables direct image migrations.
 
