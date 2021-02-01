@@ -1,15 +1,4 @@
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: restic-restore-action-config
-  namespace: {{ mig_namespace }}
-  labels:
-    velero.io/plugin-config: ""
-    velero.io/restic: RestoreItemAction
-data:
-  image: {{ velero_restic_restore_helper_fqin }}
----
 {% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int < 9 %}
 apiVersion: apps/v1beta1
 {% else %}
@@ -28,6 +17,7 @@ spec:
     metadata:
       labels:
         component: velero
+        restic-restore-action-config-name: {{ restic_restore_action_config_configmap.env | k8s_config_resource_name }}
       annotations:
 {% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int < 9 %}
         pod.alpha.kubernetes.io/init-containers: >-

@@ -7,6 +7,11 @@
       state: "present"
       definition: "{{ lookup('template', 'mig-cluster-config.yml.j2') }}"
 
+  - name: "Get mig cluster configmap for hashing"
+    set_fact:
+      cluster_config_configmap:
+        env: "{{ lookup('template', 'mig-cluster-config.yml.j2') | from_yaml }}"
+
   - when: olm_managed
     block:
     - k8s:
@@ -196,6 +201,21 @@
       state: "present"
       definition: "{{ lookup('template', 'proxy_secret.yml.j2') }}"
     when: http_proxy != "" or https_proxy != "" or no_proxy != ""
+
+  - name: "Get proxy secret for hashing"
+    set_fact:
+      proxy_secret:
+        env: "{{ lookup('template', 'restic-restore-action-config.yml.j2') | from_yaml }}"
+
+  - name: "Set up velero restic-restore-action-config"
+    k8s:
+      state: "{{ velero_state }}"
+      definition: "{{ lookup('template', 'restic-restore-action-config.yml.j2') }}"
+
+  - name: "Get restic-restore-action-config for hashing"
+    set_fact:
+      restic_restore_action_config_configmap:
+        env: "{{ lookup('template', 'restic-restore-action-config.yml.j2') | from_yaml }}"
 
   - name: "Set up velero controller"
     k8s:
@@ -476,10 +496,25 @@
       - migration_deployment_containers is defined
       - item.name == "cam"
 
+    - name: "Process webhook secret"
+      k8s:
+        state: "{{ controller_state }}"
+        definition: "{{ lookup('template', 'webhook-secret.yml.j2') }}"
+
+    - name: "Get webhook secret for hashing"
+      set_fact:
+        webhook_secret:
+          env: "{{ lookup('template', 'webhook-secret.yml.j2') | from_yaml }}"
+
     - name: "Set up mig controller configmap"
       k8s:
         state: present
         definition: "{{ lookup('template', 'controller_config.yml.j2') }}"
+
+    - name: "Get mig controller configmap for hashing"
+      set_fact:
+        controller_config_configmap:
+          env: "{{ lookup('template', 'controller_config.yml.j2') | from_yaml }}"
 
     - name: "Remove mig controller"
       k8s:
@@ -533,6 +568,11 @@
       k8s:
         state: "{{ ui_state }}"
         definition: "{{ lookup('template', 'ui-configmap.yml.j2') }}"
+
+    - name: "Get mig ui configmap for hashing"
+      set_fact:
+        ui_config_configmap:
+          env: "{{ lookup('template', 'ui-configmap.yml.j2') | from_yaml }}"
 
     - when: configmap_status.resources|length > 0
       block:

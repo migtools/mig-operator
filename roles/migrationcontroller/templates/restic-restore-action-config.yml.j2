@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: restic-restore-action-config
+  namespace: {{ mig_namespace }}
+  labels:
+    velero.io/plugin-config: ""
+    velero.io/restic: RestoreItemAction
+data:
+  image: {{ velero_restic_restore_helper_fqin }}

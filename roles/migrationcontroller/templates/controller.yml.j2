@@ -1,11 +1,5 @@
 ---
 apiVersion: v1
-kind: Secret
-metadata:
-  name: webhook-server-secret
-  namespace: {{ mig_namespace }}
----
-apiVersion: v1
 kind: Service
 metadata:
   labels:
@@ -46,13 +40,9 @@ spec:
         app: migration
         control-plane: controller-manager
         controller-tools.k8s.io: "1.0"
-      annotations:
-        configHash: "{{ (cors_origins | string)
-        | join(mig_pv_limit | string)
-        | join(mig_pod_limit | string)
-        | join(mig_namespace_limit | string)
-        | join(discovery_volume_path | string)
-        | hash('sha1') }}"
+        controller_config_name: {{ controller_config_configmap.env | k8s_config_resource_name }}
+        cluster_config_name: {{ cluster_config_configmap.env | k8s_config_resource_name }}
+        webhook_secret_name: {{ webhook_secret.env | k8s_config_resource_name }}
     spec:
       serviceAccountName: migration-controller
       containers:

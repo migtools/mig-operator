@@ -1,5 +1,6 @@
 - when: not noobaa|bool
   block:
+
   - name: Deleting NooBaa migstorage
     k8s:
       state: absent
