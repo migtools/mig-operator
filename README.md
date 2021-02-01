@@ -28,11 +28,8 @@ Konveyor Operator (mig-operator) installs a system of migration components for m
 * [Migration Example Using API](#migration-example-using-api)
 * [CORS (Cross-Origin Resource Sharing) Configuration](#cors-cross-origin-resource-sharing-configuration)
 * [Removing Konveyor Operator](#removing-konveyor-operator)
-<<<<<<< HEAD
 * [Resources Migrated By Konveyor Operator](#resource-migrated-by-konveyor-operator)
-=======
-* [Direct Migration Requirements](#Direct-Migration-Requirements)
->>>>>>> db6d503... add direct migrations req docs
+* [Direct Migration Requirements](#direct-migration-requirements)
 
 ---
 
