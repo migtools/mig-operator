@@ -25,6 +25,7 @@ Konveyor Operator (mig-operator) installs a system of migration components for m
 		* [Restic Timeout](#restic-timeout)
 		* [Migration Limits](#migration-limits)
 		* [Rollback on Migration Failure](#rollback-on-migration-failure)
+* [Migration Example Using API](#migration-example-using-api)
 * [CORS (Cross-Origin Resource Sharing) Configuration](#cors-cross-origin-resource-sharing-configuration)
 * [Removing Konveyor Operator](#removing-konveyor-operator)
 * [Resources Migrated By Konveyor Operator](#resource-migrated-by-konveyor-operator)
@@ -144,6 +145,11 @@ spec:
 ```
 
 Setting for the max allowable number of resources in a Migration Plan. The default limits serve as a recommendation to break up large scale migrations into several smaller Migration Plans.
+
+## Migration Example Using API
+
+- [Direct Migration using API](./docs/usage/DirectMigrationExampleAPI.md)
+- [Indirect Migration using API](./docs/usage/IndirectMigrationExampleAPI.md)
 
 ## CORS (Cross-Origin Resource Sharing) Configuration
 
