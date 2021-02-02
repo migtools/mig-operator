@@ -13,7 +13,7 @@ for external traffic.
 3. The exposed registry route must be configured in the source and destination MigClusters, this can be done by specifying
 the `spec.exposedRegistryPath` field or via the MTC UI. Please keep in mind that if the destination cluster is same as the 
 host cluster (where migration controller exists), in such a scenario there is no need to configure the exposed registry 
-route for that particular MigCluster.
+route for that particular MigCluster. Also, `spec.exposedRegistryPath` is only required for *Direct Image Migration* and not *Direct Volume Migration.*
 
 4. The two spec flags in MigPlan CR - `indirectImageMigration` and `indirectVolumeMigration` , both of these flags need to
 be set to `false` for Direct Migration to be executed. Default value for these flags is `false`.
