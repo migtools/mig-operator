@@ -167,6 +167,11 @@ spec:
                 - type
                 type: object
               type: array
+            containerElapsedTime:
+              type: string
+            exitCode:
+              format: int32
+              type: integer
             lastObservedProgressPercent:
               type: string
             lastObservedTransferRate:
