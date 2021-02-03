@@ -18,12 +18,12 @@ To determine the CORS URL that needs to be added retrieve the route URL after in
 `oc get -n openshift-migration route/migration -o go-template='(?i)//{{ .spec.host }}(:|\z){{ println }}' | sed 's,\.,\\.,g'`
 
 Output from this command will look something like this, but will be different for every cluster:  
-`(?i}//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)`
+`(?i)//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)`
 
 Add the output to /etc/origin/master/master-config.yaml under corsAllowedOrigins, for instance:
 ```
 corsAllowedOrigins:
-- (?i}//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)
+- (?i)//migration-openshift-migration\.apps\.foo\.bar\.baz\.com(:|\z)
 ```
 
 After making these changes on 3.x you'll need to restart OpenShift components to pick up the changed config values. The process for restarting 3.x control plane components [differs based on the OpenShift version](https://docs.openshift.com/container-platform/3.10/architecture/infrastructure_components/kubernetes_infrastructure.html#control-plane-static-pods).
