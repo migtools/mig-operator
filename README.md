@@ -29,6 +29,7 @@ Konveyor Operator (mig-operator) installs a system of migration components for m
 * [CORS (Cross-Origin Resource Sharing) Configuration](#cors-cross-origin-resource-sharing-configuration)
 * [Removing Konveyor Operator](#removing-konveyor-operator)
 * [Resources Migrated By Konveyor Operator](#resource-migrated-by-konveyor-operator)
+* [Direct Migration Requirements](#direct-migration-requirements)
 
 ---
 
@@ -177,3 +178,11 @@ oc delete oauthclient migration
 
 Please refer to [Resources Migrated By Konveyor Operator](./docs/resources_migrated.md) in order to gain insights regarding what kind of objects/resources
 get migrated by the Konveyor Operator.
+
+
+## Direct Migration Requirements
+
+In MTC 1.4.0, a new feature called Direct Migration is available that will yield significant time savings for most customers migrating persistent volumes
+and/or internal images. Direct Migration enables the migration of persistent volumes and internal images directly from the source cluster to the destination
+cluster without an intermediary replication repository. This introduces a significant performance enhancement while also providing better error and progress
+reporting information back to the end-user. Please refer the [Direct Migration Requirements](./docs/direct_mig_requirements.md) documentation for more details.
