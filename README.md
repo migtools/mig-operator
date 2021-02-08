@@ -151,6 +151,7 @@ Setting for the max allowable number of resources in a Migration Plan. The defau
 
 - [Direct Migration using API](./docs/usage/DirectMigrationExampleAPI.md)
 - [Indirect Migration using API](./docs/usage/IndirectMigrationExampleAPI.md)
+- [MTC API refernce](./docs/usage/MTCAPIDoc.md)
 
 ## CORS (Cross-Origin Resource Sharing) Configuration
 
