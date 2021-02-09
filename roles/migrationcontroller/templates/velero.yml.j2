@@ -186,8 +186,10 @@ spec:
       labels:
         name: restic
     spec:
-{% if daemonset_node_selector is defined %}
-      nodeSelector: {{ daemonset_node_selector }}
+{% if _migration_openshift_io_migrationcontroller_spec.daemonset_node_selector is defined %}
+      nodeSelector: {{ _migration_openshift_io_migrationcontroller_spec.daemonset_node_selector | to_yaml }}
+{% else %}
+      nodeSelector: null
 {% endif %}
       serviceAccountName: velero
       securityContext:
