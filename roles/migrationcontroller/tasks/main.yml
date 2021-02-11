@@ -245,6 +245,13 @@
       definition: "{{ lookup('template', 'mig_rbac.yml.j2') }}"
     when: not olm_managed
 
+  # Create custom SCC for all clusters. For <3.11 scc.users fields will drive the
+  # behavior, for others, RBAC will.
+  - name: "Set up rsync-anyuid SCC"
+    k8s:
+      state: present
+      definition: "{{ lookup('template', 'custom-rsync-anyuid.yml.j2') }}"
+
   - when: migration_controller or migration_ui
     block:
     - name: Set default CORS URLs

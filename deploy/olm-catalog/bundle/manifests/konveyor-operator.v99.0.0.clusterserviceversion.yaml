@@ -650,7 +650,7 @@ spec:
           - use
           resourceNames:
           - privileged
-          - anyuid
+          - rsync-anyuid
         - apiGroups:
           - apps.openshift.io
           - route.openshift.io

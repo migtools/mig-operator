@@ -71,7 +71,7 @@ rules:
 {% if migration_rsync_privileged %}
   - privileged
 {% else %}
-  - anyuid
+  - rsync-anyuid
 {% endif %}
 - apiGroups:
   - ""
