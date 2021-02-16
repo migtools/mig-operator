@@ -73,4 +73,4 @@
     replace:
       path: "{{ playbook_dir }}/../roles/migrationcontroller/defaults/main.yml"
       regexp: 'mig_operator_version:.*'
-      replace: "mig_operator_version: {{ release }}"
+      replace: "mig_operator_version: \"{{ release }}\""
