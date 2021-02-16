@@ -21,6 +21,12 @@
       regexp: 'value: latest'
       replace: "value: release-{{ release }}"
 
+  - name: Fix the version in the CSV
+    replace:
+      path:  "{{ playbook_dir }}/../deploy/olm-catalog/bundle/manifests/konveyor-operator.v99.0.0.clusterserviceversion.yaml"
+      regexp: '99\.0\.0'
+      replace: "{{ release }}"
+
   - name: Move CSV
     shell: |
            git mv \
@@ -63,4 +69,8 @@
       regexp: 'LABEL operators.operatorframework.io.bundle.channels.v1=.*'
       replace: "LABEL operators.operatorframework.io.bundle.channels.v1={{ channel }}"
 
-
+  - name: Replace version in defaults/main.yml
+    replace:
+      path: "{{ playbook_dir }}/../roles/migrationcontroller/defaults/main.yml"
+      regexp: 'mig_operator_version:.*'
+      replace: "mig_operator_version: {{ release }}"
