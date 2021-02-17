@@ -10,8 +10,7 @@ apiVersion: security.openshift.io/v1
 defaultAddCapabilities: null
 fsGroup:
   type: RunAsAny
-groups:
-- system:cluster-admins
+groups: []
 kind: SecurityContextConstraints
 metadata:
   annotations:
@@ -20,7 +19,8 @@ metadata:
       controller to run rsync for copping data from one pvc to another.
     release.openshift.io/create-only: "true"
   name: rsync-anyuid
-priority: 10
+{# unsetting the priority will make it priority 0, i.e. lower priority than anyuid #}
+{# priority: 10 #}
 readOnlyRootFilesystem: false
 requiredDropCapabilities:
 - MKNOD
