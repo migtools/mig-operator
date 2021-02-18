@@ -61,6 +61,8 @@ spec:
           value: webhook-server-secret
         - name: MIGRATION_REGISTRY_IMAGE
           value: {{ migration_registry_image_fqin }}
+        - name: ENABLE_INTELLIGENT_PV_RESIZE
+          value: {{ enable_intelligent_pv_resize }}
 {% if http_proxy|length >0 %}
         - name: HTTP_PROXY
           value: {{ http_proxy }}

@@ -86,6 +86,7 @@ migration_stage_version: "{{ snapshot_tag | default(lookup( 'env', 'VELERO_RESTI
 migration_stage_image_fqin: "{{ migration_stage_image }}:{{ migration_stage_version }}"
 migration_rsync_privileged: false
 olm_managed: false
+enable_intelligent_pv_resize: false
 registry: "{{ lookup( 'env', 'REGISTRY') }}"
 project: "{{ lookup( 'env', 'PROJECT') }}"
 restic_pv_host_path: /var/lib/kubelet/pods
