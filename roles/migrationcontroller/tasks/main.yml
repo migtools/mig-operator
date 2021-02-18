@@ -107,6 +107,10 @@
       restic_pv_host_path: /var/lib/origin/openshift.local.volumes/pods
     when: infrastructures is not defined or infrastructures.resources|length == 0
 
+  # look up api_groups for routes and scc
+  - set_fact:
+      api_groups: "{{ lookup('k8s', cluster_info='api_groups') }}"
+
   # This is only here to ease testing with openshift 3 dev environments
   - set_fact:
       restic_pv_host_path: /tmp/openshift.local.clusterup/openshift.local.volumes/pods
@@ -245,6 +249,14 @@
       definition: "{{ lookup('template', 'mig_rbac.yml.j2') }}"
     when: not olm_managed
 
+  # Create custom SCC for all clusters. For <3.11 scc.users fields will drive the
+  # behavior, for others, RBAC will.
+  - name: "Set up rsync-anyuid SCC"
+    k8s:
+      state: present
+      definition: "{{ lookup('template', 'custom-rsync-anyuid.yml.j2') }}"
+    when: "'security.openshift.io' in api_groups"
+
   - when: migration_controller or migration_ui
     block:
     - name: Set default CORS URLs
@@ -262,9 +274,6 @@
     - monitoring-service.yml.j2
     - monitoring-role.yml.j2
     - monitoring-rolebinding.yml.j2
-
-  - set_fact:
-      api_groups: "{{ lookup('k8s', cluster_info='api_groups') }}"
 
   - name: Check if mig ui route exists already so we don't update it
     k8s_facts:
