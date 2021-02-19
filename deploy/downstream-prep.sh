@@ -83,7 +83,7 @@ done
 
 # Make Downstream CSV Changes
 for f in deploy/olm-catalog/bundle/manifests/konveyor-operator.${MTCVERSION}.clusterserviceversion.yaml \
-         deploy/non-olm/${MTCVERSION}/operator.yml
+         deploy/non-olm/operator.yml
   do
   if [[ "$f" =~ .*clusterserviceversion.* ]]; then
     sed -i "s,mig-operator-container:.*,openshift-migration-rhel7-operator@sha256:${IMG_MAP[operator_sha]},g"                                                        ${f}
