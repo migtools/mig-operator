@@ -12,8 +12,8 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.n
 
 RUN ln -s ${HOME}/.ansible /.ansible
 COPY build/entrypoint /usr/local/bin/entrypoint
-COPY deploy/non-olm/v1.4.0/operator.yml /operator.yml
-COPY deploy/non-olm/v1.4.0/controller-3.yml /controller-3.yml
+COPY deploy/non-olm/operator.yml /operator.yml
+COPY deploy/non-olm/controller-3.yml /controller-3.yml
 
 USER 1001
 
