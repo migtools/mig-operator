@@ -26,7 +26,7 @@ data:
   STUNNEL_POD_CPU_REQUEST: "{{ stunnel_pod_cpu_requests }}"
   STUNNEL_POD_MEMORY_REQUEST: "{{ stunnel_pod_memory_requests }}"
   ENABLE_INTELLIGENT_PV_RESIZE: "{{ enable_intelligent_pv_resize }}"
-  DVM_AUTOMATIC_PVRESIZING: "{{ dvm_automatic_pvresizing }}"
+  ENABLE_DVM_PV_RESIZING: "{{ enable_dvm_pv_resizing }}"
 {% if rsync_opt_bwlimit is defined and rsync_opt_bwlimit|int > 0 %}
   RSYNC_OPT_BWLIMIT: "{{ rsync_opt_bwlimit }}"
 {% endif %}
