@@ -45,6 +45,19 @@ spec:
     spec:
       containers:
         - name: mig-ui
+{% if http_proxy|length >0 or https_proxy|length >0 %}
+          env:
+{% else %}
+          env: null
+{% endif %}
+{% if http_proxy|length >0 %}
+          - name: HTTP_PROXY
+            value: {{ http_proxy }}
+{% endif %}
+{% if https_proxy|length >0 %}
+          - name: HTTPS_PROXY
+            value: {{ https_proxy }}
+{% endif %}
           image: "{{ mig_ui_image_fqin }}"
           imagePullPolicy: "{{ image_pull_policy }}"
           ports:
