@@ -61,15 +61,26 @@ spec:
         spec:
           description: MigAnalyticSpec defines the desired state of MigAnalytic
           properties:
+            analyzeExtendedPVCapacity:
+              description: Enables advanced analysis of volumes required for PV resizing
+              type: boolean
             analyzeImageCount:
+              description: Enables analysis of image count, if set true. This is a
+                required field.
               type: boolean
             analyzeK8SResources:
+              description: Enables analysis of k8s resources, if set true. This is
+                a required field.
               type: boolean
             analyzePVCapacity:
+              description: Enables analysis of persistent volume capacity, if set
+                true. This is a required field.
               type: boolean
             listImages:
+              description: Enable used in analysis of image count, if set true.
               type: boolean
             listImagesLimit:
+              description: Represents limit on image counts
               type: integer
             migPlanRef:
               description: ObjectReference contains enough information to let you
@@ -108,6 +119,9 @@ spec:
                   description: 'UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids'
                   type: string
               type: object
+            refresh:
+              description: Enables refreshing existing MigAnalytic
+              type: boolean
           required:
           - analyzeImageCount
           - analyzeK8SResources
@@ -234,6 +248,46 @@ spec:
                         type: array
                       namespace:
                         type: string
+                      persistentVolumes:
+                        items:
+                          description: MigAnalyticPersistentVolumeClaim represents
+                            a Kubernetes Persistent volume claim with discovered analytic
+                            properties
+                          properties:
+                            actualCapacity:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              description: Actual provisioned capacity of the volume
+                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                              x-kubernetes-int-or-string: true
+                            comment:
+                              description: Human readable reason for proposed adjustment
+                              type: string
+                            name:
+                              description: Name of the persistent volume claim
+                              type: string
+                            proposedCapacity:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              description: Adjusted capacity of the volume
+                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                              x-kubernetes-int-or-string: true
+                            requestedCapacity:
+                              anyOf:
+                              - type: integer
+                              - type: string
+                              description: Requested capacity of the claim
+                              pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                              x-kubernetes-int-or-string: true
+                            usagePercentage:
+                              description: Usage of volume in percentage
+                              type: integer
+                          required:
+                          - name
+                          type: object
+                        type: array
                       pvCapacity:
                         anyOf:
                         - type: integer
