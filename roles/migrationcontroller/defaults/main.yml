@@ -41,6 +41,7 @@ target_rsync_pod_cpu_limits: '1'
 target_rsync_pod_cpu_requests: '400m'
 target_rsync_pod_memory_limits: '1Gi'
 target_rsync_pod_memory_requests: '1Gi'
+enable_dvm_pv_resizing: false
 hook_runner_image: "{{ registry }}/{{ project }}/{{ hook_runner_repo }}"
 hook_runner_repo: "{{ lookup( 'env', 'HOOK_RUNNER_REPO') }}"
 hook_runner_version: "{{ snapshot_tag | default(lookup( 'env', 'HOOK_RUNNER_TAG')) }}"
