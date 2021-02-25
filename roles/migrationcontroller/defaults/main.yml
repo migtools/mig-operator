@@ -56,6 +56,7 @@ mig_controller_version: "{{ snapshot_tag | default(lookup( 'env', 'MIG_CONTROLLE
 mig_controller_image_fqin: "{{ mig_controller_image }}:{{ mig_controller_version }}"
 discovery_volume_path: "/var/cache/discovery"
 mig_operator_version: "latest"
+mig_pv_move_storageclasses: []
 mig_pv_limit: "100"
 mig_pod_limit: "100"
 mig_namespace_limit: "10"
