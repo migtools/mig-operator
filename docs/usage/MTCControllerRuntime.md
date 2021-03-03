@@ -1,11 +1,10 @@
-# MTC Go Client
+# MTC with Kubernetes Controller-Runtime Package
 
-This document provides a short preview on how to use [Go client](https://github.com/kubernetes/client-go) with the MTC custom resources. We will go through a small example in 
-order to do so.
+This document provides a short preview on how to use [Kubernetes Controller-Runtime Package](https://pkg.go.dev/sigs.k8s.io/controller-runtime) with the MTC custom resources. We will go through a small example in order to do so.
 
 ## Prequisite
 - Golang
-- Go Client Library
+- Kubernetes Controller-Runtime
 - OpenShift/Kubernetes Cluster
 
 ## Example
@@ -108,6 +107,6 @@ func main() {
 
 }
 ```
-5. Just liek the above example, you can use the Go Client library to interact with the cluster and perform CRUD operations and much more on the MTC custom resources.
+5. Just like the above example, you can use the Go Client library to interact with the cluster and perform CRUD operations and much more on the MTC custom resources.
 
-**Note:** For more details and examples please refer [Go Client examples](https://github.com/kubernetes/client-go/tree/master/examples).
+**Note:** For more details and examples please refer [Kubernetes Controller-Runtime Package examples](https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.8.2/pkg/client#pkg-examples).
