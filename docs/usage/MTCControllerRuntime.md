@@ -107,6 +107,6 @@ func main() {
 
 }
 ```
-5. Just like the above example, you can use the Go Client library to interact with the cluster and perform CRUD operations and much more on the MTC custom resources.
+5. Just like the above example, you can use the Controller-Runtime package to interact with the cluster and perform CRUD operations and much more on the MTC custom resources.
 
 **Note:** For more details and examples please refer [Kubernetes Controller-Runtime Package examples](https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.8.2/pkg/client#pkg-examples).
