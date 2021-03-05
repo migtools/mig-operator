@@ -3,6 +3,6 @@ dist: xenial
 services: docker
 language: python
 install:
-  - pip install docker 'molecule==3.0.5' 'kubernetes==11.0.0' openshift jmespath
+  - pip install ansible docker molecule molecule-docker 'kubernetes==11.0.0' 'openshift==0.11.2' jmespath
 script:
   - molecule test -s test-local
