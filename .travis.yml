@@ -5,4 +5,5 @@ language: python
 install:
   - pip install docker 'molecule==3.0.5' 'kubernetes==11.0.0' openshift jmespath
 script:
+  - docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
   - molecule test -s test-local
