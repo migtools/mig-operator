@@ -279,7 +279,6 @@ spec:
                     - copyMethods
                     type: object
                 required:
-                - capacityConfirmed
                 - selection
                 - supported
                 type: object
