@@ -1,12 +1,14 @@
 # Upstream Release Procedures
 # Requirements
 1. podman (yum/dnf -y install podman)
+1. operator-courier (yum/dnf -y install python3-operator-courier or follow [Installation Instructions](https://github.com/operator-framework/operator-courier/#installation) for other options) 
 1. [opm](https://github.com/operator-framework/operator-registry)
+1. Your QUAY token exported, `export QUAY_TOKEN="basic ..."`, see [operator-courier](https://github.com/operator-framework/operator-courier/blob/master/README.md#authentication) for instructions on how to get a basic auth token.
 
 # Development
 1. Add the development bundle to the latest release index image and push
-  1. `opm index add -p docker -f quay.io/konveyor/mig-operator-index:1.4.1 --bundles quay.io/konveyor/mig-operator-bundle:latest --tag quay.io/konveyor/mig-operator-index:latest`
-  1. `podman push quay.io/konveyor/mig-operator-index:latest`
+  1. `ansible-playbook push-dev-metadata.yml`
+  1. When prompted provide the last stable release version to build off of, for example `1.4.1`
 
 # Stable
 1. Create the new release branch, for example `release-1.4.1`
@@ -17,17 +19,9 @@
    1. Review the changes, commit, and submit the PR for review
 1. Create a PR for the master branch.
    1. Update the skips list in the master branch CSV [example](https://github.com/konveyor/mig-operator/pull/460)
-1. Once the release is ready add it to the index image and push. In these steps you are appending the new bundle to the old index and pushing it to a new location. The steps are repeated to add development to this new index and push it to latest. This is the index image used when creating the catalogsource. In the examples below `1.4.0` is the prior version, `1.4.1` is the new version, and you will need to adjust accordingly. It is OK to overwrite the current version if an error needs to be corrected.
-   1. `opm index add -p docker -f quay.io/konveyor/mig-operator-index:1.4.0 --bundles quay.io/konveyor/mig-operator-bundle:release-1.4.1 --tag quay.io/konveyor/mig-operator-index:1.4.1`
-   1. `podman push quay.io/konveyor/mig-operator-index:1.4.1`
-   1. `opm index add -p docker -f quay.io/konveyor/mig-operator-index:1.4.1 --bundles quay.io/konveyor/mig-operator-bundle:latest --tag quay.io/konveyor/mig-operator-index:latest`
-   1. `podman push quay.io/konveyor/mig-operator-index:latest`
-1. Push the appregistry metadata
-   1. `mkdir tmp && cd tmp`
-   1. `opm index export -c podman -i quay.io/konveyor/mig-operator-index:latest -o mtc-operator -f .`
-   1. `cd mtc-operator`
-   1. `sed -i 's/mtc-operator/konveyor-operator/g' package.yaml`
-   1. `operator-courier --verbose push . konveyor konveyor-operator 47.0.0 "$QUAY_TOKEN"`. Ensure you increment the [app version](https://quay.io/application/konveyor/konveyor-operator)
+1. Once the release is ready add it to the index image and push.
+   1. `ansible-playbook push-release-metadata.yml`
+   1. When prompted enter the prior release version and new release version, for example `1.4.0` and `1.4.1`. 
 
 # Sprint
 1. Export GH_TOKEN with your Github Token, as an example `export GH_TOKEN=1234567890abcdef1234567890abcdef01234567`.
