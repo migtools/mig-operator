@@ -46,9 +46,9 @@
     register: repo_info2
     with_items: "{{ repos2 }}"
 
-  - name: Get current crane-dev SHAs
+  - name: Get current konveyor-dev SHAs
     uri:
-      url: https://api.github.com/repos/{{ org }}/{{ item }}/git/refs/heads/crane-dev
+      url: https://api.github.com/repos/{{ org }}/{{ item }}/git/refs/heads/konveyor-dev
       method: GET
       headers:
         Authorization: token {{ gh_token }}
@@ -93,7 +93,7 @@
     pause:
       minutes: 5
 
-  - name: Create sprint branches from crane-dev
+  - name: Create sprint branches from konveyor-dev
     uri:
       url: https://api.github.com/repos/{{ org }}/{{ item.item }}/git/refs
       body: '{ "ref": "refs/heads/sprint-{{ sprint }}.{{ release }}", "sha": "{{ item.json.object.sha }}"  }'
