@@ -44,7 +44,7 @@
     replace:
       path: "{{ tmp_dir.path }}/mtc-operator/package.yaml"
       regexp: mtc-operator
-      replace: konveyor-operator
+      replace: crane-operator
 
   - name: Get current version
     uri:
@@ -56,14 +56,14 @@
 
   - name: Determine old app version
     set_fact:
-      old_version: "{{ packages.json | selectattr('name', 'equalto', 'konveyor/konveyor-operator') | map(attribute='default') | list | first }}"
+      old_version: "{{ packages.json | selectattr('name', 'equalto', 'konveyor/crane-operator') | map(attribute='default') | list | first }}"
 
   - name: Set new app version
     set_fact:
       new_version: "{{ (old_version.split('.') | first | int)+1 }}.0.0"
 
   - name: Push App
-    shell: operator-courier --verbose push . konveyor konveyor-operator {{ new_version }} "$QUAY_TOKEN".
+    shell: operator-courier --verbose push . konveyor crane-operator {{ new_version }} "$QUAY_TOKEN".
     args:
       chdir: "{{ tmp_dir.path }}/mtc-operator"
 

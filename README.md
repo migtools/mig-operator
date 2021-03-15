@@ -1,5 +1,5 @@
-# Konveyor Operator
-Konveyor Operator (mig-operator) installs a system of migration components for moving workloads from OpenShift 3 to 4.
+# Crane Operator
+Crane Operator (mig-operator) installs a system of migration components for moving workloads from OpenShift 3 to 4.
 
 | Installable Component | Repository |
 |---|---|
@@ -15,20 +15,20 @@ Konveyor Operator (mig-operator) installs a system of migration components for m
 ## Contents
 
 * [Development](#development)
-* [Konveyor Operator Installation](#konveyor-operator-installation)
-	* [Konveyor Operator Upgrades](#konveyor-operator-upgrades)
+* [Crane Operator Installation](#crane-operator-installation)
+	* [Crane Operator Upgrades](#crane-operator-upgrades)
 * [Component Installation and Configuration](#component-installation-and-configuration)
 	* [Installation Topology](#installation-topology)
 	* [Customizing your Installation](#customizing-your-installation)
-	* [Installing Konveyor Components](#installing-konveyor-components)
+	* [Installing Crane Components](#installing-crane-components)
 	* [Additional Settings](#additional-settings)
 		* [Restic Timeout](#restic-timeout)
 		* [Migration Limits](#migration-limits)
 		* [Rollback on Migration Failure](#rollback-on-migration-failure)
 * [Migration Example Using API](#migration-example-using-api)
 * [CORS (Cross-Origin Resource Sharing) Configuration](#cors-cross-origin-resource-sharing-configuration)
-* [Removing Konveyor Operator](#removing-konveyor-operator)
-* [Resources Migrated By Konveyor Operator](#resource-migrated-by-konveyor-operator)
+* [Removing Crane Operator](#removing-crane-operator)
+* [Resources Migrated By Crane Operator](#resource-migrated-by-crane-operator)
 * [Direct Migration Requirements](#direct-migration-requirements)
 
 ---
@@ -36,18 +36,18 @@ Konveyor Operator (mig-operator) installs a system of migration components for m
 ## Development
 See [hacking.md](./docs/hacking.md) for instructions on installing _unreleased_ versions of mig-operator.
 
-## Konveyor Operator Installation
+## Crane Operator Installation
 
 ### OpenShift 4
 
-Konveyor Operator is installable on OpenShift 4 via OperatorHub.
+Crane Operator is installable on OpenShift 4 via OperatorHub.
 
 #### Installing _released versions_ 
 
 1. Visit the OpenShift Web Console.
 1. Navigate to _Operators => OperatorHub_.
-1. Search for _Konveyor Operator_.
-1. Install the desired _Konveyor Operator_ version.
+1. Search for _Crane Operator_.
+1. Install the desired _Crane Operator_ version.
 
 #### Installing _latest_
 
@@ -56,7 +56,7 @@ See [hacking.md](./docs/hacking.md)
 
 ### OpenShift 3
 
-Konveyor Operator is installable on OpenShift 3 via OpenShift manifest.
+Crane Operator is installable on OpenShift 3 via OpenShift manifest.
 
 #### Installing _released versions_
 Obtain the operator.yml and controller-3.yml for the desired version. Visit [Quay](https://quay.io/repository/konveyor/mig-operator-container?tab=tags) for a list of valid tags. Stable releases are tagged as release-x.y.z. Latest is used for development and may be unstable.
@@ -70,7 +70,7 @@ podman cp $(podman create quay.io/konveyor/mig-operator-container:<tag>):/contro
 oc create -f operator.yml
 ```
 
-#### Konveyor Operator Upgrades
+#### Crane Operator Upgrades
 
 See the [MTC Upgrade Documentation](./docs/usage/UpgradingCAM.md).
 
@@ -81,7 +81,7 @@ Component installation and configuration is accomplished by creating or modifyin
 
 ### Installation Topology
 
-You must install Konveyor Operator and components on all OpenShift clusters involved in a migration. 
+You must install Crane Operator and components on all OpenShift clusters involved in a migration. 
 
 |Use Case|Recommended Topology|
 |---|---|
@@ -100,14 +100,14 @@ You can choose components to install by setting parameters `MigrationController`
 | `migration_ui` | Set to `true` to install the Migration UI | Set to `true` only where `migration_controller: true`. |
 
 
-### Installing Konveyor Components
+### Installing Crane Components
 
-Creating a `MigrationController` CR will tell Konveyor Operator to install Migration Components.
+Creating a `MigrationController` CR will tell Crane Operator to install Migration Components.
 
 #### OpenShift 4
 
 1. In the OpenShift console navigate to _Operators => Installed Operators_.
-1. Click on _Konveyor Operator_.
+1. Click on _Crane Operator_.
 1. Find _MigrationController_ on the _Provided APIs_ page and click _Create Instance_.
 1. On OpenShift 4.5+, click the _Configure via: YAML view_ radio button.
 1. Customize settings (_component selections_, _migration size limits_) in the YAML editor, and click _Create_.
@@ -157,11 +157,11 @@ Setting for the max allowable number of resources in a Migration Plan. The defau
 
 You must follow the [CORs configuration steps](./docs/cors.md) _only if_:
 
-- You are installing Konveyor Operator 1.1.1 or older
+- You are installing Crane Operator 1.1.1 or older
 - You are installing Migration Controller and Migration UI on OpenShift 3
 
 
-## Removing Konveyor Operator 
+## Removing Crane Operator 
 To clean up all the resources created by the operator you can do the following:
 ```
 oc delete namespace openshift-migration
@@ -175,10 +175,10 @@ oc delete clusterrolebindings migration-operator velero mig-cluster-admin migrat
 oc delete oauthclient migration
 ```
 
-## Resources Migrated By Konveyor Operator
+## Resources Migrated By Crane Operator
 
-Please refer to [Resources Migrated By Konveyor Operator](./docs/resources_migrated.md) in order to gain insights regarding what kind of objects/resources
-get migrated by the Konveyor Operator.
+Please refer to [Resources Migrated By Crane Operator](./docs/resources_migrated.md) in order to gain insights regarding what kind of objects/resources
+get migrated by the Crane Operator.
 
 
 ## Direct Migration Requirements

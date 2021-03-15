@@ -56,7 +56,7 @@ docker push quay.io/$ORG/mig-operator-container:$TAG
 1. Update the ClusterServiceVersion in `./deploy/olm-catalog`
 
    ```
-   # from ./deploy/olm-catalog/[...]/konveyor-operator.v99.0.0.clusterserviceversion.yaml
+   # from ./deploy/olm-catalog/[...]/crane-operator.v99.0.0.clusterserviceversion.yaml
    [...]
       containers:
       - name: operator
@@ -215,7 +215,7 @@ The tooling and steps for pushing metadata depend on the OpenShift version.
 
 ### Disabling default OperatorSources
 
-If you are working on an operator such as konveyor, that exists in community-operators or elsewhere you may see duplicate operators in the UI. It can be difficult to discern which copy comes from which source. To alleviate this problem you may disable the default operator sources.
+If you are working on an operator such as crane, that exists in community-operators or elsewhere you may see duplicate operators in the UI. It can be difficult to discern which copy comes from which source. To alleviate this problem you may disable the default operator sources.
 
 ```
 oc patch OperatorHub cluster --type json -p '[{"op": "add", "path": "/spec/disableAllDefaultSources", "value": true}]'
@@ -263,12 +263,12 @@ cat << EOF > subscription.yml
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
-  name: konveyor-operator
+  name: crane-operator
   namespace: openshift-migration
 spec:
   channel: $CHANNEL
   installPlanApproval: Automatic
-  name: konveyor-operator
+  name: crane-operator
   source: migration-operator
   sourceNamespace: openshift-marketplace
 EOF

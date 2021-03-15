@@ -38,7 +38,7 @@ Once the playbook finishes you will have a sprint index image ready for testing.
 apiVersion: operators.coreos.com/v1alpha1
 kind: CatalogSource
 metadata:
-  name: konveyor-for-containers-bundle
+  name: crane-for-containers-bundle
   namespace: openshift-migration
 spec:
   sourceType: grpc

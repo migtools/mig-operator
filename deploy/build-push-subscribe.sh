@@ -115,7 +115,7 @@ if [[ ${create_sub} =~ ^[Yy]$ ]]; then
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
-  name: konveyor-operator
+  name: crane-operator
   namespace: openshift-migration
 spec:
   channel: development
