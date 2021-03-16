@@ -10,6 +10,7 @@ metadata:
   namespace: {{ mig_namespace }}
   labels:
     app: migration
+    app.kubernetes.io/part-of: openshift-migration
 spec:
   selector:
     matchLabels:
