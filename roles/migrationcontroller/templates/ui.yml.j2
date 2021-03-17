@@ -45,10 +45,14 @@ spec:
     spec:
       containers:
         - name: mig-ui
-{% if http_proxy|length >0 or https_proxy|length >0 %}
+{% if http_proxy|length >0 or https_proxy|length >0 or no_proxy|length > 0 %}
           env:
 {% else %}
           env: null
+{% endif %}
+{% if no_proxy|length >0 %}
+          - name: NO_PROXY
+            value: {{ no_proxy }}
 {% endif %}
 {% if http_proxy|length >0 %}
           - name: HTTP_PROXY
