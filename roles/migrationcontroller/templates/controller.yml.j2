@@ -51,6 +51,10 @@ spec:
         env:
         - name: EXCLUDED_RESOURCES
           value: {{ all_excluded_resources | join(',') }}
+{% if mig_pv_move_storageclasses|length >0 %}
+        - name: PV_MOVE_STORAGECLASSES
+          value: {{ mig_pv_move_storageclasses | join(',') }}
+{% endif %}
         - name: POD_NAMESPACE
           valueFrom:
             fieldRef:
