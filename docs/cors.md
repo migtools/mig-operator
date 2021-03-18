@@ -1,8 +1,8 @@
 ## CORS (Cross-Origin Resource Sharing) Configuration
-These steps are only required if you are using a Konveyor version older than 1.1.1 OR are installing the controller/UI on OpenShift 3.
+These steps are only required if you are using a Crane version older than 1.1.1 OR are installing the controller/UI on OpenShift 3.
 
 ### OpenShift 4
-If installing the controller/UI on a 4.x cluster using a version older than Konveyor 1.1.1 CORS will be configured on the cluster automatically. 
+If installing the controller/UI on a 4.x cluster using a version older than Crane 1.1.1 CORS will be configured on the cluster automatically. 
 
 If you are installing a controller older than 1.1.1 on OpenShift 4.1 you will need to add this to the MigrationController CR spec section: `deprecated_cors_configuration: true`
 

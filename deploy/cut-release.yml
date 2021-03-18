@@ -11,7 +11,7 @@
   tasks:
   - name: Replace operator tags in CSV
     replace:
-      path:  "{{ playbook_dir }}/../deploy/olm-catalog/bundle/manifests/konveyor-operator.v99.0.0.clusterserviceversion.yaml"
+      path:  "{{ playbook_dir }}/../deploy/olm-catalog/bundle/manifests/crane-operator.v99.0.0.clusterserviceversion.yaml"
       regexp: ':latest'
       replace: ":release-{{ release }}"
 
@@ -24,21 +24,21 @@
 
   - name: Replace operand in CSV
     replace:
-      path:  "{{ playbook_dir }}/../deploy/olm-catalog/bundle/manifests/konveyor-operator.v99.0.0.clusterserviceversion.yaml"
+      path:  "{{ playbook_dir }}/../deploy/olm-catalog/bundle/manifests/crane-operator.v99.0.0.clusterserviceversion.yaml"
       regexp: 'value: latest'
       replace: "value: release-{{ release }}"
 
   - name: Fix the version in the CSV
     replace:
-      path:  "{{ playbook_dir }}/../deploy/olm-catalog/bundle/manifests/konveyor-operator.v99.0.0.clusterserviceversion.yaml"
+      path:  "{{ playbook_dir }}/../deploy/olm-catalog/bundle/manifests/crane-operator.v99.0.0.clusterserviceversion.yaml"
       regexp: '99\.0\.0'
       replace: "{{ release }}"
 
   - name: Move CSV
     shell: |
            git mv \
-           {{ playbook_dir }}/../deploy/olm-catalog/bundle/manifests/konveyor-operator.v99.0.0.clusterserviceversion.yaml \
-           {{ playbook_dir }}/../deploy/olm-catalog/bundle/manifests/konveyor-operator.v{{ release }}.clusterserviceversion.yaml 
+           {{ playbook_dir }}/../deploy/olm-catalog/bundle/manifests/crane-operator.v99.0.0.clusterserviceversion.yaml \
+           {{ playbook_dir }}/../deploy/olm-catalog/bundle/manifests/crane-operator.v{{ release }}.clusterserviceversion.yaml 
 
   - name: Replace operator tags in operator.yml
     replace:
