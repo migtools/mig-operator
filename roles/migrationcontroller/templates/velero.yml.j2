@@ -17,6 +17,7 @@ spec:
     metadata:
       labels:
         component: velero
+        app.kubernetes.io/part-of: openshift-migration
         restic-restore-action-config-name: {{ restic_restore_action_config_configmap.env | k8s_config_resource_name }}
       annotations:
 {% if lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int < 9 %}

@@ -39,6 +39,7 @@ spec:
       labels:
         app: migration
         service: migration-ui
+        app.kubernetes.io/part-of: openshift-migration
 {% if ui_config_configmap is defined %}
         ui-config-name: {{ ui_config_configmap.env | k8s_config_resource_name }}
 {% endif %}
