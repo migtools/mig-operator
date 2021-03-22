@@ -134,10 +134,6 @@ spec:
                 - verify
                 type: object
               type: array
-            rsyncPodGarbageCollection:
-              description: RsyncPodGarbageCollection whether to clean up failed pods
-                during retry
-              type: boolean
             srcMigClusterRef:
               description: ObjectReference contains enough information to let you
                 inspect or modify the referred object.
