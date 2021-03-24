@@ -125,7 +125,7 @@ metadata:
 spec:
   channel: development
   installPlanApproval: Automatic
-  name: mtc-operator
+  name: crane-operator
   source: migration-operator
   sourceNamespace: openshift-marketplace
 EOF
