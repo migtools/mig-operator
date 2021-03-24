@@ -94,6 +94,8 @@ spec:
                   description: 'UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids'
                   type: string
               type: object
+            podNamespace:
+              type: string
             podRef:
               description: ObjectReference contains enough information to let you
                 inspect or modify the referred object.
@@ -130,6 +132,10 @@ spec:
                 uid:
                   description: 'UID of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids'
                   type: string
+              type: object
+            podSelector:
+              additionalProperties:
+                type: string
               type: object
           type: object
         status:
@@ -168,21 +174,74 @@ spec:
                 type: object
               type: array
             containerElapsedTime:
+              description: ContainerElapsedTime total execution time of Rsync Pod
+              type: string
+            creationTimestamp:
+              description: CreationTimestamp pod creation time
+              format: date-time
               type: string
             exitCode:
+              description: ExitCode exit code of terminated Rsync Pod
               format: int32
               type: integer
             lastObservedProgressPercent:
+              description: LastObservedProgressPercent progress of Rsync in percentage
               type: string
             lastObservedTransferRate:
+              description: LastObservedTransferRate rate of transfer of Rsync
               type: string
             logMessage:
+              description: LogMessage few lines of tailed log of the Rsync Pod
               type: string
             observedDigest:
               type: string
             phase:
-              description: PodPhase is a label for the condition of a pod at the current
-                time.
+              description: PodPhase phase of the Rsync Pod
+              type: string
+            podName:
+              description: PodName name of the Rsync Pod
+              type: string
+            rsyncElapsedTime:
+              description: RsyncElapsedTime total elapsed time of Rsync operation
+              type: string
+            rsyncPodStatuses:
+              description: RsyncPodStatuses history of all Rsync attempts
+              items:
+                description: RsyncPodStatus defines observed state of an Rsync attempt
+                properties:
+                  containerElapsedTime:
+                    description: ContainerElapsedTime total execution time of Rsync
+                      Pod
+                    type: string
+                  creationTimestamp:
+                    description: CreationTimestamp pod creation time
+                    format: date-time
+                    type: string
+                  exitCode:
+                    description: ExitCode exit code of terminated Rsync Pod
+                    format: int32
+                    type: integer
+                  lastObservedProgressPercent:
+                    description: LastObservedProgressPercent progress of Rsync in
+                      percentage
+                    type: string
+                  lastObservedTransferRate:
+                    description: LastObservedTransferRate rate of transfer of Rsync
+                    type: string
+                  logMessage:
+                    description: LogMessage few lines of tailed log of the Rsync Pod
+                    type: string
+                  phase:
+                    description: PodPhase phase of the Rsync Pod
+                    type: string
+                  podName:
+                    description: PodName name of the Rsync Pod
+                    type: string
+                type: object
+              type: array
+            totalProgressPercentage:
+              description: TotalProgressPercentage cumulative percentage of all Rsync
+                attempts
               type: string
           type: object
       type: object
