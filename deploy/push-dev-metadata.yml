@@ -9,7 +9,7 @@
   tasks:
   - name: Add development bundle to the new index
     shell: |
-           opm index add -p docker -f quay.io/konveyor/mig-operator-index:{{ new_release }} \
+           opm index add -c podman -f quay.io/konveyor/mig-operator-index:{{ new_release }} \
            --bundles quay.io/konveyor/mig-operator-bundle:latest \
            --tag quay.io/konveyor/mig-operator-index:latest
 
@@ -52,5 +52,5 @@
   - name: Push App
     shell: operator-courier --verbose push . konveyor crane-operator {{ new_version }} "$QUAY_TOKEN".
     args:
-      chdir: "{{ tmp_dir.path }}/mtc-operator"
+      chdir: "{{ tmp_dir.path }}/crane-operator"
 
