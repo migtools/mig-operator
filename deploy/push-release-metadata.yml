@@ -36,15 +36,9 @@
     register: tmp_dir
 
   - name: Extract operator metadata
-    shell: opm index export -c podman -i quay.io/konveyor/mig-operator-index:latest -o mtc-operator -f .
+    shell: opm index export -c podman -i quay.io/konveyor/mig-operator-index:latest -o crane-operator -f .
     args:
       chdir: "{{ tmp_dir.path }}"
-
-  - name: Replace operator name
-    replace:
-      path: "{{ tmp_dir.path }}/mtc-operator/package.yaml"
-      regexp: mtc-operator
-      replace: crane-operator
 
   - name: Get current version
     uri:
