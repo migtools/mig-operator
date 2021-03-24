@@ -2,6 +2,11 @@
 
 MIG_OPERATOR_REPO=$(pwd)
 
+if [[ "${ORG}" == "konveyor" ]]; then
+  echo "ORG is set to konveyor. Change ORG to your personal quay org."
+  exit 1
+fi
+
 if [[ $(basename ${MIG_OPERATOR_REPO}) != "mig-operator" ]]; then
   echo "Please run this script from the root directory of the mig-operator git repo."
   exit 1
@@ -81,7 +86,7 @@ spec:
   image: quay.io/$ORG/mig-operator-index:$TAG
 EOF
 
-  export BUNDLEDIGEST=$(docker pull quay.io/$ORG/mig-operator-index:latest | grep Digest | awk '{ print $2 }')
+  export BUNDLEDIGEST=$(docker pull quay.io/$ORG/mig-operator-index:$TAG | grep Digest | awk '{ print $2 }')
   sed "s/:latest/@$BUNDLEDIGEST/" catalogsource.yml | oc create -f -
   rm catalogsource.yml
 fi
