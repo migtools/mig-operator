@@ -79,6 +79,8 @@ for i in ${IMAGES[@]}; do
   fi
 done
 
+sed -i 's,crane-operator,mtc-operator,g' deploy/olm-catalog/bundle/metadata/annotations.yaml
+
 # Make Downstream CSV Changes
 for f in deploy/olm-catalog/bundle/manifests/crane-operator.${MTCVERSION}.clusterserviceversion.yaml \
          deploy/non-olm/operator.yml
