@@ -2,3 +2,9 @@ controller.yml
 my_var
 marketplace-secret.operatorsource.yml
 .DS_Store
+
+# files created by deploy/build-push-subscribe.sh
+mig-catalog-source.yml
+mig-operator-group.yml
+mig-operator-source.yml
+mig-operator-subscription.yml
