@@ -102,12 +102,15 @@ apiVersion: operators.coreos.com/v1
 kind: OperatorGroup
 metadata:
   namespace: openshift-migration
+  labels:
+    opg-for: mtc
   generateName: openshift-migration-
 spec:
   targetNamespaces:
   - openshift-migration
 EOF
   
+  oc delete operatorgroup -l opg-for=mtc 
   oc create -f opg.yaml
   rm opg.yaml
 fi
