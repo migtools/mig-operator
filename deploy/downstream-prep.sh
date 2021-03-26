@@ -6,6 +6,9 @@ git checkout origin/$(git branch --show-current) -- Dockerfile
 git checkout origin/$(git branch --show-current) -- .gitignore
 git checkout origin/$(git branch --show-current) -- content_sets.yml
 git checkout origin/$(git branch --show-current) -- container.yaml
+for file in $(git status --porcelain -- render_templates* | awk '{print $2}'); do
+  git checkout origin/$(git branch --show-current) -- "${file}"
+done
 
 #deal with k8s_status change upstream/downstream
 sed -i "s,ansible_operator_meta,meta,g" roles/migrationcontroller/tasks/main.yml
