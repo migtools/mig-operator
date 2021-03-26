@@ -26,6 +26,10 @@ metadata:
     control-plane: controller-manager
     controller-tools.k8s.io: "1.0"
     app.kubernetes.io/part-of: openshift-migration
+{% if jaeger_enabled|bool %}
+  annotations:
+    sidecar.jaegertracing.io/inject: "true"
+{% endif %}
   name: migration-controller
   namespace: {{ mig_namespace }}
 spec:
@@ -109,10 +113,6 @@ spec:
               fieldPath: metadata.namespace
         - name: ROLE
           value: discovery
-{% if jaeger_enabled|length >0 %}          
-        - name: JAEGER_ENABLED
-          value: true
-{% endif %}
         - name: SECRET_NAME
           value: webhook-server-secret
 {% if http_proxy|length >0 %}
