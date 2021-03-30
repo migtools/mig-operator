@@ -48,6 +48,9 @@ data:
 {% if rsync_opt_extras is defined %}
   RSYNC_OPT_EXTRAS: "{{ rsync_opt_extras }}"
 {% endif %}
+{% if rsync_backoff_limit is defined %}
+  RSYNC_BACKOFF_LIMIT: "{{ rsync_backoff_limit }}"
+{% endif %}
   STUNNEL_TCP_PROXY: "{{ stunnel_tcp_proxy }}"
   STUNNEL_VERIFY_CA: "{{ stunnel_verify_ca }}"
   STUNNEL_VERIFY_CA_LEVEL: "{{ stunnel_verify_ca_level }}"
