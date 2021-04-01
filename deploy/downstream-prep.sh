@@ -10,12 +10,9 @@ for file in $(git status --porcelain -- render_templates* | awk '{print $2}'); d
   git checkout origin/$(git branch --show-current) -- "${file}"
 done
 
-#deal with k8s_status change upstream/downstream
-sed -i "s,ansible_operator_meta,meta,g" roles/migrationcontroller/tasks/main.yml
-sed -i "s,ansible_operator_meta,meta,g" roles/migrationcontroller/templates/migration-controller.yml.j2
 
 #Fix differing entrypoint
-sed -i 's,.tini.*,exec ${OPERATOR} exec-entrypoint ansible --watches-file=/opt/ansible/watches.yaml $@,g' build/entrypoint
+sed -i 's,tini,usr/bin/tini,g' build/entrypoint
 
 #Declare image information
 IMAGES=(
