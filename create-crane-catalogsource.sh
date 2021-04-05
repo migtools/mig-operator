@@ -5,6 +5,6 @@
 # The image will not get repulled even if the CatalogSource is recreated
 # So we'll pull latest, get the sha, and use that instead
 
-export BUNDLEDIGEST=$(docker pull quay.io/konveyor/mig-operator-index:latest | grep Digest | awk '{ print $2 }')
+export BUNDLEDIGEST=$(oc image mirror --dry-run=true quay.io/konveyor/mig-operator-index:latest=quay.io/konveyor/mig-operator-index:dry 2>&1 | grep -A1 manifests | grep sha256 | awk -F' ' '{ print $1 }')
 
-sed "s/:latest/@$BUNDLEDIGEST/" mig-operator-bundle.yaml | oc create -f -
+sed "s/:latest/@$BUNDLEDIGEST/" crane-catalogsource.yaml | oc create -f -
