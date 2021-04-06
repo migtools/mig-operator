@@ -86,7 +86,7 @@ spec:
   image: quay.io/$ORG/mig-operator-index:$TAG
 EOF
 
-  export BUNDLEDIGEST=$(docker pull quay.io/$ORG/mig-operator-index:$TAG | grep Digest | awk '{ print $2 }')
+  export BUNDLEDIGEST=$(oc image mirror --dry-run=true quay.io/$ORG/mig-operator-index:$TAG=quay.io/$ORG/mig-operator-index:dry 2>&1 | grep -A1 manifests | grep sha256 | awk -F' ' '{ print $1 }')
   sed "s/:latest/@$BUNDLEDIGEST/" catalogsource.yml | oc create -f -
   rm catalogsource.yml
 fi
