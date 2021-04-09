@@ -225,6 +225,7 @@
     k8s:
       state: "{{ velero_state }}"
       definition: "{{ lookup('template', 'velero.yml.j2') }}"
+      merge_type: merge
 
   - name: "Set up migration CRDs"
     k8s:
@@ -535,6 +536,7 @@
       k8s:
         state: "{{ controller_state }}"
         definition: "{{ lookup('template', 'controller.yml.j2') }}"
+        merge_type: merge
     rescue:
     - name: "Remove mig controller"
       k8s:
@@ -545,6 +547,7 @@
       k8s:
         state: "{{ controller_state }}"
         definition: "{{ lookup('template', 'controller.yml.j2') }}"
+        merge_type: merge
 
   - name: "Set up mig log reader"
     k8s:
