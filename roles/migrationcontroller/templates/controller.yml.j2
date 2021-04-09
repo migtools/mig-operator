@@ -26,6 +26,10 @@ metadata:
     control-plane: controller-manager
     controller-tools.k8s.io: "1.0"
     app.kubernetes.io/part-of: openshift-migration
+{% if jaeger_enabled|bool %}
+  annotations:
+    sidecar.jaegertracing.io/inject: "true"
+{% endif %}
   name: migration-controller
   namespace: {{ mig_namespace }}
 spec:
