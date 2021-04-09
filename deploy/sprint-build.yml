@@ -116,7 +116,7 @@
 
   - name: Clone mig-operator
     git:
-      repo: https://github.com/jmontleon/mig-operator.git
+      repo: https://github.com/konveyor/mig-operator.git
       dest: "{{ tmp_dir.path }}/mig-operator"
       version: bundle
 
