@@ -267,7 +267,7 @@ spec:
     image: quay.io/konveyor/mig-log-reader:latest
   - name: rsync_transfer
     image: quay.io/konveyor/rsync-transfer:latest
-  displayName: Crane Operator for Containers
+  displayName: Crane Operator
   description: |
     The Crane Operator enables installation of the application migration tool components.
 
