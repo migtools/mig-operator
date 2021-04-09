@@ -116,9 +116,9 @@
 
   - name: Clone mig-operator
     git:
-      repo: https://github.com/jmontleon/mig-operator.git
+      repo: https://github.com/konveyor/mig-operator.git
       dest: "{{ tmp_dir.path }}/mig-operator"
-      version: bundle
+      version: master
 
   - name: Replace operator tags in CSV
     replace:
@@ -141,7 +141,7 @@
     shell: podman push quay.io/konveyor/mig-operator-bundle:sprint-{{ sprint }}.{{ release }}
 
   - name: Build sprint index image
-    shell: opm index add -p docker --bundles quay.io/konveyor/mig-operator-bundle:sprint-{{ sprint }}.{{ release }} --tag quay.io/konveyor/mig-operator-index:sprint-{{ sprint }}.{{ release }}
+    shell: opm index add -c podman --bundles quay.io/konveyor/mig-operator-bundle:sprint-{{ sprint }}.{{ release }} --tag quay.io/konveyor/mig-operator-index:sprint-{{ sprint }}.{{ release }}
 
   - name: Push sprint index image
     shell: podman push quay.io/konveyor/mig-operator-index:sprint-{{ sprint }}.{{ release }}
