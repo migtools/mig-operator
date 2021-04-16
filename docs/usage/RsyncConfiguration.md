@@ -37,20 +37,20 @@ Please note that the default configuration used by DVM is tested in variouos env
 
 _MigrationController_ CR exposes following variables to configure resource usage requirements and limits on Rsync and Stunnel pods:
 
-| Variable                  	| Type   	| Default 	| Description                          	|
-|---------------------------	|--------	|---------	|--------------------------------------	|
-| client_pod_cpu_limit      	| string 	| "1"     	| Source Rsync Pod's cpu limit         	|
-| client_pod_memory_limit   	| string 	| "1Gi"   	| Source Rsync Pod's memory limit      	|
-| client_pod_cpu_request    	| string 	| "400m"  	| Source Rsync Pod's cpu requests      	|
-| client_pod_memory_request 	| string 	| "1Gi"   	| Source Rsync Pod's memory requests   	|
-| transfer_pod_cpu_limits   	| string 	| "1"     	| Target Rsync Pod's cpu limit         	|
-| transfer_pod_cpu_requests 	| string 	| "400m"  	| Target Rsync Pod's cpu requests      	|
-| transfer_pod_mem_limits   	| string 	| "1Gi"   	| Target Rsync Pod's memory limit      	|
-| transfer_pod_mem_requests 	| string 	| "1Gi"   	| Target Rsync Pod's memory requests   	|
-| stunnel_pod_cpu_limits    	| string 	| "1"     	| Source Stunnel Pod's cpu limit       	|
-| stunnel_pod_cpu_requests  	| string 	| "400m"  	| Source Stunnel Pod's cpu requests    	|
-| stunnel_pod_mem_limits    	| string 	| "1Gi"   	| Source Stunnel Pod's memory limit    	|
-| stunnel_pod_mem_requests  	| string 	| "1Gi"   	| Source Stunnel Pod's memory requests 	|
+| Variable                  	      | Type   	| Default 	| Description                          	|
+|---------------------------------  |--------	|---------	|--------------------------------------	|
+| source_rsync_pod_cpu_limits	      | string 	| "1"     	| Source Rsync Pod's cpu limit         	|
+| source_rsync_pod_memory_limits   	| string 	| "1Gi"   	| Source Rsync Pod's memory limit      	|
+| source_rsync_pod_cpu_requests    	| string 	| "400m"  	| Source Rsync Pod's cpu requests      	|
+| source_rsync_pod_memory_requests 	| string 	| "1Gi"   	| Source Rsync Pod's memory requests   	|
+| target_rsync_pod_cpu_limits   	  | string 	| "1"     	| Target Rsync Pod's cpu limit         	|
+| target_rsync_pod_cpu_requests 	  | string 	| "400m"  	| Target Rsync Pod's cpu requests      	|
+| target_rsync_pod_memory_limits   	| string 	| "1Gi"   	| Target Rsync Pod's memory limit      	|
+| target_rsync_pod_memory_requests 	| string 	| "1Gi"   	| Target Rsync Pod's memory requests   	|
+| stunnel_pod_cpu_limits    	      | string 	| "1"     	| Source Stunnel Pod's cpu limit       	|
+| stunnel_pod_cpu_requests  	      | string 	| "400m"  	| Source Stunnel Pod's cpu requests    	|
+| stunnel_pod_memory_limits    	    | string 	| "1Gi"   	| Source Stunnel Pod's memory limit    	|
+| stunnel_pod_memory_requests  	    | string 	| "1Gi"   	| Source Stunnel Pod's memory requests 	|
 
 ---
 
