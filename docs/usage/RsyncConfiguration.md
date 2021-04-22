@@ -52,6 +52,23 @@ _MigrationController_ CR exposes following variables to configure resource usage
 | stunnel_pod_memory_limits    	    | string 	| "1Gi"   	| Source Stunnel Pod's memory limit    	|
 | stunnel_pod_memory_requests  	    | string 	| "1Gi"   	| Source Stunnel Pod's memory requests 	|
 
+### Configuring retries for Rsync
+
+MTC 1.4.3 onwards, a new ability of retrying a failed Rsync operation is introduced. By default, the migration controller will retry Rsync until all of the data is successfully transferred from the source to the target volume or a specified number of retries is met. The default retry limit is set to `20`. For larger volumes, the limit `20` may not be sufficient. It can be increased by using the following variable in _MigrationController_ CR:
+
+```
+apiVersion: migration.openshift.io/v1alpha1
+kind: MigrationController
+metadata:
+  name: migration-controller
+  namespace: openshift-migration
+spec:
+  [...]
+  rsync_backoff_limit: 40
+```
+
+The above will set the retry limit to `40`.
+
 ---
 
 ### Known Issues
