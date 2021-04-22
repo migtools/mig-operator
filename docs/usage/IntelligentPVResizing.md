@@ -46,4 +46,15 @@ MTC uses following criteria to calculate resulting PVC capacity in the target cl
 
 2. If a PV originally provisioned through a PVC is altered using ad-hoc storage utilities (e.g. Gluster CLI) making capacities in PVC and the PV mismatch, maximum of both capacities is used as resulting capacity.  
 
-3. If disk usage of the volume is more than 97%, an extra headroom of 3% is added to the original usage percentage.
+3. If disk usage of the volume is more than 97%, an extra headroom of 3% is added to the original usage percentage. This threshold can be adjusted in _MigrationController_ CR using `pv_resizing_threshold` variable:
+
+```yaml
+apiVersion: migration.openshift.io/v1alpha1
+kind: MigrationController
+metadata:
+  name: migration-controller
+  namespace: openshift-migration
+spec:
+  [...]
+  pv_resizing_threshold: 3
+```
