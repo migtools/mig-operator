@@ -10,7 +10,7 @@ platforms:
   - name: kind-test-local
     groups:
       - k8s
-    image: bsycorp/kind:${KUBE_VERSION:-v1.17.9}
+    image: bsycorp/kind:${KUBE_VERSION:-latest-1.19}
     privileged: true
     override_command: false
     exposed_ports:
