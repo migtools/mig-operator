@@ -58,4 +58,6 @@ data:
   DISABLE_IMAGE_COPY: "{{ disable_image_copy }}"
 {% endif %}
   JAEGER_ENABLED: "{{ jaeger_enabled }}"
-
+{% if pv_resizing_threshold is defined %}
+  PV_RESIZING_USAGE_THRESHOLD: "{{ pv_resizing_threshold }}"
+{% endif %}
