@@ -17,4 +17,8 @@ if [ x"$USER_ID" != x"0" -a x"$USER_ID" != x"1001" ]; then
     export LD_PRELOAD
 fi
 
-/tini -- /usr/local/bin/ansible-operator run --watches-file=./watches.yaml
+if [ -f "/tini" ]; then
+        /tini -- /usr/local/bin/ansible-operator run --watches-file=./watches.yaml
+else
+        /usr/bin/tini -- /usr/local/bin/ansible-operator run --watches-file=./watches.yaml
+fi
