@@ -11,9 +11,6 @@ for file in $(git status --porcelain -- render_templates* | awk '{print $2}'); d
 done
 
 
-#Fix differing entrypoint
-sed -i 's,tini,usr/bin/tini,g' build/entrypoint
-
 #Declare image information
 IMAGES=(
   "controller"
