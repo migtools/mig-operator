@@ -1,6 +1,6 @@
 FROM registry.access.redhat.com/ubi8-minimal
 
-RUN microdnf -y install python3-pip
+RUN microdnf -y install python3-pip git
 
 RUN pip3 install -U pip
 
