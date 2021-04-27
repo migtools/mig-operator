@@ -6,6 +6,9 @@ git checkout origin/$(git branch --show-current) -- Dockerfile
 git checkout origin/$(git branch --show-current) -- .gitignore
 git checkout origin/$(git branch --show-current) -- content_sets.yml
 git checkout origin/$(git branch --show-current) -- container.yaml
+for file in $(git status --porcelain -- render_templates* | awk '{print $2}'); do
+  git checkout origin/$(git branch --show-current) -- "${file}"
+done
 
 
 #Declare image information
