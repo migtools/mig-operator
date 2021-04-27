@@ -8,9 +8,6 @@ git checkout origin/$(git branch --show-current) -- content_sets.yml
 git checkout origin/$(git branch --show-current) -- container.yaml
 
 
-#Fix differing entrypoint
-sed -i 's,tini,usr/bin/tini,g' build/entrypoint
-
 #Declare image information
 IMAGES=(
   "controller"
