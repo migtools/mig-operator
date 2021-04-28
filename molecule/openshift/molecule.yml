@@ -1,0 +1,47 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: delegated
+lint: |
+  set -e
+  yamllint -d "{extends: relaxed, rules: {line-length: {max: 400}}}" roles
+platforms:
+  - name: openshift
+    groups:
+    - k8s
+provisioner:
+  name: ansible
+  log: true
+  lint: |
+    set -e
+    ansible-lint
+  inventory:
+    group_vars:
+      all:
+        controller_namespace: ${TEST_CONTROLLER_NAMESPACE:-openshift-migration}
+        migration_namespace: ${TEST_MIGRATION_NAMESPACE:-openshift-migration}
+        namespace: ${TEST_OPERATOR_NAMESPACE:-openshift-migration}
+        kubeconfig_file: ${MOLECULE_EPHEMERAL_DIRECTORY}/kubeconfig
+        test_image: ${REPLACE_IMAGE:-quay.io/konveyor/mig-operator-container:latest}
+    host_vars:
+      localhost:
+        ansible_python_interpreter: '{{ ansible_playbook_python }}'
+        deploy_dir: ${MOLECULE_PROJECT_DIRECTORY}/molecule/deploy
+  env:
+    K8S_AUTH_KUBECONFIG: ${KUBECONFIG:-"~/.kube/config"}
+verifier:
+  name: ansible
+  lint: |
+    set -e
+    ansible-lint
+scenario:
+  name: openshift
+  test_sequence:
+    - lint
+    - syntax
+    - destroy
+    - prepare
+    - converge
+    - verify
+    - destroy

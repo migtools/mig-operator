@@ -25,3 +25,20 @@
       until: (result.status|default(-1)) == 200
       retries: 60
       delay: 5
+
+- name: Prepare
+  hosts: localhost
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: Create Custom Resource Definitions
+      k8s:
+        definition: "{{ lookup('file', item) }}"
+      with_items:
+      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migrationcontroller.crd.yaml"
+
+    - name: Create namespace
+      k8s:
+        api_version: v1
+        kind: Namespace
+        name: '{{ namespace }}'
