@@ -1,0 +1,62 @@
+---
+- name: Verify
+  hosts: localhost
+  vars:
+    custom_resource: "{{ lookup('file', '/'.join([deploy_dir, 'migration_v1alpha1_migration_cr.yaml'])) | from_yaml }}"
+    deploy_dir: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/molecule/deploy"
+  connection: local
+  gather_facts: no
+  tasks:
+  - block:
+    - name: Wait 240s for reconciliation to run
+      k8s_info:
+        api_version: '{{ custom_resource.apiVersion }}'
+        kind: '{{ custom_resource.kind }}'
+        namespace: '{{ controller_namespace }}'
+        name: '{{ custom_resource.metadata.name }}'
+      register: cr
+      until:
+      - "'Reconciled' in (cr | json_query('resources[].status.phase'))"
+      delay: 10
+      retries: 24
+    rescue:
+    - name: debug cr
+      ignore_errors: yes
+      failed_when: false
+      debug:
+        var: debug_cr
+      vars:
+        debug_cr: '{{ lookup("k8s",
+          kind=custom_resource.kind,
+          api_version=custom_resource.apiVersion,
+          namespace=controller_namespace,
+          resource_name=custom_resource.metadata.name
+        )}}'
+
+    - name: debug migration operator lookup
+      ignore_errors: yes
+      failed_when: false
+      debug:
+        var: deploy
+      vars:
+        deploy: '{{ lookup("k8s",
+          kind="Deployment",
+          api_version="apps/v1",
+          namespace=controller_namespace,
+          label_selector="app=migration"
+        )}}'
+
+    - name: get operator logs
+      ignore_errors: yes
+      failed_when: false
+      command: kubectl logs deployment/{{ definition.metadata.name }} -n {{ controller_namespace }}
+      environment:
+        KUBECONFIG: '{{ lookup("env", "KUBECONFIG") }}'
+      vars:
+        definition: "{{ lookup('template', '/'.join([deploy_dir, 'operator.yaml'])) | from_yaml }}"
+      register: log
+
+    - debug: var=log.stdout_lines
+
+    - fail:
+        msg: "Failed on action: converge"
