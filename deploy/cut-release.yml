@@ -18,9 +18,12 @@
   tasks:
   - name: Replace operator tags in molecule test
     replace:
-      path:  "{{ playbook_dir }}/../molecule/test-local/converge.yml"
+      path:  "{{ item }}"
       regexp: ':latest'
       replace: ":release-{{ release }}"
+    with_items:
+    - "{{ playbook_dir }}/../molecule/kind/converge.yml"
+    - "{{ playbook_dir }}/../molecule/openshift/converge.yml"
 
   - name: Replace operand in CSV
     replace:
