@@ -7,7 +7,7 @@ lint: |
   set -e
   yamllint -d "{extends: relaxed, rules: {line-length: {max: 400}}}" roles
 platforms:
-  - name: kind-test-local
+  - name: kind
     groups:
       - k8s
     image: bsycorp/kind:${KUBE_VERSION:-latest-1.19}
@@ -51,10 +51,9 @@ verifier:
     set -e
     ansible-lint
 scenario:
-  name: test-local
+  name: kind
   test_sequence:
     - lint
-    - destroy
     - syntax
     - create
     - prepare
