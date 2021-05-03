@@ -26,3 +26,4 @@ installing CAM for OCP3->3 installations, and 4->4 installations.<br>
 [Section 19 - Intelligent PV resizing](./IntelligentPVResizing.md)<br>
 [Section 20 - MTC with Kubernetes Controller-Runtime Package](./MTCControllerRuntime.md)<br>
 [Section 21 - Proxy configuration for Direct Volume Migration](./DVMProxyConfiguration.md)<br>
+[Section 22 - Adjusting MigCluster ConfigMap](./MigClusterConfiguration.md)<br>

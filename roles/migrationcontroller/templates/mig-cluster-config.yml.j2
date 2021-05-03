@@ -14,3 +14,10 @@ data:
   RSYNC_PRIVILEGED: "{{ migration_rsync_privileged }}"
   CLUSTER_SUBDOMAIN: "{{ cluster_subdomain }}"
   OPERATOR_VERSION: "{{ mig_operator_version }}"
+{% if migration_registry_readiness_timeout is defined %}
+  REGISTRY_READINESS_TIMEOUT: "{{ migration_registry_readiness_timeout }}"
+{% endif %}
+{% if migration_registry_liveness_timeout is defined %}
+  REGISTRY_LIVENESS_TIMEOUT: "{{ migration_registry_liveness_timeout }}"
+{% endif %}
+
