@@ -10,20 +10,20 @@ spec:
   - JSONPath: .spec.clusterRef.name
     name: Cluster
     type: string
-  - JSONPath: .spec.podRef.name
+  - JSONPath: .status.podName
     name: Pod Name
     type: string
-  - JSONPath: .spec.podRef.namespace
+  - JSONPath: .spec.podNamespace
     name: Pod Namespace
     type: string
-  - JSONPath: .status.lastObservedProgressPercent
-    name: Progress Percent
+  - JSONPath: .status.totalProgressPercentage
+    name: Progress
     type: string
   - JSONPath: .status.lastObservedTransferRate
     name: Transfer Rate
     type: string
   - JSONPath: .metadata.creationTimestamp
-    name: age
+    name: Age
     type: date
   group: migration.openshift.io
   names:
