@@ -519,6 +519,7 @@
     - name: "Set up mig controller configmap"
       k8s:
         state: present
+        apply: yes
         definition: "{{ lookup('template', 'controller_config.yml.j2') }}"
 
     - name: "Get mig controller configmap for hashing"

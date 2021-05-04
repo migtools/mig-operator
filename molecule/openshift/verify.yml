@@ -19,6 +19,53 @@
       - "'Reconciled' in (cr | json_query('resources[].status.phase'))"
       delay: 10
       retries: 24
+
+    - name: Update CR to have garbage rsync flag
+      k8s:
+        state: present
+        api_version: '{{ custom_resource.apiVersion }}'
+        kind: '{{ custom_resource.kind }}'
+        namespace: '{{ controller_namespace }}'
+        name: '{{ custom_resource.metadata.name }}'
+        definition:
+          spec:
+            rsync_opt_extras: "--fake-option"
+
+    - name: Wait 240s for reconciliation to run and add rysnc opt
+      k8s_info:
+        api_version: v1
+        kind: ConfigMap
+        namespace: '{{ controller_namespace }}'
+        name: migration-controller
+      register: cm
+      until:
+      - (cm | json_query('resources[].data.RSYNC_OPT_EXTRAS')) is defined
+      delay: 10
+      retries: 24
+
+    - name: Update CR to remove garbage rsync flag
+      k8s:
+        state: present
+        api_version: '{{ custom_resource.apiVersion }}'
+        kind: '{{ custom_resource.kind }}'
+        namespace: '{{ controller_namespace }}'
+        name: '{{ custom_resource.metadata.name }}'
+        definition:
+          spec:
+            rsync_opt_extras: null
+
+    - name: Wait 240s for reconciliation to run and remove rysnc opt
+      k8s_info:
+        api_version: v1
+        kind: ConfigMap
+        namespace: '{{ controller_namespace }}'
+        name: migration-controller
+      register: cm2
+      until:
+      - cm2.resources.0.data.RSYNC_OPT_EXTRAS is not defined
+      delay: 10
+      retries: 24
+
     rescue:
     - name: debug cr
       ignore_errors: yes
@@ -31,6 +78,19 @@
           api_version=custom_resource.apiVersion,
           namespace=controller_namespace,
           resource_name=custom_resource.metadata.name
+        )}}'
+    
+    - name: debug cm
+      ignore_errors: yes
+      failed_when: false
+      debug:
+        var: debug_cm
+      vars:
+        debug_cm: '{{ lookup("k8s",
+          kind="ConfigMap",
+          api_version="v1",
+          namespace=controller_namespace,
+          resource_name="migration-controller"
         )}}'
 
     - name: debug migration operator lookup
