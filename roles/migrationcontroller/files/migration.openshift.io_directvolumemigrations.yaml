@@ -122,6 +122,8 @@ spec:
                     items:
                       type: string
                     type: array
+                  targetNamespace:
+                    type: string
                   targetStorageClass:
                     type: string
                   uid:
@@ -132,7 +134,6 @@ spec:
                 required:
                 - targetAccessModes
                 - targetStorageClass
-                - verify
                 type: object
               type: array
             srcMigClusterRef:
