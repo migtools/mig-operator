@@ -1,4 +1,3 @@
 collections:
-  - name: community.kubernetes
-    version: <=1.0
-  - name: operator_sdk.util
+  - community.kubernetes
+  - operator_sdk.util
