@@ -20,18 +20,30 @@ pushd ${MIG_OPERATOR_REPO} &> /dev/null
 
 trap "{ popd &> /dev/null; }" EXIT
 
-echo "Build docker image? (Y/N)" 
-read build_docker
-
 if [[ -z "$ORG" ]]; then
-  echo "Define ORG var"
+  echo "ORG var undefined. What quay organization should images be pushed to? (suggestion: your personal org)"
   read ORG
+  if [[ -z "$ORG" ]]; then
+    echo "ORG is undefined, exiting"
+    exit 1
+  fi
 fi
 
 if [[ -z "$TAG" ]]; then
-  echo "Define TAG var"
+  echo "TAG var undefined. What tag should be used for built images? (suggestion: latest)"
   read TAG
+  if [[ -z "$TAG" ]]; then
+    echo "TAG is undefined, exiting"
+    exit 1
+  fi
 fi
+
+echo "Using quay ORG=${ORG}"
+echo "Using image TAG=${TAG}"
+echo
+
+echo "Build docker image? (Y/N)" 
+read build_docker
 
 if [[ ${build_docker} =~ ^[Yy]$ ]]; then
   IMG=quay.io/$ORG/mig-operator-container:$TAG
