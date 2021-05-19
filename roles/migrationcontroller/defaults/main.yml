@@ -59,6 +59,7 @@ mig_controller_requests_cpu: "100m"
 mig_controller_requests_memory: "350Mi"
 mig_controller_version: "{{ snapshot_tag | default(lookup( 'env', 'MIG_CONTROLLER_TAG')) }}"
 mig_controller_image_fqin: "{{ mig_controller_image }}:{{ mig_controller_version }}"
+mig_controller_enable_cache: true
 discovery_volume_path: "/var/cache/discovery"
 mig_operator_version: "latest"
 mig_pv_move_storageclasses: []
