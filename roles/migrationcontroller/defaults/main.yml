@@ -50,7 +50,7 @@ hook_runner_image: "{{ registry }}/{{ project }}/{{ hook_runner_repo }}"
 hook_runner_repo: "{{ lookup( 'env', 'HOOK_RUNNER_REPO') }}"
 hook_runner_version: "{{ snapshot_tag | default(lookup( 'env', 'HOOK_RUNNER_TAG')) }}"
 hook_runner_image_fqin: "{{ hook_runner_image }}:{{ hook_runner_version }}"
-jaeger_enabled: "false"
+jaeger_enabled: false
 mig_controller_image: "{{ registry }}/{{ project }}/{{ mig_controller_repo }}"
 mig_controller_limits_cpu: "1"
 mig_controller_limits_memory: "10Gi"
@@ -59,6 +59,7 @@ mig_controller_requests_cpu: "100m"
 mig_controller_requests_memory: "350Mi"
 mig_controller_version: "{{ snapshot_tag | default(lookup( 'env', 'MIG_CONTROLLER_TAG')) }}"
 mig_controller_image_fqin: "{{ mig_controller_image }}:{{ mig_controller_version }}"
+discovery_collect_events: true
 discovery_volume_path: "/var/cache/discovery"
 mig_operator_version: "latest"
 mig_pv_move_storageclasses: []

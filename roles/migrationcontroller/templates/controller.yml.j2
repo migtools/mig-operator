@@ -113,6 +113,10 @@ spec:
               fieldPath: metadata.namespace
         - name: ROLE
           value: discovery
+{% if discovery_collect_events|bool is false %}
+        - name: DISCOVERY_COLLECT_EVENTS
+          value: "false"
+{% endif %}
         - name: SECRET_NAME
           value: webhook-server-secret
 {% if http_proxy|length >0 %}
