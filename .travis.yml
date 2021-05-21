@@ -1,8 +1,0 @@
-os: linux
-dist: xenial
-services: docker
-language: python
-install:
-  - pip install yamllint ansible docker molecule molecule-docker 'kubernetes==11.0.0' 'openshift==0.11.2' jmespath
-script:
-  - molecule test -s test-local
