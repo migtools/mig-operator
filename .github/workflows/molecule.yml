@@ -1,0 +1,21 @@
+name: molecule
+
+on:
+  push:
+    branches:
+      - master
+      - release-*
+  pull_request:
+    branches:
+      - master
+      - release-*
+jobs:
+  molecule:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install
+        run: pip install yamllint ansible docker molecule molecule-docker 'kubernetes==11.0.0' 'openshift==0.11.2' jmespath
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run
+        run: molecule test -s kind
