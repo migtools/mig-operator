@@ -8,17 +8,14 @@ on:
   pull_request:
     branches:
       - master
-            - release-*
+      - release-*
 jobs:
   molecule:
     runs-on: ubuntu-latest
     steps:
+      - name: Install
+        run: pip install yamllint ansible docker molecule molecule-docker 'kubernetes==11.0.0' 'openshift==0.11.2' jmespath
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          path: "${{ github.repository }}"
-      - name: Molecule
-        uses: gofrolist/molecule-action@v2
-        with:
-          molecule_command: test
-          molecule_args: --scenario-name kind
+      - name: Run
+        run: molecule test -s kind
