@@ -50,7 +50,7 @@ hook_runner_image: "{{ registry }}/{{ project }}/{{ hook_runner_repo }}"
 hook_runner_repo: "{{ lookup( 'env', 'HOOK_RUNNER_REPO') }}"
 hook_runner_version: "{{ snapshot_tag | default(lookup( 'env', 'HOOK_RUNNER_TAG')) }}"
 hook_runner_image_fqin: "{{ hook_runner_image }}:{{ hook_runner_version }}"
-jaeger_enabled: false
+jaeger_enabled: "false"
 mig_controller_image: "{{ registry }}/{{ project }}/{{ mig_controller_repo }}"
 mig_controller_limits_cpu: "1"
 mig_controller_limits_memory: "10Gi"
