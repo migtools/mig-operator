@@ -71,10 +71,6 @@ spec:
           value: webhook-server-secret
         - name: MIGRATION_REGISTRY_IMAGE
           value: {{ migration_registry_image_fqin }}
-{% if mig_controller_enable_cache|bool is true %}
-        - name: ENABLE_CACHED_CLIENT
-          value: "true"
-{% endif %}
 {% if http_proxy|length >0 %}
         - name: HTTP_PROXY
           value: {{ http_proxy }}
