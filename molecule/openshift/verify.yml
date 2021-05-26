@@ -8,7 +8,7 @@
   gather_facts: no
   tasks:
   - block:
-    - name: Wait 240s for reconciliation to run
+    - name: Wait 480s for reconciliation to run
       k8s_info:
         api_version: '{{ custom_resource.apiVersion }}'
         kind: '{{ custom_resource.kind }}'
@@ -18,7 +18,7 @@
       until:
       - "'Reconciled' in (cr | json_query('resources[].status.phase'))"
       delay: 10
-      retries: 24
+      retries: 48
 
     - name: Update CR to have garbage rsync flag
       k8s:
