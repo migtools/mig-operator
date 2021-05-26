@@ -13,7 +13,7 @@
       state: absent
       wait: yes
 
-  - name: Delete Custom Resource Definitions
+  - name: Delete MigrationController CRD
     k8s:
       definition: "{{ lookup('file', item) }}"
       state: absent

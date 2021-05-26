@@ -2,25 +2,14 @@
 dependency:
   name: galaxy
 driver:
-  name: docker
+  name: delegated
 lint: |
   set -e
   yamllint -d "{extends: relaxed, rules: {line-length: {max: 400}}}" roles
 platforms:
-  - name: kind-test-local
+  - name: openshift
     groups:
-      - k8s
-    image: bsycorp/kind:${KUBE_VERSION:-v1.17.9}
-    privileged: true
-    override_command: false
-    exposed_ports:
-      - 8443/tcp
-      - 10080/tcp
-    published_ports:
-      - 0.0.0.0:${TEST_CLUSTER_PORT:-10443}:8443/tcp
-    pre_build_image: true
-    volumes:
-      - ${MOLECULE_PROJECT_DIRECTORY}:/build:Z
+    - k8s
 provisioner:
   name: ansible
   log: true
@@ -38,25 +27,20 @@ provisioner:
     host_vars:
       localhost:
         ansible_python_interpreter: '{{ ansible_playbook_python }}'
-        template_dir: ${MOLECULE_PROJECT_DIRECTORY}/molecule/templates
         deploy_dir: ${MOLECULE_PROJECT_DIRECTORY}/molecule/deploy
   env:
-    K8S_AUTH_KUBECONFIG: ${MOLECULE_EPHEMERAL_DIRECTORY}/kubeconfig
-    KUBECONFIG: ${MOLECULE_EPHEMERAL_DIRECTORY}/kubeconfig
-    ANSIBLE_ROLES_PATH: ${MOLECULE_PROJECT_DIRECTORY}/roles
-    KIND_PORT: '${TEST_CLUSTER_PORT:-10443}'
+    K8S_AUTH_KUBECONFIG: ${KUBECONFIG:-"~/.kube/config"}
 verifier:
   name: ansible
   lint: |
     set -e
     ansible-lint
 scenario:
-  name: test-local
+  name: openshift
   test_sequence:
     - lint
-    - destroy
     - syntax
-    - create
+    - destroy
     - prepare
     - converge
     - verify
