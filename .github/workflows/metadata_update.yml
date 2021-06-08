@@ -1,0 +1,49 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Metadata Update
+
+on:
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+name: Image Update
+
+env:
+  BUNDLE_IMAGE_NAME: quay.io/konveyor/mig-operator-bundle
+  INDEX_IMAGE_NAME: quay.io/konveyor/mig-operator-bundle
+  RELEASE: 1.4.5
+  VERSION: latest
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get opm
+        run: wget $(curl -s https://api.github.com/repos/operator-framework/operator-registry/releases/latest | grep 'browser_' | cut -d\" -f4 | grep linux) -O opm
+
+      - name: chmod opm
+        run: chmod +x opm
+
+      - name: Build bundle
+        run: docker build . --file /build/Dockerfile.bundle --tag $BUNDLE_IMAGE_NAME:$VERSION
+
+      - name: Run OPM
+        shell:
+
+      - name: Add bundle to index
+        shell: |
+           ./opm index add -c podman -f quay.io/konveyor/mig-operator-index:$RELEASE \
+           --bundles quay.io/konveyor/mig-operator-bundle:latest \
+           --tag quay.io/konveyor/mig-operator-index:latest
+
+        
+
+      - name: Log into registry
+        run: echo "${{ secrets.QUAY_TOKEN }}" | docker login quay.io -u ${{ secrets.QUAY_ROBOT }} --password-stdin
+
+      - name: Push bundle
+        run: docker push $IMAGE_NAME:$VERSION
+        
+      - name: Push index
