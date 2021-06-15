@@ -24,7 +24,7 @@ You should now be viewing the live tree view for the currently selected migratio
 
 ## Troubleshooting a Migration with the Debug View
 
-In the tree view, look for resources with "Warning" or "Failed" status. You should be able to understand which elements of the migration had problems at a glance.
+In the tree view, look for resources with **Warning** or **Failed** state. You should be able to understand which elements of the migration had problems at a glance.
 
 If you see a resource of interest, you can view the logs, JSON, and associated events using the buttons in the kebab menu.
 
@@ -34,7 +34,7 @@ If something has gone wrong during your migration, the `MigMigration` resource o
 
 If the migration is still running, the status information on the  _Migration details_ page will often give a tip of why the migration isn't able to proceed. Looking at this status, then at the tree view, will often make it clear what the problematic resource is.
 
-### Using the kebab menu on resources to learn more about resources marked with "Warning" or "Failed"
+### Learn more about resources marked with _Failed_ or _Warning_
 
 Each resource in the debug tree view has a kebab button to its right which will have some combination of these buttons available:
 
