@@ -20,7 +20,7 @@ Once you've started a migration, you can access the debug view from the migratio
 3. Drill down to the _Migration details_ for your migration of interest.
 4. On the _Migration details_ page, expand the _Migration resources_ section of the page.
 
-You should now be viewing the live tree view for the currently selected migration. As the migration runs, the tree will reflect  migration activity.
+You should now be viewing the live tree view for the currently selected migration. As the migration runs, the tree will reflect migration activity.
 
 ## Troubleshooting a Migration with the Debug View
 
@@ -28,21 +28,21 @@ In the tree view, look for resources with "Warning" or "Failed" status. You shou
 
 If you see a resource of interest, you can view the logs, JSON, and associated events using the buttons in the kebab menu.
 
-## Tips for Troubleshooting
+### Tips for Troubleshooting
 
 If something has gone wrong during your migration, the `MigMigration` resource often holds the high level reason for the failure, so consider starting by looking at the status there, and then observe the status of resources nested under the migration in the tree view.
 
 If the migration is still running, the status information on the  _Migration details_ page will often give a tip of why the migration isn't able to proceed. Looking at this status, then at the tree view, will often make it clear what the problematic resource is.
 
-## Using the kebab menu on resources to learn more about resources marked with "Warning" or "Failed"
+### Using the kebab menu on resources to learn more about resources marked with "Warning" or "Failed"
 
 Each resource in the debug tree view has a kebab button to its right which will have some combination of these buttons available:
 
 - Copy `oc describe` command
-	- Copies a CLI command that will get associated events and YAML for the chosen resource.\
+	- Copies a CLI command that will get associated events and YAML for the chosen resource.
 
 - Copy `oc logs` command
-	- Copies a CLI command that will get associated logs for the chosen resource.\
+	- Copies a CLI command that will get associated logs for the chosen resource.
 
 - View JSON
 	- Open a browser resource JSON viewer for the chosen resource.
