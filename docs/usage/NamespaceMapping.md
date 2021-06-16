@@ -10,6 +10,8 @@ _Within the namespaces step in the plan wizard, you can now:_
 
 ## Accessing the namespace mapping feature
 
+_From the ui_
+
 Once you've created a migration plan, you can access the namespace mapping feature within the plan wizard on the namespaces step.
 
 1. Click _Migration plans_ in the sidebar
@@ -18,6 +20,36 @@ Once you've created a migration plan, you can access the namespace mapping featu
 4. On the _Namespaces_ step, click the pencil icon within the namespace row you'd like to create a mapping for.
 
 When you are done, proceed to the end of the wizard to finalize mapping changes.
+
+_From the CLI_
+
+1. Open up your favorite YAML editor & edit the configuration object for your existing migplan:
+
+- `oc edit migplan your-plan-name`
+
+2. Navigate to the _Plan spec_ section of the migplan and create your mapping.
+
+```yaml
+# Please edit the object below. Lines beginning with a '#' will be ignored,
+# and an empty file will abort the edit. If an error occurs while saving this file will be
+# reopened with the relevant failures.
+#
+apiVersion: migration.openshift.io/v1alpha1
+kind: MigPlan
+metadata: -- 9 lines --
+spec:
+-- other spec fields --
+  namespaces:
+    - old-namespace:new-namespace
+status: -- status fields --
+```
+
+3. To create a mapping, use the above syntax to indicate that you are creating a mapping within the namespace list. Within a namespace list member denoted by a leading hypen ( - ), add a colon ( : ) and a valid target namespace name after the src namespace name.
+
+```yaml
+namespaces:
+  - old-namespace:new-namespace
+```
 
 ## Troubleshooting
 
