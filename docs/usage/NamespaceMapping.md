@@ -8,7 +8,7 @@ _Within the namespaces step in the plan wizard, you can now:_
 
 ![Namespace mapping](./screenshots/namespacemapping/namespace_mapping.png)
 
-## Accessing the Debug View
+## Accessing the namespace mapping feature
 
 Once you've created a migration plan, you can access the namespace mapping feature within the plan wizard on the namespaces step.
 
@@ -19,7 +19,7 @@ Once you've created a migration plan, you can access the namespace mapping featu
 
 When you are done, proceed to the end of the wizard to finalize mapping changes.
 
-## Troubleshooting a Migration with the Debug View
+## Troubleshooting
 
 When mapping a namespace, there are a few things to keep in mind. We are not actively checking the target cluster for duplicate namespaces. If you have a pre-existing namespace on the target cluster with a conflicting name in your selected namespaces list, this may cause issues. In the UI, we only check for duplicate mappings against a) the list of src cluster namespaces and b) the list of mappings created thus far during the creation or editing process of a Migration Plan.
 
