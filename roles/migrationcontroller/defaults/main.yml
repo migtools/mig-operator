@@ -35,14 +35,14 @@ rsync_transfer_version: "{{ snapshot_tag | default(lookup( 'env', 'RSYNC_TRANSFE
 rsync_transfer_image_fqin: "{{ rsync_transfer_image }}:{{ rsync_transfer_version }}"
 source_rsync_pod_cpu_limits: "1"
 source_rsync_pod_memory_limits: "1Gi"
-source_rsync_pod_cpu_requests: "400m"
+source_rsync_pod_cpu_requests: "100m"
 source_rsync_pod_memory_requests: "1Gi"
 stunnel_pod_cpu_limits: '1'
-stunnel_pod_cpu_requests: '400m'
+stunnel_pod_cpu_requests: '100m'
 stunnel_pod_memory_limits: '1Gi'
 stunnel_pod_memory_requests: '1Gi'
 target_rsync_pod_cpu_limits: '1'
-target_rsync_pod_cpu_requests: '400m'
+target_rsync_pod_cpu_requests: '100m'
 target_rsync_pod_memory_limits: '1Gi'
 target_rsync_pod_memory_requests: '1Gi'
 enable_dvm_pv_resizing: false
