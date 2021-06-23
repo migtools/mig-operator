@@ -4,9 +4,7 @@ Crane/MTC 1.5.0 introduced the ability to turn on _cached Kubernetes clients_ fo
 
 ## Turning on Cached Clients in Crane/MTC 1.5.0+
 
-```
-oc edit migrationcontroller -n openshift-migration
-```
+Cached clients are turned off by default in MTC 1.5.0 since they consume additional memory. To enable them, use the command below.
 
 ### Enable cached client
 
