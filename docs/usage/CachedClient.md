@@ -39,9 +39,9 @@ By turning on cached clients, mig-controller will consume more memory since it w
 
 The cache will be kept up to date with an informer/watch mechanism, with data being pushed into the cache by the APIserver as it is updated.
 
-If you find mig-controller is hitting OOMKilled errors after enabling the cached client, you can bump the memory requests and limits for mig-controller with these MigrationController CR fields.
+If you find mig-controller is getting OOMKilled errors after enabling the cached client, you can bump the memory requests and limits for mig-controller with MigrationController CR fields mentioned in [turning on cached clients.](#turning-on-cached-clients)
 
-### APIserver load of Cached Clients
+### APIserver load and Memory Usage of Cached Clients
 
 | Cache Turned On? | Reads go to | Writes go to | Memory Usage | APIserver load from Reads | APIserver load from informer |
 |------------------|-------------|--------------|--------------|---------------------------|------------------------------|
