@@ -8,6 +8,21 @@ Crane/MTC 1.5.0 introduced the ability to turn on _cached Kubernetes clients_ fo
 oc edit migrationcontroller -n openshift-migration
 ```
 
+### Enable cached client
+
+```bash
+oc --namespace openshift-migration patch MigrationController migration-controller --type=json \
+ --patch '[{ "op": "replace", "path": "/spec/mig_controller_enable_cache", "value": true}]'
+```
+
+### Disable cached client
+```bash
+oc --namespace openshift-migration patch MigrationController migration-controller --type=json \
+ --patch '[{ "op": "replace", "path": "/spec/mig_controller_enable_cache", "value": false}]'
+```
+
+### MigrationController Options
+
 | MigrationController Option              | Explanation                                             |
 |-----------------------------------------|---------------------------------------------------------|
 | mig_controller_enable_cache: false      | Set to 'true' to enable cached client                   |
