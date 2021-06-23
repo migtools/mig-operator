@@ -1,0 +1,67 @@
+name: Publish Images
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+on:
+  push:
+    branches:
+    - master
+    - 'release-*.*.*'
+    - 'sprint-*'
+  workflow_dispatch:
+
+env:
+  REGISTRY: quay.io
+  IMAGE_NAME: ${{ github.repository }}
+  BUNDLE_SUFFIX: bundle
+  CONTAINER_SUFFIX: container
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - name: Build container image
+        run: docker build . --file build/Dockerfile --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ env.CONTAINER_SUFFIX }}:${{ steps.extract_branch.outputs.branch }}
+
+      - name: Build bundle image
+        run: docker build . --file build/Dockerfile.${{ env.BUNDLE_SUFFIX }} --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ env.BUNDLE_SUFFIX }}:${{ steps.extract_branch.outputs.branch }}
+
+      - name: Log into registry
+        run: echo "${{ secrets.QUAY_PUBLISH_TOKEN }}" | docker login quay.io -u ${{ secrets.QUAY_PUBLISH_ROBOT }} --password-stdin
+
+      - name: Push container image
+        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ env.CONTAINER_SUFFIX }}:${{ steps.extract_branch.outputs.branch }}
+
+      - name: Push bundle image
+        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ env.BUNDLE_SUFFIX }}:${{ steps.extract_branch.outputs.branch }}
+
+      - name: Retag container image
+        run: docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ env.CONTAINER_SUFFIX }}:${{ steps.extract_branch.outputs.branch }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ env.CONTAINER_SUFFIX }}:latest
+        if: ${{ github.ref == 'refs/heads/master' }}
+ 
+      - name: Retag bundle image
+        run: docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ env.BUNDLE_SUFFIX }}:${{ steps.extract_branch.outputs.branch }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ env.BUNDLE_SUFFIX }}:latest
+        if: ${{ github.ref == 'refs/heads/master' }}
+
+      - name: push retagged container image
+        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ env.CONTAINER_SUFFIX }}:latest
+        if: ${{ github.ref == 'refs/heads/master' }}
+
+      - name: push retagged bundle image
+        run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ env.BUNDLE_SUFFIX }}:latest
+        if: ${{ github.ref == 'refs/heads/master' }}
+
