@@ -5,11 +5,6 @@
 1. [opm](https://github.com/operator-framework/operator-registry)
 1. Your QUAY token exported, `export QUAY_TOKEN="basic ..."`, see [operator-courier](https://github.com/operator-framework/operator-courier/blob/master/README.md#authentication) for instructions on how to get a basic auth token.
 
-# Development
-1. Add the development bundle to the latest release index image and push
-  1. `ansible-playbook push-dev-metadata.yml`
-  1. When prompted provide the last stable release version to build off of, for example `1.4.1`
-
 # Stable
 1. Create the new release branch, for example `release-1.4.1`
 1. Create a PR for the new release branch
@@ -20,8 +15,8 @@
 1. Create a PR for the master branch.
    1. Update the skips list in the master branch CSV [example](https://github.com/konveyor/mig-operator/pull/460)
 1. Once the release is ready add it to the index image and push.
-   1. `ansible-playbook push-release-metadata.yml`
-   1. When prompted enter the prior release version and new release version, for example `1.4.0` and `1.4.1`. 
+1. When the branch is ready for release move the channel tag, e.g. `release-v1.5` to this new(er) branch.
+1. If this is a new channel update the SUPPORTED_CHANNELS env var in the publish github action.
 
 # Sprint
 1. Export GH_TOKEN with your Github Token, as an example `export GH_TOKEN=1234567890abcdef1234567890abcdef01234567`.
