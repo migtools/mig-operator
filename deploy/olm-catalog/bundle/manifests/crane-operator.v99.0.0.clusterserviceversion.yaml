@@ -230,6 +230,7 @@ metadata:
 spec:
   skips:
   - crane-operator.v1.5.0
+  - crane-operator.v1.4.6
   - crane-operator.v1.4.5
   - crane-operator.v1.4.4
   - crane-operator.v1.4.3
