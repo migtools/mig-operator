@@ -11,74 +11,6 @@
     migration_rsync_privileged: false
   tasks:
   - block:
-    - name: "Replace latest image with {{ test_image }}"
-      replace:
-        path: "{{ deploy_dir }}/operator.yaml"
-        regexp: '^(.*)image:( *)quay.io/ocpmigrate/mig-operator(.*)$'
-        replace: "\\1image:\\2{{ test_image }}"
-
-    - name: Create CRDs
-      k8s:
-        definition: "{{ lookup('file', item) }}"
-      with_items:
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration.openshift.io_directimagemigrations.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration.openshift.io_directimagestreammigrations.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration.openshift.io_miganalytics.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration.openshift.io_migclusters.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration.openshift.io_directvolumemigrations.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration.openshift.io_directvolumemigrationprogresses.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration.openshift.io_mighooks.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration.openshift.io_migmigrations.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration.openshift.io_migplans.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/migration.openshift.io_migstorages.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/backup.crd.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/backupstoragelocation.crd.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/deletebackuprequest.crd.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/downloadrequest.crd.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/podvolumebackup.crd.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/podvolumerestore.crd.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/resticrepository.crd.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/restore.crd.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/schedule.crd.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/serverstatusrequest.crd.yaml"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/olm-catalog/bundle/manifests/volumesnapshotlocation.crd.yaml"
-
-    - name: Create RBAC
-      k8s:
-        definition: "{{ lookup('template', item) }}"
-      with_items:
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/roles/migrationcontroller/templates/mig_rbac.yml.j2"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/roles/migrationcontroller/templates/velero_supporting.yml.j2"
-    - name: Make temp directory
-      tempfile:
-        state: directory
-        suffix: operator
-      register: tmp_dir
-
-    - name: Copy operator.yml
-      copy:
-        src: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/deploy/non-olm/operator.yml"
-        dest: "{{ tmp_dir.path }}/operator.yml"
-
-    - name: Update Deployment
-      lineinfile:
-        path: "{{ tmp_dir.path }}/operator.yml"
-        regexp: 'apiVersion: apps/v1beta1'
-        line: 'apiVersion: apps/v1'
-
-    - name: Update Pull Policy so we use the image we just finished building
-      lineinfile:
-        path: "{{ tmp_dir.path }}/operator.yml"
-        regexp: '        imagePullPolicy: Always'
-        line: '        imagePullPolicy: Never'
-
-    - name: Create the Operator Deployment
-      k8s:
-        namespace: '{{ controller_namespace }}'
-        definition: "{{ lookup('file', item) }}"
-      with_items:
-      - "{{ tmp_dir.path }}/operator.yml"
-
     - name: Create the migration.openshift.io/v1alpha1.MigrationController
       k8s:
         state: present
@@ -96,19 +28,6 @@
           api_version=custom_resource.apiVersion,
           namespace=controller_namespace,
           resource_name=custom_resource.metadata.name
-        )}}'
-
-    - name: debug migration operator lookup
-      ignore_errors: yes
-      failed_when: false
-      debug:
-        var: deploy
-      vars:
-        deploy: '{{ lookup("k8s",
-          kind="Deployment",
-          api_version="apps/v1",
-          namespace=controller_namespace,
-          label_selector="app=migration"
         )}}'
 
     - name: get operator logs

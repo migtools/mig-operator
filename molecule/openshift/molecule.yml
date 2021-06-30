@@ -40,8 +40,5 @@ scenario:
   test_sequence:
     - lint
     - syntax
-    - destroy
-    - prepare
     - converge
     - verify
-    - destroy

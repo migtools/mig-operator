@@ -10,7 +10,7 @@ platforms:
   - name: kind
     groups:
       - k8s
-    image: bsycorp/kind:${KUBE_VERSION:-v1.17.9}
+    image: bsycorp/kind:${KUBE_VERSION:-latest-1.19}
     privileged: true
     override_command: false
     exposed_ports:
@@ -34,7 +34,7 @@ provisioner:
         migration_namespace: ${TEST_MIGRATION_NAMESPACE:-openshift-migration}
         namespace: ${TEST_OPERATOR_NAMESPACE:-openshift-migration}
         kubeconfig_file: ${MOLECULE_EPHEMERAL_DIRECTORY}/kubeconfig
-        test_image: ${REPLACE_IMAGE:-quay.io/konveyor/mig-operator-container:latest}
+        test_image: ${REPLACE_IMAGE:-quay.io/konveyor/mig-operator-container:release-1.4.6}
     host_vars:
       localhost:
         ansible_python_interpreter: '{{ ansible_playbook_python }}'
