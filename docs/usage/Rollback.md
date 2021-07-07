@@ -27,7 +27,17 @@ Rolling back the migration plan will revert migrated resources and volumes to th
   - Pods
   - ImageStreams
   - Namespaces
-  
+
+### Leftover resources
+
+As of MTC 1.5.0, Rollback intentionally leaves some resources created by Direct Volume Migration behind on the source and the target clusters. The leftover resources assist debugging a failed migration. All of these resources are automatically deleted when performing a subsequent migration and do not require manual cleanup.
+
+On the source side, _ConfigMap_, _Secret_ and Rsync _Pods_ are left behind in each of the namespaces present in the _MigPlan_. 
+
+On the destination side, _ConfigMap_, _Secret_, _Service_ and _Route_ resources are left behind in each of the namespaces present in the _MigPlan_.
+ 
+Please note that these resources are only left behind when a migration fails for debugging purposes. A subsequent successful migration will automatically clean them up before reaching completion.
+
 ## Triggering a Rollback
 
 ### Rollback from the Web UI
