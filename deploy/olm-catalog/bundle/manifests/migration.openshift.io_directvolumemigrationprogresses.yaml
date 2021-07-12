@@ -133,8 +133,6 @@ spec:
                   type: string
               type: object
             podSelector:
-              additionalProperties:
-                type: string
               type: object
           type: object
         status:
