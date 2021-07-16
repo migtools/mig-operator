@@ -60,3 +60,13 @@ spec:
   [...]
   pv_resizing_threshold: 3
 ```
+
+## Known Issues
+
+### Limitations on OpenShift versions 3.9 and below
+
+If the source cluster in a migration is running OpenShift Version 3.9 or below, PV Resizing may not work correctly in a certain scenario. 
+
+If an application is installed on the source cluster after installing MTC, or one of the Pods of the application get re-scheduled on a different node after installation of MTC, PV resizing may fail to gather usage information of the PVs used by that application. This is due to the fact that these OpenShift versions lack the "mount propagation" feature that allows Velero to mount the application volumes automatically in the Restic Pod. MTC collects usage information of the PVs from the Restic Pod. When this case arises, MigPlan generates a _Warning_ with reason `FailedRunningDf` in its Status field. An appropriate warning message is also displayed in the UI on MigPlan validation page. This issue can be solved by manually restarting the Restic Daemonset on the source cluster. Alternatively, users can also restart the Restic Pods running on the same nodes as the application instead of restarting the entire Daemonset.
+
+If the users wish to proceed without restarting the Restic Daemonset, PV resizing will be disabled for the migration.
