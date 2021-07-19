@@ -73,6 +73,12 @@ This is due to the fact that these OpenShift versions lack the "mount propagatio
 
 #### Workaround
 
-This issue can be solved by manually restarting the Restic Daemonset on the source cluster. Alternatively, users can also restart the Restic Pods running on the same nodes as the application instead of restarting the entire Daemonset.
+This issue can be solved by manually restarting the Restic Daemonset on the source cluster prior to a migration. Alternatively, users can also restart the Restic Pods running on the same nodes as the application instead of restarting the entire Daemonset. 
+
+To restart all the Restic Pods in Daemonset, run:
+
+```bash
+oc delete pods -n openshift-migration -l name=restic
+```
 
 If the users wish to proceed without restarting the Restic Daemonset, PV resizing will be disabled for the migration.
