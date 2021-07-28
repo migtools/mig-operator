@@ -5,6 +5,7 @@ metadata:
   name: crane-operator.v1.5.0
   namespace: openshift-migration
   annotations:
+    olm.properties: '[{"type": "olm.maxOpenShiftVersion", "value": "4.8"}]'
     olm.skipRange: '>=0.0.0 <1.5.0'
     capabilities: Seamless Upgrades
     description: Facilitates migration of container workloads from OpenShift 3.x to OpenShift 4.x
