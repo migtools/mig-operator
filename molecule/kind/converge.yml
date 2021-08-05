@@ -103,7 +103,6 @@
         definition: "{{ lookup('template', item) }}"
       with_items:
       - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/roles/migrationcontroller/templates/mig_rbac.yml.j2"
-      - "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/roles/migrationcontroller/templates/velero_supporting.yml.j2"
     - name: Make temp directory
       tempfile:
         state: directory
