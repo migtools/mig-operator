@@ -1,0 +1,254 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: migration-controller
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - serviceaccounts
+  - configmaps
+  - events
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - apps
+  - batch
+  - extensions
+  resources:
+  - '*'
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - namespaces/status
+  verbs:
+  - get
+  - update
+  - patch
+- apiGroups:
+  - migration.openshift.io
+  - velero.io
+  - route.openshift.io
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - security.openshift.io
+  resources:
+  - securitycontextconstraints
+  verbs:
+  - use
+  resourceNames:
+{% if migration_rsync_privileged %}
+  - privileged
+{% else %}
+  - rsync-anyuid
+{% endif %}
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - pods/status
+  verbs:
+  - get
+  - update
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - pods/exec
+  verbs:
+  - create
+- apiGroups:
+  - ""
+  resources:
+  - pods/log
+  verbs:
+  - '*'
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumes
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumes/status
+  verbs:
+  - get
+  - update
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumeclaims
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - persistentvolumeclaims/status
+  verbs:
+  - get
+  - update
+  - patch
+- apiGroups:
+  - image.openshift.io
+  resources:
+  - '*'
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - apps.openshift.io
+  resources:
+  - '*'
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - admissionregistration.k8s.io
+  resources:
+  - mutatingwebhookconfigurations
+  - validatingwebhookconfigurations
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - services
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - storage.k8s.io
+  resources:
+  - storageclasses
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - '*'
+  resources:
+  - '*'
+  verbs:
+  - list
+  - delete
+  - watch
+  - update
+  - deletecollection
+- apiGroups:
+  - build.openshift.io
+  - rbac.authorization.k8s.io
+  resources:
+  - '*'
+  verbs:
+  - '*'
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: migration-controller
+  namespace: {{ mig_namespace }}
+  labels:
+    component: migration-controller
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: migration-controller
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: migration-controller
+subjects:
+- kind: ServiceAccount
+  name: migration-controller
+  namespace: {{ mig_namespace }}
