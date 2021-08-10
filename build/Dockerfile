@@ -11,17 +11,11 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.n
  && yum clean all
 
 RUN ln -s ${HOME}/.ansible /.ansible
-COPY build/entrypoint /usr/local/bin/entrypoint
-COPY deploy/non-olm/operator.yml /operator.yml
-COPY deploy/non-olm/controller-3.yml /controller-3.yml
 USER 1001
 
-COPY build/requirements.yml ${HOME}/requirements.yml
-RUN ansible-galaxy collection install operator_sdk.util
-RUN ansible-galaxy collection install -r ${HOME}/requirements.yml \
- && chmod -R ug+rwx ${HOME}/.ansible
+RUN ansible-galaxy collection install operator_sdk.util community.kubernetes
+RUN chmod -R ug+rwx ${HOME}/.ansible
 
 COPY watches.yaml ${HOME}/watches.yaml
 
 COPY roles/ ${HOME}/roles/
-ENTRYPOINT /usr/local/bin/entrypoint
