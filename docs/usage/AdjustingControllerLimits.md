@@ -18,7 +18,6 @@ spec:
   mig_pod_limit: '100'
   migration_controller: true
   mig_failure_rollback: false
-  olm_managed: true
   cluster_name: host
   restic_timeout: 1h
   migration_velero: true

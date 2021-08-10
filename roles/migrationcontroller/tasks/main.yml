@@ -12,26 +12,24 @@
       cluster_config_configmap:
         env: "{{ lookup('template', 'mig-cluster-config.yml.j2') | from_yaml }}"
 
-  - when: olm_managed
-    block:
-    - k8s:
-        state: "present"
-        definition: "{{ lookup('template', 'monitoring-namespace-label.yml.j2') }}"
+  - k8s:
+      state: "present"
+      definition: "{{ lookup('template', 'monitoring-namespace-label.yml.j2') }}"
 
-    - k8s:
-        state: "present"
-        definition: "{{ lookup('template', 'migration-controller.yml.j2') }}"
+  - k8s:
+      state: "present"
+      definition: "{{ lookup('template', 'migration-controller.yml.j2') }}"
 
-    - name: Clean conditions and set Reconciling state
-      operator_sdk.util.k8s_status:
-        api_version: migration.openshift.io/v1alpha1
-        kind: MigrationController
-        name: "{{ ansible_operator_meta.name }}"
-        namespace: "{{ ansible_operator_meta.namespace }}"
-        force: true
-        conditions: []
-        status:
-          phase: Reconciling
+  - name: Clean conditions and set Reconciling state
+    operator_sdk.util.k8s_status:
+      api_version: migration.openshift.io/v1alpha1
+      kind: MigrationController
+      name: "{{ ansible_operator_meta.name }}"
+      namespace: "{{ ansible_operator_meta.namespace }}"
+      force: true
+      conditions: []
+      status:
+        phase: Reconciling
 
   - set_fact: ui_state="present"
     when: migration_ui
@@ -75,16 +73,6 @@
       mig_ui_config_namespace: openshift-config
     when: config_namespace_check.resources|length > 0
 
-  #This ConfigMap contains the cluster config on Openshift 4.
-  #Looking for it provides a rudimentary way to see what version we're on.
-  #It also lets us generate the cluster API endpoint URL on Openshift 4.
-  - name: Get cluster config
-    k8s_facts:
-      api_version: config.openshift.io/v1
-      kind: ClusterVersion
-      name: version
-    register: cluster_version
-
   - name: Get the infrastructure
     k8s_facts:
       api_version: config.openshift.io/v1
@@ -93,9 +81,8 @@
     register: infrastructures
     ignore_errors: yes
 
-  - when: migration_ui and cluster_version.resources|length > 0
+  - when: migration_ui
     block:
-    # this will not be executed in a 3.x cluster
     - set_fact:
         mig_ui_cluster_api_endpoint: "{{ infrastructures.resources[0].status.apiServerURL }}"
       when:
@@ -110,13 +97,6 @@
   # look up api_groups for routes and scc
   - set_fact:
       api_groups: "{{ lookup('k8s', cluster_info='api_groups') }}"
-
-  # This is only here to ease testing with openshift 3 dev environments
-  - set_fact:
-      restic_pv_host_path: /tmp/openshift.local.clusterup/openshift.local.volumes/pods
-    when:
-    - infrastructures.resources|length == 0
-    - origin_three_dev is defined and origin_three_dev
 
   - when: migration_velero
     block:
@@ -308,146 +288,56 @@
         state: "{{ ui_state }}"
         definition: "{{ lookup('template', 'ui-oauthsecret.yml.j2') }}"
 
-    - when: cluster_version.resources|length > 0
+    - name: Retrieve apiserver config definition
+      k8s_facts:
+        api_version: "config.openshift.io/v1"
+        kind: "apiserver"
+        name: "cluster"
+      register: apiserver
+
+    - when: apiserver.resources[0].spec.additionalCORSAllowedOrigins is not defined or
+            (cors_origins | difference(apiserver.resources[0].spec.additionalCORSAllowedOrigins|default([])))|length > 0
       block:
-      - name: Retrieve apiserver config definition
-        k8s_facts:
-          api_version: "config.openshift.io/v1"
-          kind: "apiserver"
-          name: "cluster"
-        register: apiserver
+      - name: Write apiserver config definition for modification
+        copy:
+          dest: /tmp/apiserver.yaml
+          content: "{{apiserver.resources[0] | to_nice_yaml }}"
 
-      - when: not deprecated_cors_configuration and (
-              apiserver.resources[0].spec.additionalCORSAllowedOrigins is not defined or
-              (cors_origins | difference(apiserver.resources[0].spec.additionalCORSAllowedOrigins|default([])))|length > 0)
-        block:
-        - name: Write apiserver config definition for modification
-          copy:
-            dest: /tmp/apiserver.yaml
-            content: "{{apiserver.resources[0] | to_nice_yaml }}"
+      - name: Add CORS URL to apiserver config definition
+        yedit:
+          src: /tmp/apiserver.yaml
+          key: spec.additionalCORSAllowedOrigins
+          append: true
+          value: "{{ item }}"
+        with_items: "{{ cors_origins | difference(apiserver.resources[0].spec.additionalCORSAllowedOrigins|default([])) }}"
 
-        - name: Add CORS URL to apiserver config definition
-          yedit:
-            src: /tmp/apiserver.yaml
-            key: spec.additionalCORSAllowedOrigins
-            append: true
-            value: "{{ item }}"
-          with_items: "{{ cors_origins | difference(apiserver.resources[0].spec.additionalCORSAllowedOrigins|default([])) }}"
+      - name: Update apiserver config definition on the cluster
+        k8s:
+          state: present
+          definition: "{{ lookup('file', '/tmp/apiserver.yaml') | from_yaml }}"
 
-        - name: Update apiserver config definition on the cluster
-          k8s:
-            state: present
-            definition: "{{ lookup('file', '/tmp/apiserver.yaml') | from_yaml }}"
+    - name: Retrieve kubeapiserver operator definition
+      k8s_facts:
+        api_version: "operator.openshift.io/v1"
+        kind: "kubeapiserver"
+        name: "cluster"
+      register: kubeapiserver
 
-      - name: Retrieve kubeapiserver operator definition
-        k8s_facts:
-          api_version: "operator.openshift.io/v1"
-          kind: "kubeapiserver"
-          name: "cluster"
-        register: kubeapiserver
-
-      - when: deprecated_cors_configuration and (
-              kubeapiserver.resources[0].spec.unsupportedConfigOverrides is not defined or
-              kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
-              (cors_origins | difference(kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins|default([])))|length > 0)
-        block:
-        - name: Write kubeapiserver operator definition for modification
-          copy:
-            dest: /tmp/kubeapiserver.yaml
-            content: "{{kubeapiserver.resources[0] | to_nice_yaml }}"
-
-        - name: Add CORS URL to kubeapiserver operator definition
-          yedit:
-            src: /tmp/kubeapiserver.yaml
-            key: spec.unsupportedConfigOverrides.corsAllowedOrigins
-            append: true
-            value: "{{ item }}"
-          with_items: "{{ cors_origins | difference(kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins|default([])) }}"
-
-        - name: Update kubeapiserver operator definition on the cluster
-          k8s:
-            state: present
-            definition: "{{ lookup('file', '/tmp/kubeapiserver.yaml') | from_yaml }}"
-
-      - name: Assert kubeapiserver setup matches the deprecated_cors_configuration setting
-        operator_sdk.util.k8s_status:
-          api_version: migration.openshift.io/v1alpha1
-          kind: MigrationController
-          name: "{{ ansible_operator_meta.name }}"
-          namespace: "{{ ansible_operator_meta.namespace }}"
-          conditions:
-          - type: Critical
-            status: True
-            reason: "DepricatedCorsMisConfigured"
-            message: "Unexpected CORS configuration for apiserver"
-        when: olm_managed and
-              deprecated_cors_configuration and
-              apiserver.resources[0].spec.additionalCORSAllowedOrigins is defined and
-              mig_ui_cors_url in apiserver.resources[0].spec.additionalCORSAllowedOrigins
-
-      - name: Assert apiserver setup matches the deprecated_cors_configuration setting
-        operator_sdk.util.k8s_status:
-          api_version: migration.openshift.io/v1alpha1
-          kind: MigrationController
-          name: "{{ ansible_operator_meta.name }}"
-          namespace: "{{ ansible_operator_meta.namespace }}"
-          conditions:
-          - type: Critical
-            status: True
-            reason: "CorsMisConfigured"
-            message: "Unexpected CORS configuration for kubeapiserver"
-        when: olm_managed and
-              not deprecated_cors_configuration and
-              kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is defined and
-              mig_ui_cors_url in kubeapiserver.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins
-
-      - name: Retrieve authentication operator definition
-        k8s_facts:
-          api_version: "operator.openshift.io/v1"
-          kind: "authentication"
-          name: "cluster"
-        register: authentication
-
-      - when: deprecated_cors_configuration and (
-              authentication.resources[0].spec.unsupportedConfigOverrides is not defined or
-              authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins is not defined or
-              (cors_origins | difference(authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins|default([])))|length > 0)
-        block:
-        - name: Write authentication operator definition for modification
-          copy:
-            dest: /tmp/authentication.yaml
-            content: "{{authentication.resources[0] | to_nice_yaml }}"
-
-        - name: Add CORS URL to authentication operator definition
-          yedit:
-            src: /tmp/authentication.yaml
-            key: spec.unsupportedConfigOverrides.corsAllowedOrigins
-            append: true
-            value: "{{ item }}"
-          with_items: "{{ cors_origins | difference(authentication.resources[0].spec.unsupportedConfigOverrides.corsAllowedOrigins|default([])) }}"
-
-        - name: Update authentication operator definition on the cluster
-          k8s:
-            state: present
-            definition: "{{ lookup('file', '/tmp/authentication.yaml') | from_yaml }}"
+    - name: Retrieve authentication operator definition
+      k8s_facts:
+        api_version: "operator.openshift.io/v1"
+        kind: "authentication"
+        name: "cluster"
+      register: authentication
 
   - block:
     - name: "Set old_controller_detected to false"
       set_fact:
         old_controller_detected: false
 
-    - name: "Set Deployment version for OpenShift 3.9+"
-      set_fact:
-        deployment_version: apps/v1
-
-    - name: "Set Deployment version for OpenShift 3.7"
-      set_fact:
-        deployment_version: apps/v1beta1
-      when: lookup('k8s', cluster_info='version').kubernetes.minor|replace('+', '')|int < 9
-
     - name: "Get migration-controller deployment"
       k8s_facts:
-        api_version: "{{ deployment_version }}"
+        api_version: apps/v1
         kind: Deployment
         name: migration-controller
         namespace: "{{ mig_namespace }}"
@@ -671,7 +561,7 @@
       namespace: "{{ ansible_operator_meta.namespace }}"
       status:
         phase: Reconciled
-    when: olm_managed and reconciled
+    when: reconciled
 
   - operator_sdk.util.k8s_status:
       api_version: migration.openshift.io/v1alpha1
@@ -680,7 +570,7 @@
       namespace: "{{ ansible_operator_meta.namespace }}"
       status:
         phase: Failed
-    when: olm_managed and not reconciled
+    when: not reconciled
 
   - name: Retrieve migrationController status
     k8s_facts:
@@ -689,8 +579,7 @@
       namespace: "{{ mig_namespace }}"
     register: controller
 
-  - when: olm_managed and
-          controller.resources is defined and
+  - when: controller.resources is defined and
           controller.resources[0].status.conditions is defined
     block:
     - operator_sdk.util.k8s_status:
@@ -702,5 +591,3 @@
           phase: Failed
       when: item.type == 'Critical'
       with_items: "{{ controller.resources[0].status.conditions }}"
-
-- import_tasks: mcg.yml
