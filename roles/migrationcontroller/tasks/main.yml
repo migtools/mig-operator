@@ -183,23 +183,6 @@
             cloud: ""
       when: (azure_secret_status.resources|length) == 0
 
-    - when: not olm_managed
-      block:
-      - name: "Set up velero supporting resources (CRDS, SA, SCC) when not managed by OLM"
-        k8s:
-          state: "{{ velero_state }}"
-          definition: "{{ lookup('template', 'velero_supporting.yml.j2') }}"
-      rescue:
-      - name: "Set up velero supporting resources (CRDS, SA, SCC) when not managed by OLM"
-        k8s:
-          state: absent
-          definition: "{{ lookup('template', 'velero_supporting.yml.j2') }}"
-
-      - name: "Set up velero supporting resources (CRDS, SA, SCC) when not managed by OLM"
-        k8s:
-          state: "{{ velero_state }}"
-          definition: "{{ lookup('template', 'velero_supporting.yml.j2') }}"
-
   - name: "Create proxy configuration secret if proxy is configured"
     k8s:
       state: "present"
@@ -226,29 +209,6 @@
       state: "{{ velero_state }}"
       definition: "{{ lookup('template', 'velero.yml.j2') }}"
       merge_type: merge
-
-  - name: "Set up migration CRDs"
-    k8s:
-      state: "present"
-      src: "{{ role_path }}/files/{{ item }}"
-    with_items:
-    - "migration.openshift.io_directimagemigrations.yaml"
-    - "migration.openshift.io_directimagestreammigrations.yaml"
-    - "migration.openshift.io_migclusters.yaml"
-    - "migration.openshift.io_migmigrations.yaml"
-    - "migration.openshift.io_migplans.yaml"
-    - "migration.openshift.io_mighooks.yaml"
-    - "migration.openshift.io_migstorages.yaml"
-    - "migration.openshift.io_miganalytics.yaml"
-    - "migration.openshift.io_directvolumemigrations.yaml"
-    - "migration.openshift.io_directvolumemigrationprogresses.yaml"
-    when: not olm_managed
-
-  - name: "Set up mig controller RBAC"
-    k8s:
-      state: present
-      definition: "{{ lookup('template', 'mig_rbac.yml.j2') }}"
-    when: not olm_managed
 
   # Create custom SCC for all clusters. For <3.11 scc.users fields will drive the
   # behavior, for others, RBAC will.
