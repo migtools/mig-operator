@@ -9,7 +9,7 @@ metadata:
     olm.skipRange: '>=0.0.0 <1.5.1'
     capabilities: Seamless Upgrades
     description: Facilitates migration of container workloads from OpenShift 3.x to OpenShift 4.x
-    categories: 'Modernization & Migration, OpenShift Optional'
+    categories: 'OpenShift Optional'
     containerImage: quay.io/konveyor/mig-operator-container:release-1.5.1
     createdAt: 2019-07-25T10:21:00Z
     repository: https://github.com/konveyor/mig-operator
