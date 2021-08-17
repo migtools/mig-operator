@@ -44,3 +44,10 @@ ssl_bump splice dvmRoute
 
 The above configuration allows forwarding the traffic destined to the target cluster's Rsync Route transparently.
 
+### Known Issues
+
+#### Migration fails with error `Upgrade request required` 
+
+The migration Controller uses SPDY protocol to execute commands within remote Pods. If the remote cluster is behind a proxy/firewall which does not support SPDY protocol, the migration controller will fail to execute remote commands. The migration will fail with error message `Upgrade request required`. To solve the issue, the proxy must allow SPDY protocol.
+
+In addition to supporting SPDY protocol, the proxy/firewall also needs to pass `Upgrade` HTTP header to the API server. This header is used by the client to open a websocket connection with the API server. If the `Upgrade` header is blocked by the proxy/firewall, the migration will still fail with the same error message. To solve this issue, the proxy simply needs to forward `Upgrade` header.
