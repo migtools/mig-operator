@@ -4,16 +4,15 @@ Refer to the guidelines below to select the correct mig-operator version for you
 
 ## Install version guidelines
 
- - OpenShift 3.7 - 4.5
-  - Install MTC 1.5.1 or newer MTC 1.5.x
+ - **OpenShift 3.7 - 4.5**
+   - Install latest MTC 1.5.x
+ - **OpenShift 4.6+**
+   - Install MTC 1.6.x+
+   - Use this as the control cluster (where mig-controller and mig-ui are installed)
 
- - OpenShift 4.6+
-  - Install MTC 1.6.x+
-  - Use this as the control cluster (where mig-controller and mig-ui are installed)
+_Note_: MTC 1.6.x and MTC 1.5.1 are designed to be compatible when MTC 1.6.x is the control cluster (e.g. the cluster where mig-controller and mig-ui runs).
 
-_Note_ that MTC 1.6.x and MTC 1.5.1 are designed to be compatible when MTC 1.6.x is the control cluster (e.g. the cluster where mig-controller and mig-ui runs).
-
-# Incompatibilities
+## Incompatibilities
 
 Due to the switchover from v1beta1 to v1 CRD API in recent versions of OpenShift:
 
