@@ -38,6 +38,8 @@ See [hacking.md](./docs/hacking.md) for instructions on installing _unreleased_ 
 
 ## Crane Operator Installation
 
+See [OpenShift version Compatibility ](./docs/usage/CompatibleOCPVersions.md) for info on appropriate Crane versions for your OpenShift versions.
+
 ### OpenShift 4
 
 Crane Operator is installable on OpenShift 4 via OperatorHub.
