@@ -5,15 +5,29 @@ If you've finished migrating your apps with Crane and you want to cleanly remove
 
 ## Clean up steps
 
-For _all clusters_ where Crane is installed:
+### For _control clusters_ where mig-controller is installed:
+
+1. Login to the cluster
+1. Set `spec.closed: true` on all MigPlans to run cleanup routines for each plan. This will remove migration related resources spread across the cluster.
+    ```sh
+    for migplan in $(oc get migplan -n openshift-migration -o jsonpath='{.items[*].metadata.name}'); do oc -n openshift-migration patch migplan $migplan --type=json --patch '[{ "op": "add", "path": "/spec/closed", "value": "true" }]'; done
+    ```
+1. Wait for each MigPlan status.conditions to reflect that the plan is closed.
+    ```sh
+    watch oc get migplan -n openshift-migration
+    ```
+1. Follow instructions below for common removal steps.
+
+
+### For _all clusters_ where Crane is installed:
 
 1. Login to the cluster
 1. Remove the `openshift-migration` namespace where Crane is installed
-    ```
+    ```sh
     oc delete namespace openshift-migration
     ```
 1. Remove Crane API objects and CRDs
-    ```
+    ```sh
     # Remove mig-operator CRD
     oc delete customresourcedefinition migrationcontrollers.migration.openshift.io
 
@@ -30,7 +44,7 @@ For _all clusters_ where Crane is installed:
     oc delete customresourcedefinition migstorages.migration.openshift.io
     ```
 1. Remove cluster-scoped RBAC resources installed by Crane
-   ```
+   ```sh
    oc delete clusterrolebinding migration-controller
    oc delete clusterrole migration-controller
    ```
