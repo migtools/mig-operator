@@ -1,6 +1,6 @@
 # Post-migration cleanup
 
-If you've finished migrating your apps with Crane and you want to cleanly remove Crane and associated MigPlans from the cluster, follow these steps:
+If you've finished migrating your apps with Crane and you want to cleanly remove Crane and associated migration resources from the cluster, follow these steps:
 
 
 ## Clean up steps
