@@ -14,7 +14,7 @@ If you've finished migrating your apps with Crane and you want to cleanly remove
     ```
 1. Wait for each MigPlan status.conditions to reflect that the plan is closed.
     ```sh
-    watch oc get migplan -n openshift-migration
+    watch oc get migplan -n openshift-migration -o json
     ```
 1. Follow instructions below for common removal steps.
 
