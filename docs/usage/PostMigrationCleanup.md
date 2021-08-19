@@ -14,6 +14,10 @@ For _all clusters_ where Crane is installed:
     ```
 1. Remove Crane API objects and CRDs
     ```
+    # Remove mig-operator CRD
+    oc delete customresourcedefinition migrationcontrollers.migration.openshift.io
+
+    # Remove mig-controller CRDs
     oc delete customresourcedefinition directimagemigrations.migration.openshift.io
     oc delete customresourcedefinition directimagestreammigrations.migration.openshift.io
     oc delete customresourcedefinition directvolumemigrationprogresses.migration.openshift.io
