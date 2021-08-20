@@ -10,7 +10,7 @@ If you've finished migrating your apps with Crane and you want to cleanly remove
 1. Login to the cluster
 1. Set `spec.closed: true` on all MigPlans to run cleanup routines for each plan. This will remove migration related resources spread across the cluster.
     ```sh
-    for migplan in $(oc get migplan -n openshift-migration -o jsonpath='{.items[*].metadata.name}'); do oc -n openshift-migration patch migplan $migplan --type=json --patch '[{ "op": "add", "path": "/spec/closed", "value": "true" }]'; done
+    for migplan in $(oc get migplan -n openshift-migration -o jsonpath='{.items[*].metadata.name}'); do oc -n openshift-migration patch migplan $migplan --type=json --patch '[{ "op": "add", "path": "/spec/closed", "value": true }]'; done
     ```
 1. Wait for each MigPlan status.conditions to reflect that the plan is closed.
     ```sh
@@ -43,8 +43,15 @@ If you've finished migrating your apps with Crane and you want to cleanly remove
     oc delete customresourcedefinition migplans.migration.openshift.io
     oc delete customresourcedefinition migstorages.migration.openshift.io
     ```
-1. Remove cluster-scoped RBAC resources installed by Crane
+1. For non-OLM installs: Remove cluster-scoped RBAC resources installed by Crane
    ```sh
+   # Cluster Role Bindings
    oc delete clusterrolebinding migration-controller
+   oc delete clusterrolebinding migration-operator
+   oc delete clusterrolebinding migration-velero
+
+   # Cluster Roles
    oc delete clusterrole migration-controller
+   oc delete clusterrole migration-operator
+   oc delete clusterrole migration-velero
    ```
