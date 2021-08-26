@@ -11,7 +11,7 @@ This guide will provide you with hands-on exposure to the new OpenShift Migratio
 [Section 5 - Debugging Failed Migrations](./5.md)<br>
 [Section 6 - Migration at Scale via API (optional)](./6.md)<br>
 [Section 7 - Additional Links](./7.md)<br>
-[Section 8 - Mirroring Images for Restricted Network Installs](./8.md)<br>
+[Section 8 - Mirroring Images for Restricted Network Installs](https://docs.openshift.com/container-platform/4.8/migrating_from_ocp_3_to_4/installing-restricted-3-4.html)<br>
 [Section 9 - Manual Rollback Procedure](./9.md)<br>
 [Section 10 - Migration Hooks](./10.md)<br>
 [Section 11 - Proxy Configuration](./11.md)<br>
