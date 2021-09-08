@@ -17,7 +17,7 @@ spec:
       serviceAccountName: migration-operator
       containers:
       - name: operator
-        image: quay.io/konveyor/mig-operator-container:release-1.5.1
+        image: quay.io/konveyor/mig-operator-container:release-1.5.2
         imagePullPolicy: Always
         volumeMounts:
         - mountPath: /tmp/ansible-operator/runner
@@ -40,7 +40,7 @@ spec:
         - name: HOOK_RUNNER_REPO
           value: hook-runner
         - name: HOOK_RUNNER_TAG
-          value: release-1.5.1
+          value: release-1.5.2
         - name: MIG_CONTROLLER_REPO
           value: mig-controller
         - name: MIG_UI_REPO
@@ -48,7 +48,7 @@ spec:
         - name: MIGRATION_REGISTRY_REPO
           value: registry
         - name: MIGRATION_REGISTRY_TAG
-          value: release-1.5.1
+          value: release-1.5.2
         - name: VELERO_REPO
           value: velero
         - name: VELERO_PLUGIN_REPO
@@ -62,21 +62,21 @@ spec:
         - name: VELERO_AZURE_PLUGIN_REPO
           value: velero-plugin-for-microsoft-azure
         - name: VELERO_TAG
-          value: release-1.5.1
+          value: release-1.5.2
         - name: VELERO_RESTIC_RESTORE_HELPER_TAG
-          value: release-1.5.1
+          value: release-1.5.2
         - name: VELERO_PLUGIN_TAG
-          value: release-1.5.1
+          value: release-1.5.2
         - name: VELERO_AWS_PLUGIN_TAG
-          value: release-1.5.1
+          value: release-1.5.2
         - name: VELERO_GCP_PLUGIN_TAG
-          value: release-1.5.1
+          value: release-1.5.2
         - name: VELERO_AZURE_PLUGIN_TAG
-          value: release-1.5.1
+          value: release-1.5.2
         - name: MIG_UI_TAG
-          value: release-1.5.1
+          value: release-1.5.2
         - name: MIG_CONTROLLER_TAG
-          value: release-1.5.1
+          value: release-1.5.2
       volumes:
         - name: runner
           emptyDir: {}
