@@ -6,7 +6,7 @@ Refer to the guidelines below to select the correct mig-operator version for you
 
  - **OpenShift 3.7 - 4.5**
    - Crane 1.5.x is compatible
-   - Install Crane using [mig-legacy-operator](https://github.com/konveyor/mig-legacy-operator) available from YAML manifests.
+   - Install Crane using [mig-operator 1.5.x](https://github.com/konveyor/mig-operator/tree/release-1.5.1) available from YAML manifests.
  - **OpenShift 4.6+**
    - Crane 1.6.x+ is compatible
    - Install Crane using [mig-operator](https://github.com/konveyor/mig-operator) available from OperatorHub.
