@@ -323,3 +323,7 @@ _Logging into target Kibana using user credentials_
 We verified that the demo data we created on the source cluster was present in the target cluster:
 
 ![verify-target](./screenshots/state-only/elasticsearch/verify-target.gif)
+
+#### Continue reading
+
+See [State Transfer Usage](./StateTransferUsage.md) documentation to learn more about using State Transfer in MTC 1.6.0
