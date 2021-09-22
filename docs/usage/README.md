@@ -28,4 +28,4 @@ installing CAM for OCP3->3 installations, and 4->4 installations.<br>
 [Section 21 - Proxy configuration for Direct Volume Migration](./DVMProxyConfiguration.md)<br>
 [Section 22 - Adjusting MigCluster ConfigMap](./MigClusterConfiguration.md)<br>
 [Section 23 - State Transfer Usage](./StateTransferUsage.md)<br>
-
+[Section 24 - Migration Controller Configuration Quick View](./MigrationControllerConfigQuickView.md)
