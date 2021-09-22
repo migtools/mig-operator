@@ -46,11 +46,7 @@ spec:
     spec:
       containers:
         - name: mig-ui
-{% if http_proxy|length >0 or https_proxy|length >0 or no_proxy|length > 0 %}
           env:
-{% else %}
-          env: null
-{% endif %}
 {% if no_proxy|length >0 %}
           - name: NO_PROXY
             value: {{ no_proxy }}
@@ -63,6 +59,10 @@ spec:
           - name: HTTPS_PROXY
             value: {{ https_proxy }}
 {% endif %}
+          - name: CLUSTER_API_URL
+            value: {{ internal_cluster_api_url }}
+          - name: DISCOVERY_SVC_URL
+            value: {{ internal_discovery_svc_url }}
           image: "{{ mig_ui_image_fqin }}"
           imagePullPolicy: "{{ image_pull_policy }}"
           ports:
