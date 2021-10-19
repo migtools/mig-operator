@@ -33,6 +33,7 @@ service catalog resources or OLM resources, OLM migration is not handled by Cran
   - operatorgroups
   - events
   - events.events.k8s.io
+  - rolebindings.authorization.openshift.io
 ```
 
 **Note:** For more granular information on this topic please refer the [Velero docs.](https://velero.io/docs/v1.4/how-velero-works/)
