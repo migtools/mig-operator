@@ -128,7 +128,6 @@ metadata:
     support: Red Hat
     operatorframework.io/suggested-namespace: openshift-migration
 spec:
-<<<<<<< Updated upstream
   skips:
   - crane-operator.v1.6.3
   - crane-operator.v1.6.2
@@ -155,26 +154,12 @@ spec:
   - crane-operator.v1.2.2
   - crane-operator.v1.2.1
   - crane-operator.v1.2.0
-=======
->>>>>>> Stashed changes
   relatedImages:
   - name: controller
     image: quay.io/konveyor/mig-controller:latest
   - name: ui
     image: quay.io/konveyor/mig-ui:latest
-  - name: velero
-    image: quay.io/konveyor/velero:latest
-  - name: velero_restic_restore_helper
-    image: quay.io/konveyor/velero-restic-restore-helper:latest
   - name: migration_plugin
-    image: quay.io/konveyor/openshift-velero-plugin:latest
-  - name: aws_plugin
-    image: quay.io/konveyor/velero-plugin-for-aws:latest
-  - name: azure_plugin
-    image: quay.io/konveyor/velero-plugin-for-microsoft-azure:latest
-  - name: gcp_plugin
-    image: quay.io/konveyor/velero-plugin-for-gcp:latest
-  - name: registry
     image: quay.io/konveyor/registry:latest
   - name: hook_runner
     image: quay.io/konveyor/hook-runner:latest
@@ -644,55 +629,6 @@ spec:
           - '*'
           verbs:
           - '*'
-      - serviceAccountName: velero
-        rules:
-        - apiGroups:
-          - build.openshift.io
-          - migration.openshift.io
-          - rbac.authorization.k8s.io
-          - velero.io
-          resources:
-          - '*'
-          verbs:
-          - '*'
-        - apiGroups:
-          - ""
-          resources:
-          - serviceaccounts
-          verbs:
-          - '*'
-        - apiGroups:
-          - packages.operators.coreos.com
-          resources:
-          - packagemanifests
-          verbs:
-          - '*'
-        - apiGroups:
-          - '*'
-          resources:
-          - '*'
-          verbs:
-          - get
-          - watch
-          - list
-          - update
-          - patch
-          - create
-          - delete
-          - assign
-          - deletecollection
-        - nonResourceURLs:
-          - '*'
-          verbs:
-          - '*'
-        - apiGroups:
-          - security.openshift.io
-          resources:
-          - securitycontextconstraints
-          verbs:
-          - use
-          resourceNames:
-          - privileged
       deployments:
       - name: migration-operator
         spec:
