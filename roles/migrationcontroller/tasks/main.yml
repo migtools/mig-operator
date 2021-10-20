@@ -39,9 +39,6 @@
   - set_fact: controller_state="present"
     when: migration_controller
 
-  - set_fact: velero_state="present"
-    when: migration_velero
-
   - set_fact: log_reader_state="present"
     when: migration_log_reader
 
@@ -118,71 +115,6 @@
     - infrastructures.resources|length == 0
     - origin_three_dev is defined and origin_three_dev
 
-  - when: migration_velero
-    block:
-    - name: Check if cloud-credentials secret exists already so we don't update it
-      k8s_facts:
-        api_version: v1
-        kind: Secret
-        name: "{{ velero_aws_secret_name }}"
-        namespace: "{{ mig_namespace }}"
-      register: secret_status
-
-    - name: Check if gcp-cloud-credentials secret exists already so we don't update it
-      k8s_facts:
-        api_version: v1
-        kind: Secret
-        name: "{{ velero_gcp_secret_name }}"
-        namespace: "{{ mig_namespace }}"
-      register: gcp_secret_status
-
-    - name: Check if azure-cloud-credentials secret exists already so we don't update it
-      k8s_facts:
-        api_version: v1
-        kind: Secret
-        name: "{{ velero_azure_secret_name }}"
-        namespace: "{{ mig_namespace }}"
-      register: azure_secret_status
-
-    - name: "Create empty velero S3 secret"
-      k8s:
-        state: "{{ velero_state }}"
-        definition:
-          apiVersion: v1
-          kind: Secret
-          metadata:
-            name: "{{ velero_aws_secret_name }}"
-            namespace: "{{ mig_namespace }}"
-          data:
-            cloud: ""
-      when: (secret_status.resources|length) == 0
-
-    - name: "Create empty velero gcp secret"
-      k8s:
-        state: "{{ velero_state }}"
-        definition:
-          apiVersion: v1
-          kind: Secret
-          metadata:
-            name: "{{ velero_gcp_secret_name }}"
-            namespace: "{{ mig_namespace }}"
-          data:
-            cloud: ""
-      when: (gcp_secret_status.resources|length) == 0
-
-    - name: "Create empty velero azure secret"
-      k8s:
-        state: "{{ velero_state }}"
-        definition:
-          apiVersion: v1
-          kind: Secret
-          metadata:
-            name: "{{ velero_azure_secret_name }}"
-            namespace: "{{ mig_namespace }}"
-          data:
-            cloud: ""
-      when: (azure_secret_status.resources|length) == 0
-
   - name: "Create proxy configuration secret if proxy is configured"
     k8s:
       state: "present"
@@ -204,11 +136,6 @@
       restic_restore_action_config_configmap:
         env: "{{ lookup('template', 'restic-restore-action-config.yml.j2') | from_yaml }}"
 
-  - name: "Set up velero controller"
-    k8s:
-      state: "{{ velero_state }}"
-      definition: "{{ lookup('template', 'velero.yml.j2') }}"
-      merge_type: merge
 
   # Create custom SCC for all clusters. For <3.11 scc.users fields will drive the
   # behavior, for others, RBAC will.
@@ -626,39 +553,6 @@
         namespace: "{{ mig_namespace }}"
       with_items: "{{ ui_replicasets.resources }}"
 
-  - when: not migration_velero
-    block:
-    - name: Find Velero ReplicaSets
-      k8s_facts:
-        kind: ReplicaSet
-        namespace: "{{ mig_namespace }}"
-        label_selectors:
-        - component=velero
-      register: velero_replicasets
-
-    - name: Terminate Velero ReplicaSets
-      k8s:
-        name: "{{ item.metadata.name }}"
-        state: absent
-        kind: ReplicaSet
-        namespace: "{{ mig_namespace }}"
-      with_items: "{{ velero_replicasets.resources }}"
-
-    - name: Find Restic Pods
-      k8s_facts:
-        kind: Pod
-        namespace: "{{ mig_namespace }}"
-        label_selectors:
-        - name=restic
-      register: restic_pods
-
-    - name: Terminate Restic Pods
-      k8s:
-        name: "{{ item.metadata.name }}"
-        state: absent
-        kind: Pod
-        namespace: "{{ mig_namespace }}"
-      with_items: "{{ restic_pods.resources }}"
 
   - set_fact:
       reconciled: true
