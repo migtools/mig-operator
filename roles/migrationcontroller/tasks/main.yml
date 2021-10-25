@@ -116,20 +116,11 @@
       restic_restore_action_config_configmap:
         env: "{{ lookup('template', 'restic-restore-action-config.yml.j2') | from_yaml }}"
 
-  # Create custom SCC for all clusters. For <3.11 scc.users fields will drive the
-  # behavior, for others, RBAC will.
   - name: "Set up rsync-anyuid SCC"
     k8s:
       state: present
       definition: "{{ lookup('template', 'custom-rsync-anyuid.yml.j2') }}"
     when: "'security.openshift.io' in api_groups"
-
-  - when: migration_controller or migration_ui
-    block:
-    - name: Set default CORS URLs
-      set_fact:
-        mig_ui_cors_loopback: "//127.0.0.1(:|$)"
-        mig_ui_cors_localhost: "//localhost(:|$)"
 
   - name: "Set up mig controller monitoring config"
     k8s:
@@ -170,18 +161,6 @@
         name: migration
       register: route
 
-    - name: Determine UI CORS URL
-      set_fact:
-        mig_ui_url: "{{ route.resources[0].spec.host }}"
-        mig_ui_cors_url: "(?i)//{{ route.resources[0].spec.host | regex_replace('\\.', '\\.') }}(:|\\z)"
-
-    - name: Configure CORS allowed origins for UI install
-      set_fact:
-        cors_origins:
-        - "{{ mig_ui_cors_url }}"
-        - "{{ mig_ui_cors_loopback }}"
-        - "{{ mig_ui_cors_localhost }}"
-
     - name: "Set up discovery service and route"
       k8s:
         state: present
@@ -213,48 +192,6 @@
       k8s:
         state: "{{ ui_state }}"
         definition: "{{ lookup('template', 'ui-oauthsecret.yml.j2') }}"
-
-    - name: Retrieve apiserver config definition
-      k8s_facts:
-        api_version: "config.openshift.io/v1"
-        kind: "apiserver"
-        name: "cluster"
-      register: apiserver
-
-    - when: apiserver.resources[0].spec.additionalCORSAllowedOrigins is not defined or
-            (cors_origins | difference(apiserver.resources[0].spec.additionalCORSAllowedOrigins|default([])))|length > 0
-      block:
-      - name: Write apiserver config definition for modification
-        copy:
-          dest: /tmp/apiserver.yaml
-          content: "{{apiserver.resources[0] | to_nice_yaml }}"
-
-      - name: Add CORS URL to apiserver config definition
-        yedit:
-          src: /tmp/apiserver.yaml
-          key: spec.additionalCORSAllowedOrigins
-          append: true
-          value: "{{ item }}"
-        with_items: "{{ cors_origins | difference(apiserver.resources[0].spec.additionalCORSAllowedOrigins|default([])) }}"
-
-      - name: Update apiserver config definition on the cluster
-        k8s:
-          state: present
-          definition: "{{ lookup('file', '/tmp/apiserver.yaml') | from_yaml }}"
-
-    - name: Retrieve kubeapiserver operator definition
-      k8s_facts:
-        api_version: "operator.openshift.io/v1"
-        kind: "kubeapiserver"
-        name: "cluster"
-      register: kubeapiserver
-
-    - name: Retrieve authentication operator definition
-      k8s_facts:
-        api_version: "operator.openshift.io/v1"
-        kind: "authentication"
-        name: "cluster"
-      register: authentication
 
   - block:
     - name: "Set old_controller_detected to false"
@@ -441,7 +378,6 @@
         kind: ReplicaSet
         namespace: "{{ mig_namespace }}"
       with_items: "{{ ui_replicasets.resources }}"
-
 
   - set_fact:
       reconciled: true
