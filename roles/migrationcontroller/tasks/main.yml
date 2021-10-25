@@ -146,6 +146,10 @@
       name: migration
     register: route
 
+  - name: Determine UI URL
+    set_fact:
+      mig_ui_url: "{{ route.resources[0].spec.host }}"
+
   - name: "Set up discovery service and route"
     k8s:
       state: present
