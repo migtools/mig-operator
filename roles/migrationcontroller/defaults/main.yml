@@ -104,8 +104,8 @@ restic_timeout: 1h
 restic_supplemental_groups: []
 ui_state: absent
 velero_aws_secret_name: cloud-credentials
-velero_gcp_secret_name: gcp-cloud-credentials
-velero_azure_secret_name: azure-cloud-credentials
+velero_gcp_secret_name: cloud-credentials-gcp
+velero_azure_secret_name: cloud-credentials-azure
 velero_debug: false
 velero_image: "{{ registry }}/{{ project }}/{{ velero_repo }}"
 velero_repo: "{{ lookup( 'env', 'VELERO_REPO') }}"
