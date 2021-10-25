@@ -62,7 +62,7 @@ mig_controller_image_fqin: "{{ mig_controller_image }}:{{ mig_controller_version
 mig_controller_enable_cache: false
 discovery_collect_events: true
 discovery_volume_path: "/var/cache/discovery"
-mig_operator_version: "1.5.2"
+mig_operator_version: "1.5.3"
 mig_pv_move_storageclasses: []
 mig_pv_limit: "100"
 mig_pod_limit: "100"
