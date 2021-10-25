@@ -1,0 +1,13 @@
+apiVersion: oadp.openshift.io/v1alpha1
+kind: Velero
+metadata:
+  name: velero
+  namespace: "{{ mig_namespace }}"
+spec:
+  enableRestic: true
+  defaultVeleroPlugins:
+  - openshift
+  - aws
+  - gcp
+  - azure
+  noDefaultBackupLocation: true

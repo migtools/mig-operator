@@ -2,7 +2,6 @@
 azure_resource_group: ""
 configmap_secret: ""
 controller_state: absent
-cors_origins: []
 disable_image_migration: false
 disable_image_copy: false
 disable_pv_migration: false
