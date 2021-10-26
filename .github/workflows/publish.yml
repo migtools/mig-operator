@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 env:
-  SUPPORTED_CHANNELS: release-v1.3,release-v1.4,release-v1.5
+  SUPPORTED_CHANNELS: release-v1.3,release-v1.4,release-v1.5,release-v1.6
   REGISTRY: quay.io
   IMAGE_NAME: ${{ github.repository }}
   BUNDLE_SUFFIX: bundle
