@@ -89,21 +89,6 @@
     definition: "{{ lookup('template', 'proxy_secret.yml.j2') }}"
   when: http_proxy != "" or https_proxy != "" or no_proxy != ""
 
-- name: "Get proxy secret for hashing"
-  set_fact:
-    proxy_secret:
-      env: "{{ lookup('template', 'restic-restore-action-config.yml.j2') | from_yaml }}"
-
-- name: "Set up velero restic-restore-action-config"
-  k8s:
-    state: "{{ velero_state }}"
-    definition: "{{ lookup('template', 'restic-restore-action-config.yml.j2') }}"
-
-- name: "Get restic-restore-action-config for hashing"
-  set_fact:
-    restic_restore_action_config_configmap:
-      env: "{{ lookup('template', 'restic-restore-action-config.yml.j2') | from_yaml }}"
-
 - when: migration_velero
   block:
   - name: Check if cloud-credentials secret exists already so we don't update it
