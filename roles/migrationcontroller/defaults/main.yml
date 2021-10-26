@@ -20,6 +20,7 @@ excluded_resources:
   - serviceplans
   - operatorgroups
   - events
+  - rolebindings.authorization.openshift.io
 proxy_secret_name: "migration-proxy"
 http_proxy: "{{ lookup( 'env', 'HTTP_PROXY') }}"
 https_proxy: "{{ lookup( 'env', 'HTTPS_PROXY') }}"
