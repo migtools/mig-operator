@@ -74,6 +74,7 @@ Default exluded resources:
   - operatorgroups
   - events
   - events.events.k8s.io
+  - rolebindings.authorization.openshift.io
 ```
 
 See full doc [here](./ExcludeResources.md)

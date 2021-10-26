@@ -21,6 +21,7 @@ excluded_resources:
   - operatorgroups
   - events
   - events.events.k8s.io
+  - rolebindings.authorization.openshift.io
 proxy_secret_name: "migration-proxy"
 http_proxy: "{{ lookup( 'env', 'HTTP_PROXY') }}"
 https_proxy: "{{ lookup( 'env', 'HTTPS_PROXY') }}"
