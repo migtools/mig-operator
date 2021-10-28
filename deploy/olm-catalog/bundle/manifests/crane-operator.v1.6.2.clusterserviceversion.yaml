@@ -230,6 +230,7 @@ metadata:
 spec:
   skips:
   - crane-operator.v1.6.1
+  - crane-operator.v1.6.0
   relatedImages:
   - name: controller
     image: quay.io/konveyor/mig-controller:latest
