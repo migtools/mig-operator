@@ -2,7 +2,7 @@ FROM quay.io/operator-framework/ansible-operator:latest
 
 USER root
 
-RUN yum -y update && yum clean all
+RUN yum -y update --allowerasing --nobest && yum clean all
 
 RUN echo -ne "[centos-8-appstream]\nname = CentOS 8 (RPMs) - AppStream\nbaseurl = http://mirror.centos.org/centos-8/8/AppStream/x86_64/os/\nenabled = 1\ngpgcheck = 0" > /etc/yum.repos.d/centos.repo
 
