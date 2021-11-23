@@ -1,13 +1,25 @@
 apiVersion: oadp.openshift.io/v1alpha1
-kind: Velero
+kind: DataProtectionApplication
 metadata:
   name: velero
   namespace: "{{ mig_namespace }}"
 spec:
-  enableRestic: true
-  defaultVeleroPlugins:
-  - openshift
-  - aws
-  - gcp
-  - azure
-  noDefaultBackupLocation: true
+  configuration:
+    velero:
+      defaultPlugins:
+      - openshift
+      - aws
+      - gcp
+      - azure
+      noDefaultBackupLocation: true
+    restic:
+      enable: true
+      timeout: "{{ restic_timeout }}"
+      supplementalGroups: {{ restic_supplemental_groups }}
+{% if _migration_openshift_io_migrationcontroller_spec.daemonset_node_selector is defined %}
+      podConfig:
+        nodeSelector: {{ _migration_openshift_io_migrationcontroller_spec.daemonset_node_selector | to_yaml }}
+{% else %}
+      podConfig: {}
+{% endif %}
+
