@@ -667,6 +667,14 @@ spec:
           - privileged
           - rsync-anyuid
         - apiGroups:
+          - config.openshift.io
+          resources:
+          - ingresses
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
           - apps.openshift.io
           - route.openshift.io
           resources:
