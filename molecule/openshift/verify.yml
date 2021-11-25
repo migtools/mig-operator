@@ -16,7 +16,7 @@
         name: '{{ custom_resource.metadata.name }}'
       register: cr
       until:
-      - "'Reconciled' in (cr | json_query('resources[].status.phase'))"
+      - 0 == (cr | community.general.json_query('resources[].status.conditions[0].ansibleResult.failures') | int)
       delay: 10
       retries: 48
 

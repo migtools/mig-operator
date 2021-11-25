@@ -32,9 +32,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install operator-courier
-        run: pip3 install operator-courier
-
       - name: Get opm
         run: wget $(curl -s https://api.github.com/repos/operator-framework/operator-registry/releases/latest | grep 'browser_' | cut -d\" -f4 | grep linux) -O opm && chmod +x opm
 
@@ -90,16 +87,3 @@ jobs:
 
       - name: Push index
         run: docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ env.INDEX_SUFFIX }}:latest
-
-      - name: mkdir export dir
-        run: mkdir /tmp/export
-
-      - name: export operator metadata
-        run: ./opm index export -c docker -i quay.io/konveyor/mig-operator-index:latest -o crane-operator -f /tmp/export
-
-      - name: Get and increment current application version
-        run: echo "##[set-output name=version;]"$(echo $(( $(curl -s https://quay.io/cnr/api/v1/packages?namespace=$(echo ${{ github.repository }} | cut -d '/' -f 1) | jq -r ".[] | select(.name==\"$(echo ${{ github.repository }} | cut -d '/' -f 1)/crane-operator\").default" | cut -d "." -f 1 ) + 1)))
-        id: get_version
-
-      - name: Push application metadata
-        run: operator-courier --verbose push /tmp/export/crane-operator $(echo ${{ github.repository }} | cut -d '/' -f 1) crane-operator ${{ steps.get_version.outputs.version }}.0.0 "basic $(echo -n ${{ secrets.QUAY_PUBLISH_ROBOT }}:${{ secrets.QUAY_PUBLISH_TOKEN }} | base64 -w0)"

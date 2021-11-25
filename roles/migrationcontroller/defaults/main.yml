@@ -2,8 +2,6 @@
 azure_resource_group: ""
 configmap_secret: ""
 controller_state: absent
-deprecated_cors_configuration: false
-cors_origins: []
 disable_image_migration: false
 disable_image_copy: false
 disable_pv_migration: false
@@ -98,7 +96,6 @@ migration_stage_repo: "{{ lookup( 'env', 'VELERO_RESTIC_RESTORE_HELPER_REPO') }}
 migration_stage_version: "{{ snapshot_tag | default(lookup( 'env', 'VELERO_RESTIC_RESTORE_HELPER_TAG')) }}"
 migration_stage_image_fqin: "{{ migration_stage_image }}:{{ migration_stage_version }}"
 migration_rsync_privileged: false
-olm_managed: false
 enable_intelligent_pv_resize: true
 registry: "{{ lookup( 'env', 'REGISTRY') }}"
 project: "{{ lookup( 'env', 'PROJECT') }}"
@@ -107,8 +104,8 @@ restic_timeout: 1h
 restic_supplemental_groups: []
 ui_state: absent
 velero_aws_secret_name: cloud-credentials
-velero_gcp_secret_name: gcp-cloud-credentials
-velero_azure_secret_name: azure-cloud-credentials
+velero_gcp_secret_name: cloud-credentials-gcp
+velero_azure_secret_name: cloud-credentials-azure
 velero_debug: false
 velero_image: "{{ registry }}/{{ project }}/{{ velero_repo }}"
 velero_repo: "{{ lookup( 'env', 'VELERO_REPO') }}"
@@ -137,21 +134,3 @@ velero_azure_plugin_fqin: "{{ velero_azure_plugin_image }}:{{ velero_azure_plugi
 velero_state: absent
 velero_qps: 100
 velero_burst: 1000
-
-# MCG integration
-noobaa: false
-noobaa_expected_crds:
-  - noobaas.noobaa.io
-  - bucketclasses.noobaa.io
-  - backingstores.noobaa.io
-noobaa_admin_secret: noobaa-admin
-noobaa_system_namespace: "{{ mig_namespace }}"
-noobaa_mig_bucket_name: mig-storage
-noobaa_s3_endpoint_proto: http
-noobaa_system_core_cpu: 0.5
-noobaa_system_core_mem: 500Mi
-noobaa_system_db_cpu: 0.5
-noobaa_system_db_mem: 1Gi
-noobaa_system_endpoints_cpu: 1
-noobaa_system_endpoints_mem: 500Mi
-noobaa_system_endpoints_pod_count: 2

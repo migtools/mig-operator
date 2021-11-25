@@ -28,111 +28,11 @@ metadata:
               "migration_controller": true,
               "migration_ui": true,
               "migration_log_reader": true,
-              "olm_managed": true,
               "restic_timeout": "1h",
               "mig_pv_limit": "100",
               "mig_pod_limit": "100",
               "mig_namespace_limit": "10"
             }
-        },
-        {
-            "apiVersion": "velero.io/v1",
-            "kind": "Backup",
-            "metadata": {
-              "name": "backup",
-              "namespace": "openshift-migration"
-            },
-            "spec": {}
-        },
-        {
-            "apiVersion": "velero.io/v1",
-            "kind": "BackupStorageLocation",
-            "metadata": {
-              "name": "backupstoragelocation",
-              "namespace": "openshift-migration"
-            },
-            "spec": {}
-        },
-        {
-            "apiVersion": "velero.io/v1",
-            "kind": "DeleteBackupRequest",
-            "metadata": {
-              "name": "deletebackuprequest",
-              "namespace": "openshift-migration"
-            },
-            "spec": {}
-        },
-        {
-            "apiVersion": "velero.io/v1",
-            "kind": "DownloadRequest",
-            "metadata": {
-              "name": "downloadrequest",
-              "namespace": "openshift-migration"
-            },
-            "spec": {}
-        },
-        {
-            "apiVersion": "velero.io/v1",
-            "kind": "PodVolumeBackup",
-            "metadata": {
-              "name": "podvolumebackup",
-              "namespace": "openshift-migration"
-            },
-            "spec": {}
-        },
-        {
-            "apiVersion": "velero.io/v1",
-            "kind": "PodVolumeRestore",
-            "metadata": {
-              "name": "podvolumerestore",
-              "namespace": "openshift-migration"
-            },
-            "spec": {}
-        },
-        {
-            "apiVersion": "velero.io/v1",
-            "kind": "ResticRepository",
-            "metadata": {
-              "name": "resticrepository",
-              "namespace": "openshift-migration"
-            },
-            "spec": {}
-        },
-        {
-            "apiVersion": "velero.io/v1",
-            "kind": "Restore",
-            "metadata": {
-              "name": "restore",
-              "namespace": "openshift-migration"
-            },
-            "spec": {}
-        },
-        {
-            "apiVersion": "velero.io/v1",
-            "kind": "Schedule",
-            "metadata": {
-              "name": "schedule",
-              "namespace": "openshift-migration"
-            },
-            "spec": {}
-        },
-        {
-            "apiVersion": "velero.io/v1",
-            "kind": "ServerStatusRequest",
-            "metadata": {
-              "name": "serverstatusrequest",
-              "namespace": "openshift-migration"
-            },
-            "spec": {}
-        },
-        {
-            "apiVersion": "velero.io/v1",
-            "kind": "VolumeSnapshotLocation",
-            "metadata": {
-              "name": "volumesnapshotlocation",
-              "namespace": "openshift-migration"
-            },
-            "spec": {}
         },
         {
             "apiVersion": "migration.openshift.io/v1alpha1",
@@ -259,19 +159,7 @@ spec:
     image: quay.io/konveyor/mig-controller:latest
   - name: ui
     image: quay.io/konveyor/mig-ui:latest
-  - name: velero
-    image: quay.io/konveyor/velero:latest
-  - name: velero_restic_restore_helper
-    image: quay.io/konveyor/velero-restic-restore-helper:latest
   - name: migration_plugin
-    image: quay.io/konveyor/openshift-velero-plugin:latest
-  - name: aws_plugin
-    image: quay.io/konveyor/velero-plugin-for-aws:latest
-  - name: azure_plugin
-    image: quay.io/konveyor/velero-plugin-for-microsoft-azure:latest
-  - name: gcp_plugin
-    image: quay.io/konveyor/velero-plugin-for-gcp:latest
-  - name: registry
     image: quay.io/konveyor/registry:latest
   - name: hook_runner
     image: quay.io/konveyor/hook-runner:latest
@@ -741,55 +629,6 @@ spec:
           - '*'
           verbs:
           - '*'
-      - serviceAccountName: velero
-        rules:
-        - apiGroups:
-          - build.openshift.io
-          - migration.openshift.io
-          - rbac.authorization.k8s.io
-          - velero.io
-          resources:
-          - '*'
-          verbs:
-          - '*'
-        - apiGroups:
-          - ""
-          resources:
-          - serviceaccounts
-          verbs:
-          - '*'
-        - apiGroups:
-          - packages.operators.coreos.com
-          resources:
-          - packagemanifests
-          verbs:
-          - '*'
-        - apiGroups:
-          - '*'
-          resources:
-          - '*'
-          verbs:
-          - get
-          - watch
-          - list
-          - update
-          - patch
-          - create
-          - delete
-          - assign
-          - deletecollection
-        - nonResourceURLs:
-          - '*'
-          verbs:
-          - '*'
-        - apiGroups:
-          - security.openshift.io
-          resources:
-          - securitycontextconstraints
-          verbs:
-          - use
-          resourceNames:
-          - privileged
       deployments:
       - name: migration-operator
         spec:
@@ -880,26 +719,6 @@ spec:
   version: 99.0.0
   customresourcedefinitions:
     owned:
-    - name: backupstoragelocations.velero.io
-      version: v1
-      kind: BackupStorageLocation
-      displayName: BackupStorageLocation
-      description: A velero backup storage location
-    - name: backups.velero.io
-      version: v1
-      kind: Backup
-      displayName: Backup
-      description: A velero backup
-    - name: deletebackuprequests.velero.io
-      version: v1
-      kind: DeleteBackupRequest
-      displayName: DeleteBackupRequest
-      description: A request to delete a velero backup
-    - name: downloadrequests.velero.io
-      version: v1
-      kind: DownloadRequest
-      displayName: DownloadRequest
-      description: A download request for velero
     - name: directvolumemigrations.migration.openshift.io
       version: v1alpha1
       kind: DirectVolumeMigration
@@ -972,38 +791,3 @@ spec:
       kind: MigStorage
       displayName: MigStorage
       description: A migration storage location
-    - name: podvolumebackups.velero.io
-      version: v1
-      kind: PodVolumeBackup
-      displayName: PodVolumeBackup
-      description: A velero pod volume backup
-    - name: podvolumerestores.velero.io
-      version: v1
-      kind: PodVolumeRestore
-      displayName: PodVolumeRestore
-      description: A velero pod volume restore
-    - name: resticrepositories.velero.io
-      version: v1
-      kind: ResticRepository
-      displayName: ResticRepository
-      description: A restic repository for velero
-    - name: restores.velero.io
-      version: v1
-      kind: Restore
-      displayName: Restore
-      description: A velero restore
-    - name: schedules.velero.io
-      version: v1
-      kind: Schedule
-      displayName: Schedule
-      description: A velero schedule
-    - name: serverstatusrequests.velero.io
-      version: v1
-      kind: ServerStatusRequest
-      displayName: ServerStatusRequest
-      description: A velero server status request
-    - name: volumesnapshotlocations.velero.io
-      version: v1
-      kind: VolumeSnapshotLocation
-      displayName: VolumeSnapshotLocation
-      description: A velero volume snapshot location
