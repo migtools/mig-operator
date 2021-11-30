@@ -1,6 +1,5 @@
 reviewers:
   - jmontleon
-  - djwhatle
   - shawn-hurley
   - pranavgaikwad
   - eriknelson
@@ -10,9 +9,10 @@ reviewers:
   - rayfordj
   - jortle
   - jaydipgabani
+  - djzager
 approvers:
   - jmontleon
-  - djwhatle
+  - djzager
   - shawn-hurley
   - pranavgaikwad
   - eriknelson
