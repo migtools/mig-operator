@@ -305,6 +305,10 @@ spec:
                                 description: Requested capacity of the claim
                                 pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
                                 x-kubernetes-int-or-string: true
+                              sparseFilesFound:
+                                description: Indicate whether or not sparse files
+                                  were found in the volume
+                                type: boolean
                               usagePercentage:
                                 description: Usage of volume in percentage
                                 type: integer
