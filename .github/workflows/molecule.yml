@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install
-        run: pip install yamllint ansible docker molecule molecule-docker 'kubernetes==11.0.0' 'openshift==0.11.2' jmespath
+        run: pip install yamllint ansible docker molecule molecule-docker 'kubernetes==12.0.0' openshift jmespath
       - name: Checkout
         uses: actions/checkout@v2
       - name: Run
