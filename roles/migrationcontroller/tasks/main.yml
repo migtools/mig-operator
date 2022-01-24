@@ -47,6 +47,11 @@
     all_excluded_resources: "{{ all_excluded_resources + ['persistentvolumeclaims'] }}"
   when: disable_pv_migration|bool and 'persistentvolumeclaims' not in excluded_resources
 
+- set_fact:
+    all_excluded_resources: "{{ all_excluded_resources + [item] }}"
+  with_items: "{{ additional_excluded_resources }}"
+  when: additional_excluded_resources is defined and item is not in excluded_resources
+
 - name: Get cluster config
   k8s_facts:
     api_version: v1
