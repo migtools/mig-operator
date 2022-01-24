@@ -31,7 +31,23 @@ spec:
 
 Disabling pv migration will also disable PV discovery during plan creation.
 
-# Exclude Kubernetes Resources
+# Exclude Additional Kubernetes Resources
+You may add additional resources to the excluded resources list using the `additional_excluded_resources` parameter.
+
+```
+apiVersion: migration.openshift.io/v1alpha1
+kind: MigrationController
+metadata:
+  name: migration-controller
+  namespace: openshift-migration
+spec:
+  additional_excluded_resources:
+  - foo
+  - bar
+...
+```
+
+# Modify the Default Excluded Kubernetes Resources
 To modify the default list of excluded resources add an `excluded_resources` parameter to the MigrationController CR.
 
 It is suggested that you only add to the list since migrating resources on this list is known to be problematic.
