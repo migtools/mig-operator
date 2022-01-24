@@ -15,14 +15,12 @@
       regexp: ':latest'
       replace: ":release-{{ release }}"
 
-  tasks:
   - name: Replace operator tags in molecule test
     replace:
       path:  "{{ item }}"
       regexp: ':latest'
       replace: ":release-{{ release }}"
     with_items:
-    - "{{ playbook_dir }}/../molecule/kind/converge.yml"
     - "{{ playbook_dir }}/../molecule/openshift/converge.yml"
 
   - name: Replace operand in CSV
@@ -42,18 +40,6 @@
            git mv \
            {{ playbook_dir }}/../deploy/olm-catalog/bundle/manifests/crane-operator.v99.0.0.clusterserviceversion.yaml \
            {{ playbook_dir }}/../deploy/olm-catalog/bundle/manifests/crane-operator.v{{ release }}.clusterserviceversion.yaml 
-
-  - name: Replace operator tags in operator.yml
-    replace:
-      path:  "{{ playbook_dir }}/../deploy/non-olm/operator.yml"
-      regexp: ':latest'
-      replace: ":release-{{ release }}"
-
-  - name: Replace operand in operator.yml
-    replace:
-      path:  "{{ playbook_dir }}/../deploy/non-olm/operator.yml"
-      regexp: 'value: latest'
-      replace: "value: release-{{ release }}"
 
   - name: Replace default channel in annotations
     replace:
