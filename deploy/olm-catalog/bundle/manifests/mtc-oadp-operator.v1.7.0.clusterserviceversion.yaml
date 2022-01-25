@@ -2,14 +2,14 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
-  name: crane-operator.v99.0.0
+  name: mtc-oadp-operator.v1.7.0
   namespace: openshift-migration
   annotations:
-    olm.skipRange: '>=0.0.0 <99.0.0'
+    olm.skipRange: '>=0.0.0 <1.7.0'
     capabilities: Seamless Upgrades
     description: Facilitates migration of container workloads from OpenShift 3.x to OpenShift 4.x
     categories: 'Modernization & Migration, OpenShift Optional'
-    containerImage: quay.io/konveyor/mig-operator-container:latest
+    containerImage: quay.io/spampatt/mig-operator-container:latest
     createdAt: 2019-07-25T10:21:00Z
     repository: https://github.com/konveyor/mig-operator
     alm-examples: |-
@@ -129,32 +129,7 @@ metadata:
     operatorframework.io/suggested-namespace: openshift-migration
 spec:
   skips:
-  - crane-operator.v1.6.3
-  - crane-operator.v1.6.2
-  - crane-operator.v1.6.1
-  - crane-operator.v1.6.0
-  - crane-operator.v1.5.4
-  - crane-operator.v1.5.3
-  - crane-operator.v1.5.2
-  - crane-operator.v1.5.1
-  - crane-operator.v1.5.0
-  - crane-operator.v1.4.7
-  - crane-operator.v1.4.6
-  - crane-operator.v1.4.5
-  - crane-operator.v1.4.4
-  - crane-operator.v1.4.3
-  - crane-operator.v1.4.2
-  - crane-operator.v1.4.1
-  - crane-operator.v1.4.0
-  - crane-operator.v1.3.2
-  - crane-operator.v1.3.1
-  - crane-operator.v1.3.0
-  - crane-operator.v1.2.5
-  - crane-operator.v1.2.4
-  - crane-operator.v1.2.3
-  - crane-operator.v1.2.2
-  - crane-operator.v1.2.1
-  - crane-operator.v1.2.0
+  - mtc-operator.v1.6.3
   relatedImages:
   - name: controller
     image: quay.io/konveyor/mig-controller:latest
@@ -653,7 +628,7 @@ spec:
               serviceAccount: migration-operator
               containers:
               - name: operator
-                image: quay.io/konveyor/mig-operator-container:latest
+                image: quay.io/spampatt/mig-operator-container:latest
                 imagePullPolicy: Always
                 volumeMounts:
                 - mountPath: /tmp/ansible-operator/runner
@@ -725,7 +700,7 @@ spec:
               - name: runner
                 emptyDir: {}
   maturity: alpha
-  version: 99.0.0
+  version: 1.7.0
   customresourcedefinitions:
     owned:
     - name: directvolumemigrations.migration.openshift.io

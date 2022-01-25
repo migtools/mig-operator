@@ -1,5 +1,5 @@
 dependencies:
 - type: olm.package
   value:
-    packageName: oadp-operator
-    version: ">=0.5.0"
+    packageName: mtc2-oadp-operator
+    version: ">=1.0.0"
