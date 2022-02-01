@@ -129,6 +129,7 @@ metadata:
     operatorframework.io/suggested-namespace: openshift-migration
 spec:
   skips:
+  - crane-operator.v1.6.4
   - crane-operator.v1.6.3
   - crane-operator.v1.6.2
   - crane-operator.v1.6.1
