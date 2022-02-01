@@ -52,6 +52,26 @@
   with_items: "{{ additional_excluded_resources }}"
   when: additional_excluded_resources is defined and item is not in excluded_resources
 
+- name: "Check for existing velero controller from MTC <1.7.0"
+  k8s_facts:
+    api_version: "apps/v1"
+    kind: Deployment
+    name: velero
+    namespace: "{{ mig_namespace }}"
+  register: velero_status
+
+- name: "Delete existing velero controller from MTC <1.7.0"
+  k8s:
+    name: "velero"
+    state: absent
+    kind: Deployment
+    namespace: "{{ mig_namespace }}"
+  when:
+  - velero_status.resources is defined
+  - (velero_status.resources|length) > 0
+  - (velero_status.resources.metadata.ownerReferences|length) > 0
+  - velero_status.resources[0].metadata.ownerReferences[0].kind == "MigrationController"
+
 - name: Get cluster config
   k8s_facts:
     api_version: v1
