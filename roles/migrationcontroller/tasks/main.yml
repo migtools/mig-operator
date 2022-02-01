@@ -69,8 +69,29 @@
   when:
   - velero_status.resources is defined
   - (velero_status.resources|length) > 0
-  - (velero_status.resources.metadata.ownerReferences|length) > 0
+  - (velero_status.resources[0].metadata.ownerReferences|length) > 0
   - velero_status.resources[0].metadata.ownerReferences[0].kind == "MigrationController"
+
+- name: "Check for existing restic daemonset from MTC <1.7.0"
+  k8s_facts:
+    api_version: "apps/v1"
+    kind: DaemonSet
+    name: restic
+    namespace: "{{ mig_namespace }}"
+  register: restic_status
+
+- name: "Delete existing restic daemonset from MTC <1.7.0"
+  k8s:
+    name: "restic"
+    state: absent
+    kind: DaemonSet
+    namespace: "{{ mig_namespace }}"
+  when:
+  - restic_status.resources is defined
+  - (restic_status.resources|length) > 0
+  - (restic_status.resources[0].metadata.ownerReferences|length) > 0
+  - restic_status.resources[0].metadata.ownerReferences[0].kind == "MigrationController"
+
 
 - name: Get cluster config
   k8s_facts:
