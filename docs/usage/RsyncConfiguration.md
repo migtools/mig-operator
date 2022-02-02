@@ -52,6 +52,25 @@ _MigrationController_ CR exposes following variables to configure resource usage
 | stunnel_pod_memory_limits    	    | string 	| "1Gi"   	| Source Stunnel Pod's memory limit    	|
 | stunnel_pod_memory_requests  	    | string 	| "1Gi"   	| Source Stunnel Pod's memory requests 	|
 
+### Configuring Supplemental Groups for Rsync Pods
+
+If PVCs are using a shared storage, the access to storage can be configured by adding supplemental groups to Rsync Pod definitions in order for the Pods to allow access:
+
+|          Variable          	|  Type  	| Default 	| Description                                                                                                                                                                                                                                                 	|
+|:--------------------------:	|:------:	|---------	|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
+|   src_supplemental_groups  	| string 	| Not Set 	| Comma separated list of supplemental groups for source Rsync Pods                                                                                                                                                                                           	|
+| target_supplemental_groups 	| string 	| Not Set 	| Comma separated list of supplemental groups for target Rsync Pods                                                                                                                                                                                           	|
+
+#### Example Usage
+
+_MigrationController_ CR can be updated to set the above values:
+
+```yaml
+spec:
+  src_supplemental_groups: "1000,2000"
+  target_supplemental_groups: "2000,3000"
+```
+
 ### Configuring retries for Rsync
 
 MTC 1.4.3 onwards, a new ability of retrying a failed Rsync operation is introduced. By default, the migration controller will retry Rsync until all of the data is successfully transferred from the source to the target volume or a specified number of retries is met. The default retry limit is set to `20`. For larger volumes, the limit `20` may not be sufficient. It can be increased by using the following variable in _MigrationController_ CR:

@@ -60,6 +60,12 @@ data:
 {% if pv_resizing_threshold is defined %}
   PV_RESIZING_USAGE_THRESHOLD: "{{ pv_resizing_threshold }}"
 {% endif %}
+{% if src_supplemental_groups is defined %}
+  SOURCE_SUPPLEMENTAL_GROUPS: "{{ src_supplemental_groups }}"
+{% endif %}
+{% if target_supplemental_groups is defined %}
+  TARGET_SUPPLEMENTAL_GROUPS: "{{ target_supplemental_groups }}"
+{% endif %}
   ENABLE_CACHED_CLIENT: "{{ mig_controller_enable_cache }}"
   DISCOVERY_COLLECT_EVENTS: "{{ discovery_collect_events }}"
 
