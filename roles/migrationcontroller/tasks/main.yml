@@ -92,6 +92,25 @@
   - (restic_status.resources[0].metadata.ownerReferences|length) > 0
   - restic_status.resources[0].metadata.ownerReferences[0].kind == "MigrationController"
 
+- name: "Check for existing restic-restore-action-config configmap from MTC <1.7.0"
+  k8s_facts:
+    api_version: "v1"
+    kind: Configmap
+    name: restic-restore-action-config
+    namespace: "{{ mig_namespace }}"
+  register: restic_restore_config
+
+- name: "Delete existing restic-restore-action-config configmap from MTC <1.7.0"
+  k8s:
+    name: restic-restore-action-config
+    state: absent
+    kind: ConfigMap
+    namespace: "{{ mig_namespace }}"
+  when:
+  - restic_restore_config.resources is defined
+  - (restic_restore_config.resources|length) > 0
+  - (restic_restore_config.resources[0].metadata.ownerReferences|length) > 0
+  - restic_restore_config.resources[0].metadata.ownerReferences[0].kind == "MigrationController"
 
 - name: Get cluster config
   k8s_facts:
