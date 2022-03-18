@@ -1,7 +1,34 @@
 # Using State Transfer in MTC
 
-In MTC 1.6.0 and above, _State Migration_ enables migration of Persistent Volume data along with a subset of Kubernetes resources which constitute the application state. To use State Migration, a Migration Plan needs to be created for the source namespaces. Once the plan is Ready, State Migration will be available in the Migration Plan actions menu. It differs from other Migration Types (Stage/Cutover) in that the State migration shouldn't be used to migrate the entire namespaces. It should only be used to migrate application state.
+In MTC 1.6.0 and above, _State Migration_ enables migration of Persistent Volume data. In special cases, it also allows migrating a subset of Kubernetes resources which constitute the application state. It differs from other migration types in that the State migration does not migrate entire namespaces. It only migrates _PersistentVolumeClaims_ and data on the persistent volumes. It is specifically designed to be used in conjuction with external CD mechanisms such as OpenShift Gitops. The idea is to migrate application manifests using GitOps, while migrating the state using MTC.
 
+## Using State Migration in conjunction with GitOps (ArgoCD)
+
+This section recommends sequence of actions to perform a state-only migration in conjunction with OpenShift Gitops. In order to keep the document concise and relevant to MTC, we will skip the details of ArgoCD deployment. We will make certain assumptions about the environments: 
+- Application manifests are available in a central repository accessible by both source & target clusters. 
+- Application on the source cluster has persisted state in _PersistentVolumes_ provisioned through _PersistentVolumeClaims_. 
+
+### Migration
+
+- Step 1: Migrate persistent volume data from source to target cluster
+  - This is the staging phase where we will migrate application data using State Migration. It can be performed as many times as needed. The source applications will continue running. See [this section](#migrating-pv-data) for details on data migration.
+
+- Step 2: Quiesce down source application
+  - In this step, we will quiesce down the application on source cluster. This can be done by setting the replicas of workload resources to 0. It can either be done directly on the source cluster or by updating the manifests in GitHub before re-syncing the ArgoCD application. 
+
+- Step 3: Clone application manifests to target cluster
+  - ArgoCD can be used to clone the same application to the target cluster.
+
+- Step 4: Migrate remaining volume data from source to target cluster
+  - In this step, any new data created by the application during Step 1 & Step 2 can be migrated by performing a final data migration. 
+
+- Step 5: Un-quiesce destination application
+  - This step is only applicable if the cloned application is in quiesced state.
+
+- Step 6: Switch DNS
+  - Finally, DNS can be switched over to the destination cluster to re-direct user traffic to the migrated application.
+
+> NOTE: MTC 1.6 cannot quiesce the application automatically when using State Migration. It can only migrate PV data. Therefore, the users are required to use their CD mechanisms to handle quiescing/unquiescing of applications. MTC 1.7 improves user experience around State Migration by introducing explicit Stage and Cutover flows. Staging can be used to perform initial data transfers as many times as needed. Finally, a Cutover can be performed in which the quiescing of source applications will be handled automatically.
 
 ## Migrating PV data
 
