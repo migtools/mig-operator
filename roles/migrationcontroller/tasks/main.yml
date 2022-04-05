@@ -6,6 +6,7 @@
   - k8s:
       state: "present"
       definition: "{{ lookup('template', 'mig-cluster-config.yml.j2') }}"
+      merge_type: merge
 
   - name: "Get mig cluster configmap for hashing"
     set_fact:
