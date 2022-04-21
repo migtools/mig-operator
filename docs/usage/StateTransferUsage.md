@@ -36,9 +36,7 @@ State Migrations offers several different options for migrating PV data from the
 
 ### Selecting PVCs to migrate
 
-When performing a state transfer, the users can select _State_ from the _MigPlan_ actions. In the modal, individual PVCs can be selected using a checkbox. All the checked PVCs will be included in the Migration. 
-
-In the API, the same thing can be accomplished by updating the _MigPlan_ spec fields. Once the _MigPlan_ PV discovery is complete, `migplan.spec.persistentVolumes` field is populated with discovered PVCs in the source cluster. For each PVC present in the list, the users can set `selection.action` field to `skip` to indicate that the PVC must be skipped from the migration. This is equivalent to unchecking the checkbox in the plan wizard.
+In the API, individual PVCs can be selected for State Migration using _MigPlan_ spec fields. Once the _MigPlan_ PV discovery is complete, `migplan.spec.persistentVolumes` field is populated with discovered PVCs in the source cluster. For each PVC present in the list, the users can set `selection.action` field to `skip` to indicate that the PVC must be skipped from the migration. This is equivalent to unchecking the checkbox in the plan wizard.
 
 ```yaml
 apiVersion: migration.openshift.io/v1alpha1
@@ -87,7 +85,9 @@ The general mapping format is `<source_pvc_name>:<target_pvc_name>`.
 
 ## Migrating Kubernetes resources selectively
 
-Once all of the PV data is migrated, users can migrate a subset of Kubernetes resources from the source to the target cluster. This is particularly useful for State Transfers when the users only want to migrate resources that constitute the application state. The users can configure _MigPlan_ fields to provide a list of Kubernetes resources with an additional label selector to further filter those resources, and then perform a _Final_ migration to migrate those resources selectively. Since incremental migration of Kubernetes resources is not supported by MTC, this can only be done once. The _MigPlan_ will be closed after this migration. 
+Once all of the PV data is migrated, users can migrate a subset of Kubernetes resources from the source to the target cluster. This is particularly useful for State Transfers when the users only want to migrate resources that constitute the application state. The users can configure _MigPlan_ fields to provide a list of Kubernetes resources with an additional label selector to further filter those resources, and then perform a migration by creating _MigMigration_ CR. The _MigPlan_ will be closed after this migration.
+
+> Please note that selecting Kubernetes resources is an API only feature. The users are required to update MigPlan CR and create a MigMigration for it via CLI. Migration UI does not support this.
 
 ### Selecting GVKs to migrate
 
@@ -148,3 +148,21 @@ spec:
   [...]
 ```
 
+### Creating MigMigration
+
+Once the _MigPlan_ is created, a _MigMigration_ CR can be created to migrate the selected Kubernetes resources:
+
+```yaml
+apiVersion: migration.openshift.io/v1alpha1
+kind: MigMigration
+metadata:
+  generateName: migplan-01-
+  namespace: openshift-migration
+spec:
+  migPlanRef:
+    name: migplan-01
+    namespace: openshift-migration
+  stage: false
+```
+
+Make sure the right _MigPlan_ is referenced in the `migPlanRef` above.
