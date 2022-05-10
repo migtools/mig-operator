@@ -1,4 +1,5 @@
 ---
+
 - k8s:
     state: "present"
     definition: "{{ lookup('template', 'mig-cluster-config.yml.j2') }}"

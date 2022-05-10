@@ -1,4 +1,5 @@
 ---
+
 azure_resource_group: ""
 configmap_secret: ""
 controller_state: absent
