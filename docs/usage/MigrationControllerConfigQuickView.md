@@ -47,6 +47,7 @@ See full doc [here](./AlternativeCAMTopologies.md#component_configuration)
 | cluster_subdomain                    	| string 	| No       	| Cluster's subdomain                                                      	|
 | migration_registry_readiness_timeout 	| int    	| No       	| Readiness timeout (in seconds) for Migration Registry Deployment         	|
 | migration_registry_liveness_timeout  	| int    	| No       	| Liveness timeout (in seconds) for Migration Registry Deployment          	|
+| exposed_registry_validation_path     	| string 	| No       	| Subpath to validate exposed registry in a MigCluster (e.g. /v2)          	|
 
 See full doc [here](./MigClusterConfiguration.md)
 
