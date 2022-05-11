@@ -20,4 +20,6 @@ data:
 {% if migration_registry_liveness_timeout is defined %}
   REGISTRY_LIVENESS_TIMEOUT: "{{ migration_registry_liveness_timeout }}"
 {% endif %}
-
+{% if exposed_registry_validation_path is defined %}
+  REGISTRY_VALIDATION_SUBPATH: "{{ exposed_registry_validation_path }}"
+{% endif %}
