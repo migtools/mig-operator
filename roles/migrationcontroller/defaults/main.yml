@@ -100,6 +100,7 @@ enable_intelligent_pv_resize: true
 registry: "{{ lookup( 'env', 'REGISTRY') }}"
 project: "{{ lookup( 'env', 'PROJECT') }}"
 restic_pv_host_path: /var/lib/kubelet/pods
+restic_requests_cpu: "100m"
 restic_timeout: 1h
 restic_supplemental_groups: []
 ui_state: absent

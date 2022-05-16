@@ -25,4 +25,23 @@ spec:
 {% if _migration_openshift_io_migrationcontroller_spec.daemonset_node_selector is defined %}
         nodeSelector: {{ _migration_openshift_io_migrationcontroller_spec.daemonset_node_selector | to_yaml }}
 {% endif %}
+        resourceAllocations:
+{% if restic_requests_cpu is defined or restic_requests_memory is defined %}
+          requests:
+{% if restic_requests_cpu is defined %}
+            cpu: "{{ restic_requests_cpu }}"
+{% endif %}
+{% if restic_requests_memory is defined %}
+            memory: "{{ restic_requests_memory }}"
+{% endif %}
+{% endif %}
+{% if restic_limits_cpu is defined or restic_limits_memory is defined %}
+{% if restic_limits_cpu is defined %}
+          limits:
+            cpu: "{{ restic_limits_cpu }}"
+{% endif %}
+{% if restic_limits_memory is defined %}
+            memory: "{{ restic_limits_memory }}"
+{% endif %}
+{% endif %}
 
