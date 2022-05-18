@@ -15,5 +15,6 @@ Following table summarizes the _MigrationController_ variables:
 | cluster_subdomain                    	| string 	| No       	| Cluster's subdomain                                                      	|
 | migration_registry_readiness_timeout 	| int    	| No       	| Readiness timeout (in seconds) for Migration Registry Deployment         	|
 | migration_registry_liveness_timeout  	| int    	| No       	| Liveness timeout (in seconds) for Migration Registry Deployment          	|
+| exposed_registry_validation_path     	| string 	| No       	| Subpath to validate exposed registry in a MigCluster (e.g. /v2)          	|
 
 > Note that the values are specific to MigCluster resource. Therefore, the variables need to be updated in the MigrationController resource present on the respective cluster you wish to update. The values that are *not required* will be automatically set by the Migration Operator or the Migration Controller.
