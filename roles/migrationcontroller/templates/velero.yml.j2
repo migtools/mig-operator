@@ -15,6 +15,37 @@ spec:
       podConfig:
         labels:
           app.kubernetes.io/part-of: openshift-migration
+        resourceAllocations:
+{% if velero_requests_cpu is defined or velero_requests_memory is defined %}
+          requests:
+{% if velero_requests_cpu is defined %}
+            cpu: "{{ velero_requests_cpu }}"
+{% else %}
+            cpu: null
+{% endif %}
+{% if velero_requests_memory is defined %}
+            memory: "{{ velero_requests_memory }}"
+{% else %}
+            memory: null
+{% endif %}
+{% else %}
+          requests: null
+{% endif %}
+{% if velero_limits_cpu is defined or velero_limits_memory is defined %}
+          limits:
+{% if velero_limits_cpu is defined %}
+            cpu: "{{ velero_limits_cpu }}"
+{% else %}
+            cpu: null
+{% endif %}
+{% if velero_limits_memory is defined %}
+            memory: "{{ velero_limits_memory }}"
+{% else %}
+            memory: null
+{% endif %}
+{% else %}
+          limits: null
+{% endif %}
     restic:
       enable: true
       timeout: "{{ restic_timeout }}"
@@ -30,18 +61,29 @@ spec:
           requests:
 {% if restic_requests_cpu is defined %}
             cpu: "{{ restic_requests_cpu }}"
+{% else %}
+            cpu: null
 {% endif %}
 {% if restic_requests_memory is defined %}
             memory: "{{ restic_requests_memory }}"
+{% else %}
+            memory: null
 {% endif %}
+{% else %}
+          requests: null
 {% endif %}
 {% if restic_limits_cpu is defined or restic_limits_memory is defined %}
-{% if restic_limits_cpu is defined %}
           limits:
+{% if restic_limits_cpu is defined %}
             cpu: "{{ restic_limits_cpu }}"
+{% else %}
+            cpu: null
 {% endif %}
 {% if restic_limits_memory is defined %}
             memory: "{{ restic_limits_memory }}"
+{% else %}
+            memory: null
 {% endif %}
+{% else %}
+          limits: null
 {% endif %}
-

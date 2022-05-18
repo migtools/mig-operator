@@ -224,6 +224,7 @@
   k8s:
     state: "{{ velero_state }}"
     definition: "{{ lookup('template', 'velero.yml.j2') }}"
+    merge_type: merge
 
 - name: "Set up rsync-anyuid SCC"
   k8s:
