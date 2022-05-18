@@ -12,14 +12,17 @@ spec:
       - gcp
       - azure
       noDefaultBackupLocation: true
+      podConfig:
+        labels:
+          app.kubernetes.io/part-of: openshift-migration
     restic:
       enable: true
       timeout: "{{ restic_timeout }}"
       supplementalGroups: {{ restic_supplemental_groups }}
-{% if _migration_openshift_io_migrationcontroller_spec.daemonset_node_selector is defined %}
       podConfig:
+        labels:
+          app.kubernetes.io/part-of: openshift-migration
+{% if _migration_openshift_io_migrationcontroller_spec.daemonset_node_selector is defined %}
         nodeSelector: {{ _migration_openshift_io_migrationcontroller_spec.daemonset_node_selector | to_yaml }}
-{% else %}
-      podConfig: {}
 {% endif %}
 
