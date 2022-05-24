@@ -100,6 +100,7 @@ enable_intelligent_pv_resize: true
 registry: "{{ lookup( 'env', 'REGISTRY') }}"
 project: "{{ lookup( 'env', 'PROJECT') }}"
 restic_pv_host_path: /var/lib/kubelet/pods
+restic_requests_cpu: "100m"
 restic_timeout: 1h
 restic_supplemental_groups: []
 ui_state: absent
@@ -131,6 +132,7 @@ velero_azure_plugin_image: "{{ registry }}/{{ project }}/{{ velero_azure_plugin_
 velero_azure_plugin_repo: "{{ lookup( 'env', 'VELERO_AZURE_PLUGIN_REPO') }}"
 velero_azure_plugin_version: "{{ snapshot_tag | default(lookup( 'env', 'VELERO_AZURE_PLUGIN_TAG')) }}"
 velero_azure_plugin_fqin: "{{ velero_azure_plugin_image }}:{{ velero_azure_plugin_version }}"
+velero_requests_cpu: "100m"
 velero_state: absent
 velero_qps: 100
 velero_burst: 1000
