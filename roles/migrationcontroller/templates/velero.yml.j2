@@ -5,6 +5,8 @@ metadata:
   namespace: "{{ mig_namespace }}"
 spec:
   backupImages: false
+  unsupportedOverrides:
+    operator-type: mtc
   configuration:
     velero:
       defaultPlugins:
