@@ -4,6 +4,7 @@ metadata:
   name: velero
   namespace: "{{ mig_namespace }}"
 spec:
+  backupImages: false
   configuration:
     velero:
       defaultPlugins:
