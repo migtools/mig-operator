@@ -5,7 +5,7 @@
   collections:
     - community.kubernetes
   vars:
-    image: quay.io/konveyor/mig-operator-container:release-1.5.5
+    image: quay.io/konveyor/mig-operator-container:release-1.5.6
   tasks:
     # using command so we don't need to install any dependencies
     - name: Get existing image hash
