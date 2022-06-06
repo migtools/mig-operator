@@ -138,6 +138,7 @@ spec:
   - crane-operator.v1.6.2
   - crane-operator.v1.6.1
   - crane-operator.v1.6.0
+  - crane-operator.v1.5.6
   - crane-operator.v1.5.5
   - crane-operator.v1.5.4
   - crane-operator.v1.5.3
