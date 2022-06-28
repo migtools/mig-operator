@@ -2,4 +2,4 @@ dependencies:
 - type: olm.package
   value:
     packageName: oadp-operator
-    version: ">=0.5.0"
+    version: ">=0.5.0 <1.1.0"
