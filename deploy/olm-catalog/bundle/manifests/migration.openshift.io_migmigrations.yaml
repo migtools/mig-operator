@@ -136,6 +136,22 @@ spec:
                   true the migration controller switches to rollback itinerary. This
                   field needs to be set prior to creation of a MigMigration.
                 type: boolean
+              runAsGroup:
+                description: If set, runs rsync operations with provided group id.
+                  This provided user id should be a valid one that falls within the
+                  range of allowed GID of user namespace
+                format: int64
+                type: integer
+              runAsRoot:
+                description: If set True, run rsync operations with escalated privileged,
+                  takes precedence over setting RunAsUser and RunAsGroup
+                type: boolean
+              runAsUser:
+                description: If set, runs rsync operations with provided user id.
+                  This provided user id should be a valid one that falls within the
+                  range of allowed UID of user namespace
+                format: int64
+                type: integer
               stage:
                 description: Invokes the stage operation, when set to true the migration
                   controller switches to stage itinerary. This is a required field.
