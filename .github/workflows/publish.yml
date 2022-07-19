@@ -76,7 +76,7 @@ jobs:
           git fetch -q origin
           BUNDLES=""
           for i in $(echo $SUPPORTED_CHANNELS | sed "s/,/ /g"); do
-            BUNDLES=$(echo $BUNDLES,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ env.BUNDLE_SUFFIX }}:$(git branch -r --contains $i | grep release | cut -d '/' -f 2 ) | sed 's/^,//')
+            BUNDLES=$(echo $BUNDLES,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ env.BUNDLE_SUFFIX }}:$(git branch -r --contains $i | tail -n 1 | grep release | cut -d '/' -f 2 ) | sed 's/^,//')
           done
           BUNDLES=$BUNDLES,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ env.BUNDLE_SUFFIX }}:latest
           echo "##[set-output name=bundles]$(echo $BUNDLES)"
