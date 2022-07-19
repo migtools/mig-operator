@@ -90,6 +90,72 @@ The above will set the retry limit to `40`.
 
 ---
 
+### Configuring Rsync command using Migration CR
+
+MTC 1.7.5 onwards, user can choose to run rsync pods as root, or a specific user/group, or with the default uid/gid allowed from the uid/gid range of a namespace. By default the rsync pod will run with the minimal capabilities and with the default uid/gid provided by SCC controller at run time.
+
+MTC 1.7.5 introduces three fields in migmigration CR to allow users to use different pod profile:
+
+- `RunAsRoot` - By default the value is not set and field is omitted. If passed `true`, rsync pod will run with `privileged` SCC. Takes precedence over below mentioned two fields.
+  - You need to add these labels in the namespace to run rsync pods as root if your environment is 4.11+, source or destination. If these labels are not added, and the environment is 4.11+ rsync will not run as non-root.
+    - `pod-security.kubernetes.io/enforce: privileged`
+    - `pod-security.kubernetes.io/audit: privileged`
+    - `pod-security.kubernetes.io/warn: privileged`
+- `RunAsGroup` - By default the value is not set and field is omitted. The value of this field should be within allowed range of gid on the namespace.
+- `RunAsUser` - By default the value is not set and field is omitted. The value of this field should be within allowed range of uid on the namespace.
+
+An example of the migration CR running rsync operations as root:
+```
+apiVersion: migration.openshift.io/v1alpha1
+kind: MigMigration
+metadata:
+  name: migration-controller
+  namespace: openshift-migration
+spec:
+  [...]
+  runAsRoot: true
+```
+
+An example of migration CR running rsync operations with uid/gid:
+```
+apiVersion: migration.openshift.io/v1alpha1
+kind: MigMigration
+metadata:
+  name: migration-controller
+  namespace: openshift-migration
+spec:
+  [...]
+  runAsUser: 10010001
+  runAsGroup: 3
+```
+
+**Note**: By default rsync operation runs with minimal capabilities and as non-root.
+
+#### Why/When to run rsync with root/non-root?
+
+Kubelet makes the decision of changing file ownership with `chown` per plugin. 
+
+- For in-tree plugins:
+    - Each plugin has a `SetUpAt()` function implemented which can call `volume.SetVolumeOwnership`, thus indicating kubelet to change permissions of the files. The example of such in-tree plugins are - `aws_ebs`, `vsphere_volume`, `portworx`, `configmap`, `secret`, `azuredd`, `rbd`, `iscsi`, `flexvolume`. Detailed list of all the plugins calling to `volume.SetVolumeOwnership` can be found [here](https://github.com/kubernetes/kubernetes/search?p=1&q=SetVolumeOwnership). 
+    - The rest of the in-tree plugins such as `nfs`, `azure_file`, `cephfs` are examples of plugins that are not changing ownership since these plugins are not making a call to `volume.SetVolumeOwnership`.
+
+- For CSI plugins:
+    - Before K8s 1.19, OpenShift 4.5 or earlier:
+        1. If `fstype` is "", then skip `fsgroup` (could be an indication of a non-block filesystem), and not change the permissions
+        2. if `fstype` is provided and `pv.AccessMode == ReadWriteOnly` and `!c.spec.ReadOnly` then apply `fsgroup` and change the file permissions
+    - At or after 1.19, OpenShift 4.6 and onward, `CSIDriver.Spec.FSGroupPolicy` is used by kubelet to decide on changing the ownership, which can have following possible values. More details on this can be found [here](https://github.com/kubernetes/enhancements/tree/master/keps/sig-storage/1682-csi-driver-skip-permission):          
+         - `ReadWriteOnceWithFSType` --> Current behavior. Attempt to modify the volume ownership and permissions to the defined fsGroup when the volume is mounted if accessModes is RWO.
+         - `None` --> New behavior. Attach the volume without attempting to modify volume ownership or permissions.
+         - `File` --> New behavior. Always attempt to apply the defined fsGroup to modify volume ownership and permissions regardless of fstype or access mode.
+
+[This doc](https://docs.google.com/document/d/12XbFpkMbMvBH1Vy3lk9e2-_pkIfCNODPkY_xbYti4Fo/edit) talks about how kubelet acts in response to different plugins in detail.
+
+##### Making the decision of how to run rsync operations
+
+If kubelet will change the permissions for volume, you should not care about running rsync with root or specific UID/GID. 
+
+For the plugins for which kubelet won't change the permissions, you can choose to preserve permissions by running rsync with root, or change the permissions to specific UID/GID, or change permissions to default UID/GID provided by SCC.
+
 ### Known Issues
 
 #### Rsync fails with 'Connection reset by peer' error
