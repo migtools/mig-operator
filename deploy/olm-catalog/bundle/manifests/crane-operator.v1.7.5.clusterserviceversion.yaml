@@ -129,6 +129,7 @@ metadata:
     operatorframework.io/suggested-namespace: openshift-migration
 spec:
   skips:
+  - crane-operator.v1.7.4
   - crane-operator.v1.7.3
   - crane-operator.v1.7.2
   - crane-operator.v1.7.1
@@ -410,6 +411,14 @@ spec:
           - '*'
           verbs:
           - '*'
+        - apiGroups:
+          - security.openshift.io
+          resourceNames:
+          - privileged
+          resources:
+          - securitycontextconstraints
+          verbs:
+          - use
       - serviceAccountName: migration-controller
         rules:
         - apiGroups:
