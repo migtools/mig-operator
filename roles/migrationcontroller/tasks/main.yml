@@ -124,6 +124,23 @@
     mig_ui_config_namespace: openshift-config
   when: config_namespace_check.resources|length > 0
 
+- name: Get the infrastructure
+  k8s_facts:
+    api_version: config.openshift.io/v1
+    kind: Infrastructure
+    name: cluster
+  register: infrastructures
+  ignore_errors: yes
+
+- when: migration_ui
+  block:
+  - set_fact:
+      mig_ui_cluster_api_endpoint: "{{ infrastructures.resources[0].status.apiServerURL }}"
+    when:
+    - infrastructures is defined
+    - infrastructures.resources | length > 0
+    - infrastructures.resources[0].get('status', {}).get('apiServerURL', '') != ''
+
 # look up api_groups for routes and scc
 - set_fact:
     api_groups: "{{ lookup('k8s', cluster_info='api_groups') }}"
