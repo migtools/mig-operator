@@ -90,21 +90,53 @@ The above will set the retry limit to `40`.
 
 ---
 
-### Configuring Rsync command using Migration CR
+### Rsync behavior in OpenShift 4.12 and above
 
-MTC 1.7.5 onwards, user can choose to run rsync pods as root, or a specific user/group, or with the default uid/gid allowed from the uid/gid range of a namespace. By default the rsync pod will run with the minimal capabilities and with the default uid/gid provided by SCC controller at run time.
+_This section applies to cases when the destination cluster is OpenShift 4.12 and above_
 
-MTC 1.7.5 introduces three fields in migmigration CR to allow users to use different pod profile:
+OpenShift 4.12+ environments have PodSecurityAdmission controller enabled by default. It requires cluster admins to enforce Pod Security Standards via namespace labels. All workloads in the cluster are expected to run at a Pod Security Standard level set by cluster admins. The three different policies are _Privileged, Baseline and Restricted_. Every cluster has its own default policy set. 
+
+To guarantee successful data transfer in all environments, MTC 1.7.5 introduces changes in Rsync Pods. Rsync Pod is run as non-root user by default. It ensures that data transfer is possible even for workloads that do not necessarily require higher privileges. Note that its best to run workloads with lowest level of privileges possible. 
+
+While this works in most cases, data transfer may fail when workloads are running as root user on the source side. MTC provides two ways to manually override default non-root operation for data transfer. In both cases, the namespaces that are running workloads with higher privileges need to have certain labels set on them prior to migration. The labels set an exception to the destination cluster's default security policy and allow pods to run with higher privileges than the enforced defaults. For all such namespaces, users are expected to set following labels on the source side:
+
+```yaml
+pod-security.kubernetes.io/enforce: privileged
+pod-security.kubernetes.io/audit: privileged
+pod-security.kubernetes.io/warn: privileged
+```
+
+During the migration, these labels will be copied to destination namespaces and workloads will continue running with higher privileges. Once the labels are set on namespaces, users need to override default non-root operation either via _MigrationController_ config or on per _MigMigration_ basis.
+
+> In the absence of these labels, Rsync will automatically fallback to non-root user even if below mentioned config is present.
+
+#### Configuring root / non-root for all migrations
+
+On the destination cluster, _MigrationController_ can be configured to run rsync as root:
+
+```yaml
+apiVersion: migration.openshift.io/v1alpha1
+kind: MigrationController
+metadata:
+  name: migration-controller
+  namespace: openshift-migration
+spec:
+  [...]
+  migration_rsync_privileged: true
+```
+
+This config will apply to all migrations that take place after the update.
+
+#### Configuring root / non-root per migration
+
+MTC 1.7.5 introduces three fields in _MigMigration_ CR to allow users to configure root/non-root operation along with some additional UID / GID settings. These settings take place at migration level and are not applicable to all migrations.
 
 - `RunAsRoot` - By default the value is not set and field is omitted. If passed `true`, rsync pod will run with `privileged` SCC. Takes precedence over below mentioned two fields.
-  - You need to add these labels in the namespace to run rsync pods as root if your environment is 4.11+, source or destination. If these labels are not added, and the environment is 4.11+ rsync will not run as non-root.
-    - `pod-security.kubernetes.io/enforce: privileged`
-    - `pod-security.kubernetes.io/audit: privileged`
-    - `pod-security.kubernetes.io/warn: privileged`
 - `RunAsGroup` - By default the value is not set and field is omitted. The value of this field should be within allowed range of gid on the namespace.
 - `RunAsUser` - By default the value is not set and field is omitted. The value of this field should be within allowed range of uid on the namespace.
 
 An example of the migration CR running rsync operations as root:
+
 ```
 apiVersion: migration.openshift.io/v1alpha1
 kind: MigMigration
@@ -129,7 +161,7 @@ spec:
   runAsGroup: 3
 ```
 
-**Note**: By default rsync operation runs with minimal capabilities and as non-root.
+**Note**: The above settings are only available via API.
 
 #### Why/When to run rsync with root/non-root?
 
