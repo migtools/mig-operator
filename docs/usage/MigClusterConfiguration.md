@@ -10,6 +10,7 @@ Following table summarizes the _MigrationController_ variables:
 |--------------------------------------	|--------	|----------	|--------------------------------------------------------------------------	|
 | migration_stage_image_fqin           	| string 	| No       	| Image to use for Stage Pods (only applicable to IndirectVolumeMigration) 	|
 | migration_registry_image_fqin        	| string 	| No       	| Image to use for Migration Registry                                      	|
+| rsync_endpoint_type                  	| string 	| No       	| Type of endpoint for data transfer ("Route", "ClusterIP", "NodePort")    	|
 | rsync_transfer_image_fqin            	| string 	| No       	| Image to use for Rsync Pods (only applicable to DirectVolumeMigration)   	|
 | migration_rsync_privileged           	| bool   	| No       	| Whether to run Rsync Pods as privileged or not                           	|
 | cluster_subdomain                    	| string 	| No       	| Cluster's subdomain                                                      	|
