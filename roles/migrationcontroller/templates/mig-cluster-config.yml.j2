@@ -23,3 +23,6 @@ data:
 {% if exposed_registry_validation_path is defined %}
   REGISTRY_VALIDATION_SUBPATH: "{{ exposed_registry_validation_path }}"
 {% endif %}
+{% if rsync_endpoint_type is defined %}
+  RSYNC_ENDPOINT_TYPE: "{{ rsync_endpoint_type }}"
+{% endif %}
