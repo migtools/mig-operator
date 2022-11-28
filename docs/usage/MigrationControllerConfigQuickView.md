@@ -27,6 +27,33 @@ See full doc [here](./AdjustingControllerLimits.md)
 
 See full doc [here](./AlternativeCAMTopologies.md#component_configuration)
 
+## Configuring OADP/Velero Components
+
+| Option                          | Type    | Description                               |
+|---------------------------------|---------|-------------------------------------------|
+| oadp_velero_image_fqin          | string  | Velero image to use                       |
+| oadp_openshift_plugin_fqin      | string  | OpenShift Plugin image to use with Velero |
+| oadp_restic_restore_helper_fqin | string  | Restic image to use with Velero           |
+| oadp_aws_plugin_fqin            | string  | AWS Plugin image to use with Velero       |
+| oadp_azure_plugin_fqin          | string  | Azure plugin image to use with Velero     |
+| oadp_gcp_plugin_fqin            | string  | GCP plugin image to use with Velero       |
+
+| Option                     | Type    | Description                    |
+|----------------------------|---------|--------------------------------|
+| velero_requests_cpu        | string  | Velero Pod cpu requests        |
+| velero_requests_memory     | string  | Velero Pod memory requests     |
+| velero_limits_cpu          | string  | Velero Pod cpu limits          |
+| velero_limits_memory       | string  | Velero Pod memory limits       |
+
+| Option                     | Type    | Description                    |
+|----------------------------|---------|--------------------------------|
+| restic_requests_cpu        | string  | Restic Pod cpu requests        |
+| restic_requests_memory     | string  | Restic Pod memory requests     |
+| restic_limits_cpu          | string  | Restic Pod cpu limits          |
+| restic_limits_memory       | string  | Restic Pod memory limits       |
+| restic_timeout             | string  | Restic timeout                 |
+| restic_supplemental_groups | string  | Restic Pod supplemental groups |
+
 ## Migration Limits
 
 
