@@ -32,6 +32,24 @@ Customizing `rsync_opt_info` flag can adversely affect MTC's progress reporting 
 
 Please note that the default configuration used by DVM is tested in variouos environments and is deemed apt for most production use cases provided the clusters are healthy and performing well. These configuration variables should be used in case the default settings do not work and fail the Rsync operation. Please see [known issues section](#known-issues) for more information about issues we have frequently observed and how to solve them using different Rsync configurations.
 
+### Choosing alternate endpoint for data transfer
+
+By default, DVM uses _OpenShift Route_ as an endpoint to transfer PV data to destination cluster. Endpoints are created on the destination cluster. Alternatively, if cluster topologies allow, users can choose other type of supported endpoints.
+
+For every cluster, an endpoint can be configured by setting `rsync_endpoint_type` variable on respective cluster in _MigrationController_:
+
+```
+apiVersion: migration.openshift.io/v1alpha1
+kind: MigrationController
+metadata:
+  name: migration-controller
+  namespace: openshift-migration
+spec:
+  [...]
+  rsync_endpoint_type: [NodePort|ClusterIP|Route]
+```
+
+> Note that this is a cluster specific config and it needs to be set on the destination cluster.
 
 ### Configuring resource limits on Rsync Pods
 
