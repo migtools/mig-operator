@@ -12,6 +12,7 @@ data:
   REGISTRY_IMAGE: "{{ migration_registry_image_fqin }}"
   RSYNC_TRANSFER_IMAGE: "{{ rsync_transfer_image_fqin }}"
   RSYNC_PRIVILEGED: "{{ migration_rsync_privileged }}"
+  RSYNC_SUPER_PRIVILEGED: "{{ migration_rsync_super_privileged }}"
   CLUSTER_SUBDOMAIN: "{{ cluster_subdomain }}"
   OPERATOR_VERSION: "{{ mig_operator_version }}"
 {% if migration_registry_readiness_timeout is defined %}
