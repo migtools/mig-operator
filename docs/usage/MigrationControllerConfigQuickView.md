@@ -38,16 +38,17 @@ See full doc [here](./AlternativeCAMTopologies.md#component_configuration)
 
 ## Migration Cluster Configuration
 
-| Variable                             	| Type   	| Required 	| Description                                                              	|
-|--------------------------------------	|--------	|----------	|--------------------------------------------------------------------------	|
-| migration_stage_image_fqin           	| string 	| No       	| Image to use for Stage Pods (only applicable to IndirectVolumeMigration) 	|
-| migration_registry_image_fqin        	| string 	| No       	| Image to use for Migration Registry                                      	|
-| rsync_transfer_image_fqin            	| string 	| No       	| Image to use for Rsync Pods (only applicable to DirectVolumeMigration)   	|
-| migration_rsync_privileged           	| bool   	| No       	| Whether to run Rsync Pods as privileged or not                           	|
-| cluster_subdomain                    	| string 	| No       	| Cluster's subdomain                                                      	|
-| migration_registry_readiness_timeout 	| int    	| No       	| Readiness timeout (in seconds) for Migration Registry Deployment         	|
-| migration_registry_liveness_timeout  	| int    	| No       	| Liveness timeout (in seconds) for Migration Registry Deployment          	|
-| exposed_registry_validation_path     	| string 	| No       	| Subpath to validate exposed registry in a MigCluster (e.g. /v2)          	|
+| Variable                             	| Type   	| Required 	| Description                                                                               |
+|--------------------------------------	|--------	|----------	|------------------------------------------------------------------------------------------ |
+| migration_stage_image_fqin           	| string 	| No       	| Image to use for Stage Pods (only applicable to IndirectVolumeMigration)                  |
+| migration_registry_image_fqin        	| string 	| No       	| Image to use for Migration Registry                                                       |
+| rsync_transfer_image_fqin            	| string 	| No       	| Image to use for Rsync Pods (only applicable to DirectVolumeMigration)                    |
+| migration_rsync_privileged           	| bool   	| No       	| Whether to run Rsync Pods as privileged or not                                            |
+| migration_rsync_super_privileged      | bool   	| No       	| Whether to run Rsync Pods as super privileged containers (spc_t selinux context) or not   |
+| cluster_subdomain                    	| string 	| No       	| Cluster's subdomain                                                                       |
+| migration_registry_readiness_timeout 	| int    	| No       	| Readiness timeout (in seconds) for Migration Registry Deployment                          |
+| migration_registry_liveness_timeout  	| int    	| No       	| Liveness timeout (in seconds) for Migration Registry Deployment                           |
+| exposed_registry_validation_path     	| string 	| No       	| Subpath to validate exposed registry in a MigCluster (e.g. /v2)                           |
 
 See full doc [here](./MigClusterConfiguration.md)
 
