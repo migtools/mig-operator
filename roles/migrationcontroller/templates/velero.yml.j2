@@ -9,40 +9,26 @@ spec:
     operator-type: mtc
 {% if oadp_velero_image_fqin is defined %}
     veleroImageFqin: "{{ oadp_velero_image_fqin }}"
-{% else %}
-    veleroImageFqin: null
 {% endif %}
 {% if oadp_openshift_plugin_fqin is defined %}
     openshiftPluginImageFqin: "{{ oadp_openshift_plugin_fqin }}"
-{% else %}
-    openshiftPluginImageFqin: null
 {% endif %}
 {% if oadp_restic_restore_helper_fqin is defined %}
     resticRestoreImageFqin: "{{ oadp_restic_restore_helper_fqin }}"
-{% else %}
-    resticRestoreImageFqin: null
 {% endif %}
 {% if oadp_aws_plugin_fqin is defined %}
     awsPluginImageFqin: "{{ oadp_aws_plugin_fqin }}"
-{% else %}
-    awsPluginImageFqin: null
 {% endif %}
 {% if oadp_azure_plugin_fqin is defined %}
     azurePluginImageFqin: "{{ oadp_azure_plugin_fqin }}"
-{% else %}
-    azurePluginImageFqin: null
 {% endif %}
 {% if oadp_gcp_plugin_fqin is defined %}
     gcpPluginImageFqin: "{{ oadp_gcp_plugin_fqin }}"
-{% else %}
-    gcpPluginImageFqin: null
 {% endif %}
   configuration:
     velero:
 {% if velero_log_level is defined %}
       logLevel: "{{ velero_log_level }}"
-{% else %}
-      logLevel: null
 {% endif %}
       defaultPlugins:
       - openshift
