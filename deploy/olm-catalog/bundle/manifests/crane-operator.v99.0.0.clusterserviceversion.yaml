@@ -720,7 +720,7 @@ spec:
         version: v1
       - kind: Deployment
         version: apps/v1
-      - kind: Configmap
+      - kind: ConfigMap
         version: v1
       - kind: OAuthClient
         version: oauth.openshift.io/v1
