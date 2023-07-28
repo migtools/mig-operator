@@ -30,6 +30,9 @@ spec:
 {% if velero_log_level is defined %}
       logLevel: "{{ velero_log_level }}"
 {% endif %}
+      customPlugins:
+      - name: mtc
+        image: "{{ mtc_velero_plugin_fqin }}"
       defaultPlugins:
       - openshift
       - aws

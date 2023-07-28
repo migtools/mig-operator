@@ -650,6 +650,10 @@ spec:
                   value: velero-plugin-for-gcp
                 - name: VELERO_GCP_PLUGIN_TAG
                   value: latest
+                - name: VELERO_MTC_PLUGIN_REPO
+                  value: velero-plugin-for-mtc
+                - name: VELERO_MTC_PLUGIN_TAG
+                  value: latest
                 - name: VELERO_AZURE_PLUGIN_REPO
                   value: velero-plugin-for-microsoft-azure
                 - name: VELERO_AZURE_PLUGIN_TAG
