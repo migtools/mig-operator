@@ -91,9 +91,9 @@ migration_registry_image: "{{ registry }}/{{ project }}/{{ migration_registry_re
 migration_registry_repo: "{{ lookup( 'env', 'MIGRATION_REGISTRY_REPO') }}"
 migration_registry_version: "{{ lookup( 'env', 'MIGRATION_REGISTRY_TAG') }}"
 migration_registry_image_fqin: "{{ migration_registry_image }}:{{ migration_registry_version }}"
-migration_stage_image: "{{ registry }}/{{ project }}/{{ velero_restic_restore_helper_repo }}"
-migration_stage_repo: "{{ lookup( 'env', 'VELERO_RESTIC_RESTORE_HELPER_REPO') }}"
-migration_stage_version: "{{ snapshot_tag | default(lookup( 'env', 'VELERO_RESTIC_RESTORE_HELPER_TAG')) }}"
+migration_stage_image: "{{ registry }}/{{ project }}/{{ migration_stage_repo }}"
+migration_stage_repo: "{{ lookup( 'env', 'RSYNC_TRANSFER_REPO') }}"
+migration_stage_version: "{{ snapshot_tag | default(lookup( 'env', 'RSYNC_TRANSFER_TAG')) }}"
 migration_stage_image_fqin: "{{ migration_stage_image }}:{{ migration_stage_version }}"
 migration_rsync_privileged: false
 migration_rsync_super_privileged: false
