@@ -2,14 +2,14 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
-  name: crane-operator.v1.7.12
+  name: crane-operator.v1.7.13
   namespace: openshift-migration
   annotations:
-    olm.skipRange: '>=0.0.0 <1.7.12'
+    olm.skipRange: '>=0.0.0 <1.7.13'
     capabilities: Seamless Upgrades
     description: Facilitates migration of container workloads from OpenShift 3.x to OpenShift 4.x
     categories: 'Modernization & Migration, OpenShift Optional'
-    containerImage: quay.io/konveyor/mig-operator-container:release-1.7.12
+    containerImage: quay.io/konveyor/mig-operator-container:release-1.7.13
     createdAt: 2019-07-25T10:21:00Z
     repository: https://github.com/konveyor/mig-operator
     alm-examples: |-
@@ -129,8 +129,10 @@ metadata:
     operatorframework.io/suggested-namespace: openshift-migration
 spec:
   skips:
+  - crane-operator.v1.7.12
   - crane-operator.v1.7.11
   - crane-operator.v1.7.10
+  - crane-operator.v1.7.9
   - crane-operator.v1.7.8
   - crane-operator.v1.7.7
   - crane-operator.v1.7.6
@@ -140,46 +142,19 @@ spec:
   - crane-operator.v1.7.2
   - crane-operator.v1.7.1
   - crane-operator.v1.7.0
-  - crane-operator.v1.6.4
-  - crane-operator.v1.6.3
-  - crane-operator.v1.6.2
-  - crane-operator.v1.6.1
-  - crane-operator.v1.6.0
-  - crane-operator.v1.5.4
-  - crane-operator.v1.5.3
-  - crane-operator.v1.5.2
-  - crane-operator.v1.5.1
-  - crane-operator.v1.5.0
-  - crane-operator.v1.4.7
-  - crane-operator.v1.4.6
-  - crane-operator.v1.4.5
-  - crane-operator.v1.4.4
-  - crane-operator.v1.4.3
-  - crane-operator.v1.4.2
-  - crane-operator.v1.4.1
-  - crane-operator.v1.4.0
-  - crane-operator.v1.3.2
-  - crane-operator.v1.3.1
-  - crane-operator.v1.3.0
-  - crane-operator.v1.2.5
-  - crane-operator.v1.2.4
-  - crane-operator.v1.2.3
-  - crane-operator.v1.2.2
-  - crane-operator.v1.2.1
-  - crane-operator.v1.2.0
   relatedImages:
   - name: controller
-    image: quay.io/konveyor/mig-controller:release-1.7.12
+    image: quay.io/konveyor/mig-controller:release-1.7.13
   - name: ui
-    image: quay.io/konveyor/mig-ui:release-1.7.12
+    image: quay.io/konveyor/mig-ui:release-1.7.13
   - name: migration_plugin
-    image: quay.io/konveyor/registry:release-1.7.12
+    image: quay.io/konveyor/registry:release-1.7.13
   - name: hook_runner
-    image: quay.io/konveyor/hook-runner:release-1.7.12
+    image: quay.io/konveyor/hook-runner:release-1.7.13
   - name: mig_log_reader
-    image: quay.io/konveyor/mig-log-reader:release-1.7.12
+    image: quay.io/konveyor/mig-log-reader:release-1.7.13
   - name: rsync_transfer
-    image: quay.io/konveyor/rsync-transfer:release-1.7.12
+    image: quay.io/konveyor/rsync-transfer:release-1.7.13
   displayName: Crane Operator
   description: |
     The Crane Operator enables installation of the application migration tool components.
@@ -585,7 +560,7 @@ spec:
               serviceAccount: migration-operator
               containers:
               - name: operator
-                image: quay.io/konveyor/mig-operator-container:release-1.7.12
+                image: quay.io/konveyor/mig-operator-container:release-1.7.13
                 imagePullPolicy: Always
                 volumeMounts:
                 - mountPath: /tmp/ansible-operator/runner
@@ -608,51 +583,51 @@ spec:
                 - name: RSYNC_TRANSFER_REPO
                   value: rsync-transfer
                 - name: RSYNC_TRANSFER_TAG
-                  value: release-1.7.12
+                  value: release-1.7.13
                 - name: HOOK_RUNNER_REPO
                   value: hook-runner
                 - name: HOOK_RUNNER_TAG
-                  value: release-1.7.12
+                  value: release-1.7.13
                 - name: MIG_CONTROLLER_REPO
                   value: mig-controller
                 - name: MIG_CONTROLLER_TAG
-                  value: release-1.7.12
+                  value: release-1.7.13
                 - name: MIG_UI_REPO
                   value: mig-ui
                 - name: MIG_UI_TAG
-                  value: release-1.7.12
+                  value: release-1.7.13
                 - name: MIG_LOG_READER_REPO
                   value: mig-log-reader
                 - name: MIG_LOG_READER_TAG
-                  value: release-1.7.12
+                  value: release-1.7.13
                 - name: MIGRATION_REGISTRY_REPO
                   value: registry
                 - name: MIGRATION_REGISTRY_TAG
-                  value: release-1.7.12
+                  value: release-1.7.13
                 - name: VELERO_REPO
                   value: velero
                 - name: VELERO_TAG
-                  value: release-1.7.12
+                  value: release-1.7.13
                 - name: VELERO_PLUGIN_REPO
                   value: openshift-velero-plugin
                 - name: VELERO_PLUGIN_TAG
-                  value: release-1.7.12
+                  value: release-1.7.13
                 - name: VELERO_AWS_PLUGIN_REPO
                   value: velero-plugin-for-aws
                 - name: VELERO_AWS_PLUGIN_TAG
-                  value: release-1.7.12
+                  value: release-1.7.13
                 - name: VELERO_GCP_PLUGIN_REPO
                   value: velero-plugin-for-gcp
                 - name: VELERO_GCP_PLUGIN_TAG
-                  value: release-1.7.12
+                  value: release-1.7.13
                 - name: VELERO_AZURE_PLUGIN_REPO
                   value: velero-plugin-for-microsoft-azure
                 - name: VELERO_AZURE_PLUGIN_TAG
-                  value: release-1.7.12
+                  value: release-1.7.13
                 - name: VELERO_RESTIC_RESTORE_HELPER_REPO
                   value: velero-restic-restore-helper
                 - name: VELERO_RESTIC_RESTORE_HELPER_TAG
-                  value: release-1.7.12
+                  value: release-1.7.13
                 securityContext:
                   allowPrivilegeEscalation: false
               securityContext:
