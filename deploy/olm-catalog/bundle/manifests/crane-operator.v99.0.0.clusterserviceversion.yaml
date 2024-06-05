@@ -349,6 +349,25 @@ spec:
           - edit
           - patch
           - delete
+        - apiGroups:
+          - cdi.kubevirt.io
+          resources:
+          - 'datavolumes'
+          verbs:
+          - create
+          - delete
+          - list
+          - watch
+          - get
+        - apiGroups:
+          - kubevirt.io
+          resources:
+          - 'VirtualMachines'
+          verbs:
+          - update
+          - list
+          - get
+          - watch
       - serviceAccountName: migration-controller
         rules:
         - apiGroups:
@@ -582,6 +601,25 @@ spec:
           - '*'
           verbs:
           - '*'
+        - apiGroups:
+          - cdi.kubevirt.io
+          resources:
+          - 'datavolumes'
+          verbs:
+          - create
+          - delete
+          - list
+          - watch
+          - get
+        - apiGroups:
+          - kubevirt.io
+          resources:
+          - 'VirtualMachines'
+          verbs:
+          - update
+          - list
+          - get
+          - watch
       deployments:
       - name: migration-operator
         spec:
