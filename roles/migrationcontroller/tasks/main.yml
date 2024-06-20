@@ -54,7 +54,7 @@
   when: additional_excluded_resources is defined and item is not in excluded_resources
 
 - name: "Check for existing velero controller from MTC <1.7.0"
-  k8s_facts:
+  k8s_info:
     api_version: "apps/v1"
     kind: Deployment
     name: velero
@@ -74,7 +74,7 @@
   - velero_status.resources[0].metadata.ownerReferences[0].kind == "MigrationController"
 
 - name: "Check for existing restic daemonset from MTC <1.7.0"
-  k8s_facts:
+  k8s_info:
     api_version: "apps/v1"
     kind: DaemonSet
     name: restic
@@ -94,7 +94,7 @@
   - restic_status.resources[0].metadata.ownerReferences[0].kind == "MigrationController"
 
 - name: "Check for existing restic-restore-action-config configmap from MTC <1.7.0"
-  k8s_facts:
+  k8s_info:
     api_version: "v1"
     kind: ConfigMap
     name: restic-restore-action-config
@@ -114,7 +114,7 @@
   - restic_restore_config.resources[0].metadata.ownerReferences[0].kind == "MigrationController"
 
 - name: Get cluster config
-  k8s_facts:
+  k8s_info:
     api_version: v1
     kind: Namespace
     name: openshift-config
@@ -125,7 +125,7 @@
   when: config_namespace_check.resources|length > 0
 
 - name: Get the infrastructure
-  k8s_facts:
+  k8s_info:
     api_version: config.openshift.io/v1
     kind: Infrastructure
     name: cluster
@@ -154,7 +154,7 @@
 - when: migration_velero
   block:
   - name: Check if cloud-credentials secret exists already so we don't update it
-    k8s_facts:
+    k8s_info:
       api_version: v1
       kind: Secret
       name: "{{ velero_aws_secret_name }}"
@@ -162,7 +162,7 @@
     register: secret_status
 
   - name: Check if gcp-cloud-credentials secret exists already so we don't update it
-    k8s_facts:
+    k8s_info:
       api_version: v1
       kind: Secret
       name: "{{ velero_gcp_secret_name }}"
@@ -170,7 +170,7 @@
     register: gcp_secret_status
 
   - name: Check if azure-cloud-credentials secret exists already so we don't update it
-    k8s_facts:
+    k8s_info:
       api_version: v1
       kind: Secret
       name: "{{ velero_azure_secret_name }}"
@@ -240,7 +240,7 @@
   - monitoring-rolebinding.yml.j2
 
 - name: Check if mig ui route exists already so we don't update it
-  k8s_facts:
+  k8s_info:
     api_version: "route.openshift.io/v1"
     kind: Route
     name: migration
@@ -260,7 +260,7 @@
 - when: migration_ui
   block:
   - name: Find generated route
-    k8s_facts:
+    k8s_info:
       api_version: "route.openshift.io/v1"
       kind: "Route"
       namespace: "{{ mig_namespace }}"
@@ -281,7 +281,7 @@
       mig_ui_oauth_redirect_url: "https://{{ mig_ui_url }}/login/callback"
 
   - name: Check if migration ui oauthclient secret exists already so we don't update it
-    k8s_facts:
+    k8s_info:
       api_version: v1
       kind: OAuthClient
       name: migration
@@ -309,7 +309,7 @@
       old_controller_detected: false
 
   - name: "Get migration-controller deployment"
-    k8s_facts:
+    k8s_info:
       api_version: apps/v1
       kind: Deployment
       name: migration-controller
@@ -379,7 +379,7 @@
     definition: "{{ lookup('template', 'log_reader.yml.j2') }}"
 
 - name: Check if discovery route exists
-  k8s_facts:
+  k8s_info:
     api_version: "route.openshift.io/v1"
     kind: Route
     name: discovery
@@ -393,7 +393,7 @@
       discovery_api_url: "https://{{discovery_route.resources[0].spec.host}}"
 
   - name: Check if migration ui configmap exists already so we don't update it
-    k8s_facts:
+    k8s_info:
       api_version: v1
       kind: ConfigMap
       name: "{{ mig_ui_configmap_name }}"
@@ -456,7 +456,7 @@
 - when: not migration_controller
   block:
   - name: Find Controller ReplicaSets
-    k8s_facts:
+    k8s_info:
       kind: ReplicaSet
       namespace: "{{ mig_namespace }}"
       label_selectors:
@@ -474,7 +474,7 @@
 - when: not migration_ui
   block:
   - name: Find UI ReplicaSets
-    k8s_facts:
+    k8s_info:
       kind: ReplicaSet
       namespace: "{{ mig_namespace }}"
       label_selectors:
