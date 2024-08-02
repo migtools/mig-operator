@@ -368,6 +368,15 @@ spec:
           - list
           - get
           - watch
+        - apiGroups:
+          - kubevirt.io
+          resources:
+          - 'virtualmachineinstances'
+          - 'virtualmachineinstancemigrations'
+          verbs:
+          - list
+          - get
+          - watch
       - serviceAccountName: migration-controller
         rules:
         - apiGroups:
@@ -617,6 +626,15 @@ spec:
           - 'VirtualMachines'
           verbs:
           - update
+          - list
+          - get
+          - watch
+        - apiGroups:
+          - kubevirt.io
+          resources:
+          - 'virtualmachineinstances'
+          - 'virtualmachineinstancemigrations'
+          verbs:
           - list
           - get
           - watch
