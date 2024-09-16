@@ -56,29 +56,30 @@ spec:
                   new migrations can be carried out for this migplan.
                 type: boolean
               destMigClusterRef:
-                description: 'ObjectReference contains enough information to let you
+                description: "ObjectReference contains enough information to let you
                   inspect or modify the referred object. --- New uses of this type
                   are discouraged because of difficulty describing its usage when
                   embedded in APIs. 1. Ignored fields.  It includes many fields which
                   are not generally honored.  For instance, ResourceVersion and FieldPath
-                  are both very rarely valid in actual usage. 2. Invalid usage help.  It
-                  is impossible to add specific help for individual usage.  In most
-                  embedded usages, there are particular restrictions like, "must refer
-                  only to types A and B" or "UID not honored" or "name must be restricted".
-                  Those cannot be well described when embedded. 3. Inconsistent validation.  Because
-                  the usages are different, the validation rules are different by
-                  usage, which makes it hard for users to predict what will happen.
-                  4. The fields are both imprecise and overly precise.  Kind is not
-                  a precise mapping to a URL. This can produce ambiguity during interpretation
-                  and require a REST mapping.  In most cases, the dependency is on
-                  the group,resource tuple and the version of the actual struct is
-                  irrelevant. 5. We cannot easily change it.  Because this type is
-                  embedded in many locations, updates to this type will affect numerous
-                  schemas.  Don''t make new APIs embed an underspecified API type
-                  they do not control. Instead of using this type, create a locally
-                  provided and used type that is well-focused on your reference. For
-                  example, ServiceReferences for admission registration: https://github.com/kubernetes/api/blob/release-1.17/admissionregistration/v1/types.go#L533
-                  .'
+                  are both very rarely valid in actual usage. 2. Invalid usage help.
+                  \ It is impossible to add specific help for individual usage.  In
+                  most embedded usages, there are particular restrictions like, \"must
+                  refer only to types A and B\" or \"UID not honored\" or \"name must
+                  be restricted\". Those cannot be well described when embedded. 3.
+                  Inconsistent validation.  Because the usages are different, the
+                  validation rules are different by usage, which makes it hard for
+                  users to predict what will happen. 4. The fields are both imprecise
+                  and overly precise.  Kind is not a precise mapping to a URL. This
+                  can produce ambiguity during interpretation and require a REST mapping.
+                  \ In most cases, the dependency is on the group,resource tuple and
+                  the version of the actual struct is irrelevant. 5. We cannot easily
+                  change it.  Because this type is embedded in many locations, updates
+                  to this type will affect numerous schemas.  Don't make new APIs
+                  embed an underspecified API type they do not control. \n Instead
+                  of using this type, create a locally provided and used type that
+                  is well-focused on your reference. For example, ServiceReferences
+                  for admission registration: https://github.com/kubernetes/api/blob/release-1.17/admissionregistration/v1/types.go#L533
+                  ."
                 properties:
                   apiVersion:
                     description: API version of the referent.
@@ -131,7 +132,7 @@ spec:
                         and PostRestore.'
                       type: string
                     reference:
-                      description: 'ObjectReference contains enough information to
+                      description: "ObjectReference contains enough information to
                         let you inspect or modify the referred object. --- New uses
                         of this type are discouraged because of difficulty describing
                         its usage when embedded in APIs. 1. Ignored fields.  It includes
@@ -139,9 +140,9 @@ spec:
                         ResourceVersion and FieldPath are both very rarely valid in
                         actual usage. 2. Invalid usage help.  It is impossible to
                         add specific help for individual usage.  In most embedded
-                        usages, there are particular restrictions like, "must refer
-                        only to types A and B" or "UID not honored" or "name must
-                        be restricted". Those cannot be well described when embedded.
+                        usages, there are particular restrictions like, \"must refer
+                        only to types A and B\" or \"UID not honored\" or \"name must
+                        be restricted\". Those cannot be well described when embedded.
                         3. Inconsistent validation.  Because the usages are different,
                         the validation rules are different by usage, which makes it
                         hard for users to predict what will happen. 4. The fields
@@ -151,12 +152,12 @@ spec:
                         is on the group,resource tuple and the version of the actual
                         struct is irrelevant. 5. We cannot easily change it.  Because
                         this type is embedded in many locations, updates to this type
-                        will affect numerous schemas.  Don''t make new APIs embed
-                        an underspecified API type they do not control. Instead of
+                        will affect numerous schemas.  Don't make new APIs embed an
+                        underspecified API type they do not control. \n Instead of
                         using this type, create a locally provided and used type that
                         is well-focused on your reference. For example, ServiceReferences
                         for admission registration: https://github.com/kubernetes/api/blob/release-1.17/admissionregistration/v1/types.go#L533
-                        .'
+                        ."
                       properties:
                         apiVersion:
                           description: API version of the referent.
@@ -274,30 +275,36 @@ spec:
                     type: object
                 type: object
                 x-kubernetes-map-type: atomic
+              liveMigrate:
+                description: LiveMigrate optional flag to enable live migration of
+                  VMs during direct volume migration Only running VMs when the plan
+                  is executed will be live migrated
+                type: boolean
               migStorageRef:
-                description: 'ObjectReference contains enough information to let you
+                description: "ObjectReference contains enough information to let you
                   inspect or modify the referred object. --- New uses of this type
                   are discouraged because of difficulty describing its usage when
                   embedded in APIs. 1. Ignored fields.  It includes many fields which
                   are not generally honored.  For instance, ResourceVersion and FieldPath
-                  are both very rarely valid in actual usage. 2. Invalid usage help.  It
-                  is impossible to add specific help for individual usage.  In most
-                  embedded usages, there are particular restrictions like, "must refer
-                  only to types A and B" or "UID not honored" or "name must be restricted".
-                  Those cannot be well described when embedded. 3. Inconsistent validation.  Because
-                  the usages are different, the validation rules are different by
-                  usage, which makes it hard for users to predict what will happen.
-                  4. The fields are both imprecise and overly precise.  Kind is not
-                  a precise mapping to a URL. This can produce ambiguity during interpretation
-                  and require a REST mapping.  In most cases, the dependency is on
-                  the group,resource tuple and the version of the actual struct is
-                  irrelevant. 5. We cannot easily change it.  Because this type is
-                  embedded in many locations, updates to this type will affect numerous
-                  schemas.  Don''t make new APIs embed an underspecified API type
-                  they do not control. Instead of using this type, create a locally
-                  provided and used type that is well-focused on your reference. For
-                  example, ServiceReferences for admission registration: https://github.com/kubernetes/api/blob/release-1.17/admissionregistration/v1/types.go#L533
-                  .'
+                  are both very rarely valid in actual usage. 2. Invalid usage help.
+                  \ It is impossible to add specific help for individual usage.  In
+                  most embedded usages, there are particular restrictions like, \"must
+                  refer only to types A and B\" or \"UID not honored\" or \"name must
+                  be restricted\". Those cannot be well described when embedded. 3.
+                  Inconsistent validation.  Because the usages are different, the
+                  validation rules are different by usage, which makes it hard for
+                  users to predict what will happen. 4. The fields are both imprecise
+                  and overly precise.  Kind is not a precise mapping to a URL. This
+                  can produce ambiguity during interpretation and require a REST mapping.
+                  \ In most cases, the dependency is on the group,resource tuple and
+                  the version of the actual struct is irrelevant. 5. We cannot easily
+                  change it.  Because this type is embedded in many locations, updates
+                  to this type will affect numerous schemas.  Don't make new APIs
+                  embed an underspecified API type they do not control. \n Instead
+                  of using this type, create a locally provided and used type that
+                  is well-focused on your reference. For example, ServiceReferences
+                  for admission registration: https://github.com/kubernetes/api/blob/release-1.17/admissionregistration/v1/types.go#L533
+                  ."
                 properties:
                   apiVersion:
                     description: API version of the referent.
@@ -375,6 +382,10 @@ spec:
                           type: string
                         namespace:
                           type: string
+                        volumeMode:
+                          description: PersistentVolumeMode describes how a volume
+                            is intended to be consumed, either Block or Filesystem.
+                          type: string
                       type: object
                     selection:
                       description: Selection Action - The PV migration action (move|copy|skip)
@@ -424,29 +435,30 @@ spec:
                   migplan is in Ready state or not.
                 type: boolean
               srcMigClusterRef:
-                description: 'ObjectReference contains enough information to let you
+                description: "ObjectReference contains enough information to let you
                   inspect or modify the referred object. --- New uses of this type
                   are discouraged because of difficulty describing its usage when
                   embedded in APIs. 1. Ignored fields.  It includes many fields which
                   are not generally honored.  For instance, ResourceVersion and FieldPath
-                  are both very rarely valid in actual usage. 2. Invalid usage help.  It
-                  is impossible to add specific help for individual usage.  In most
-                  embedded usages, there are particular restrictions like, "must refer
-                  only to types A and B" or "UID not honored" or "name must be restricted".
-                  Those cannot be well described when embedded. 3. Inconsistent validation.  Because
-                  the usages are different, the validation rules are different by
-                  usage, which makes it hard for users to predict what will happen.
-                  4. The fields are both imprecise and overly precise.  Kind is not
-                  a precise mapping to a URL. This can produce ambiguity during interpretation
-                  and require a REST mapping.  In most cases, the dependency is on
-                  the group,resource tuple and the version of the actual struct is
-                  irrelevant. 5. We cannot easily change it.  Because this type is
-                  embedded in many locations, updates to this type will affect numerous
-                  schemas.  Don''t make new APIs embed an underspecified API type
-                  they do not control. Instead of using this type, create a locally
-                  provided and used type that is well-focused on your reference. For
-                  example, ServiceReferences for admission registration: https://github.com/kubernetes/api/blob/release-1.17/admissionregistration/v1/types.go#L533
-                  .'
+                  are both very rarely valid in actual usage. 2. Invalid usage help.
+                  \ It is impossible to add specific help for individual usage.  In
+                  most embedded usages, there are particular restrictions like, \"must
+                  refer only to types A and B\" or \"UID not honored\" or \"name must
+                  be restricted\". Those cannot be well described when embedded. 3.
+                  Inconsistent validation.  Because the usages are different, the
+                  validation rules are different by usage, which makes it hard for
+                  users to predict what will happen. 4. The fields are both imprecise
+                  and overly precise.  Kind is not a precise mapping to a URL. This
+                  can produce ambiguity during interpretation and require a REST mapping.
+                  \ In most cases, the dependency is on the group,resource tuple and
+                  the version of the actual struct is irrelevant. 5. We cannot easily
+                  change it.  Because this type is embedded in many locations, updates
+                  to this type will affect numerous schemas.  Don't make new APIs
+                  embed an underspecified API type they do not control. \n Instead
+                  of using this type, create a locally provided and used type that
+                  is well-focused on your reference. For example, ServiceReferences
+                  for admission registration: https://github.com/kubernetes/api/blob/release-1.17/admissionregistration/v1/types.go#L533
+                  ."
                 properties:
                   apiVersion:
                     description: API version of the referent.
@@ -525,16 +537,25 @@ spec:
                     is the default AccessModes - access modes supported by the dynamic
                     provisioner
                   properties:
-                    accessModes:
-                      items:
-                        type: string
-                      type: array
                     default:
                       type: boolean
                     name:
                       type: string
                     provisioner:
                       type: string
+                    volumeAccessModes:
+                      items:
+                        properties:
+                          accessModes:
+                            items:
+                              type: string
+                            type: array
+                          volumeMode:
+                            description: PersistentVolumeMode describes how a volume
+                              is intended to be consumed, either Block or Filesystem.
+                            type: string
+                        type: object
+                      type: array
                   type: object
                 type: array
               excludedResources:
@@ -607,16 +628,25 @@ spec:
                     is the default AccessModes - access modes supported by the dynamic
                     provisioner
                   properties:
-                    accessModes:
-                      items:
-                        type: string
-                      type: array
                     default:
                       type: boolean
                     name:
                       type: string
                     provisioner:
                       type: string
+                    volumeAccessModes:
+                      items:
+                        properties:
+                          accessModes:
+                            items:
+                              type: string
+                            type: array
+                          volumeMode:
+                            description: PersistentVolumeMode describes how a volume
+                              is intended to be consumed, either Block or Filesystem.
+                            type: string
+                        type: object
+                      type: array
                   type: object
                 type: array
             type: object
