@@ -362,7 +362,7 @@ spec:
         - apiGroups:
           - kubevirt.io
           resources:
-          - 'VirtualMachines'
+          - 'virtualmachines'
           verbs:
           - update
           - list
@@ -623,7 +623,7 @@ spec:
         - apiGroups:
           - kubevirt.io
           resources:
-          - 'VirtualMachines'
+          - 'virtualimachines'
           verbs:
           - update
           - list
