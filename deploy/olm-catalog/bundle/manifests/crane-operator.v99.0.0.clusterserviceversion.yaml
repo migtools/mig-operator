@@ -385,6 +385,8 @@ spec:
           - prometheuses/api
           verbs:
           - get
+          - create
+          - update
       - serviceAccountName: migration-controller
         rules:
         - apiGroups:
@@ -654,6 +656,8 @@ spec:
           - prometheuses/api
           verbs:
           - get
+          - create
+          - update
       deployments:
       - name: migration-operator
         spec:
