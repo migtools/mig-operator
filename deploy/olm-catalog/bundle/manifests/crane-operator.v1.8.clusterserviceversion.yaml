@@ -329,6 +329,14 @@ spec:
           - list
           - get
           - watch
+        - apiGroups:
+          - monitoring.coreos.com
+          resourceNames:
+          - k8s
+          resources:
+          - prometheuses/api
+          verbs:
+          - get
       - serviceAccountName: migration-controller
         rules:
         - apiGroups:
@@ -575,7 +583,7 @@ spec:
         - apiGroups:
           - kubevirt.io
           resources:
-          - 'virtualimachines'
+          - 'virtualmachines'
           verbs:
           - update
           - list
@@ -590,6 +598,14 @@ spec:
           - list
           - get
           - watch
+        - apiGroups:
+          - monitoring.coreos.com
+          resourceNames:
+          - k8s
+          resources:
+          - prometheuses/api
+          verbs:
+          - get
       deployments:
       - name: migration-operator
         spec:
