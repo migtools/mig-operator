@@ -177,6 +177,10 @@ spec:
                       description: TargetStorageClass storage class of the migrated
                         PVC in the target cluster
                       type: string
+                    targetVolumeMode:
+                      description: TargetVolumeMode volume mode of the migrated PVC
+                        in the target cluster
+                      type: string
                     uid:
                       description: |-
                         UID of the referent.
