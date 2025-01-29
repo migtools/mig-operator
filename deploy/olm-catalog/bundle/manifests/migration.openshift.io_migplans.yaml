@@ -390,6 +390,8 @@ spec:
                           type: string
                         namespace:
                           type: string
+                        ownerType:
+                          type: string
                         volumeMode:
                           description: PersistentVolumeMode describes how a volume
                             is intended to be consumed, either Block or Filesystem.
