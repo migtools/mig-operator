@@ -73,7 +73,12 @@ spec:
 {% else %}
           limits: null
 {% endif %}
+{% if new_dpa|bool %}
+    nodeAgent:
+      uploaderType: restic
+{% else %}
     restic:
+{% endif %}
       enable: true
       timeout: "{{ restic_timeout }}"
       supplementalGroups: {{ restic_supplemental_groups }}

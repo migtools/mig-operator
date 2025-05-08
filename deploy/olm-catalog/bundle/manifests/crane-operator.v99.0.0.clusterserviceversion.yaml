@@ -259,6 +259,13 @@ spec:
       - serviceAccountName: migration-operator
         rules:
         - apiGroups:
+          - operators.coreos.com
+          resources:
+          - clusterserviceversions
+          verbs:
+          - list
+          - get
+        - apiGroups:
           - rbac.authorization.k8s.io
           resources:
           - roles
