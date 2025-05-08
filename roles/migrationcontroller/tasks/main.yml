@@ -216,11 +216,35 @@
           cloud: ""
     when: (azure_secret_status.resources|length) == 0
 
+- name: Assume old DPA
+  set_fact:
+    new_dpa: false
+
+- name: Get ClusterServiceVersions
+  k8s_info:
+    api_version: operators.coreos.com/v1alpha1
+    kind: ClusterServiceVersion
+    namespace: "{{ mig_namespace }}"
+  register: csvs
+
+- name: Get OADP Version
+  set_fact:
+    oadp_version: "{{ item.spec.version }}"
+  with_items:
+    -  "{{ csvs.resources }}"
+  when: item.spec.displayName == "OADP Operator"
+
+- name: Check for new DPA and set if appropriate
+  set_fact:
+    new_dpa: true
+  when: "oadp_version is version_compare('1.5.0', '>=')"
+
 - name: "Set up velero controller"
   k8s:
     state: "{{ velero_state }}"
     definition: "{{ lookup('template', 'velero.yml.j2') }}"
     apply: true
+    merge_type: merge
 
 - name: "Set up rsync-anyuid SCC"
   k8s:
