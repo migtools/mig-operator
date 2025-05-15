@@ -108,36 +108,10 @@ ui_state: absent
 velero_aws_secret_name: cloud-credentials
 velero_gcp_secret_name: cloud-credentials-gcp
 velero_azure_secret_name: cloud-credentials-azure
-velero_debug: false
-velero_image: "{{ registry }}/{{ project }}/{{ velero_repo }}"
-velero_repo: "{{ lookup( 'env', 'VELERO_REPO') }}"
-velero_version: "{{ snapshot_tag | default(lookup( 'env', 'VELERO_TAG')) }}"
-velero_image_fqin: "{{ velero_image }}:{{ velero_version }}"
-velero_plugin_image: "{{ registry }}/{{ project }}/{{ velero_plugin_repo }}"
-velero_plugin_repo: "{{ lookup( 'env', 'VELERO_PLUGIN_REPO') }}"
-velero_plugin_version: "{{ snapshot_tag | default(lookup( 'env', 'VELERO_PLUGIN_TAG')) }}"
-velero_plugin_fqin: "{{ velero_plugin_image }}:{{ velero_plugin_version }}"
-velero_restic_restore_helper_image: "{{ registry }}/{{ project }}/{{ velero_restic_restore_helper_repo }}"
-velero_restic_restore_helper_repo: "{{ lookup( 'env', 'VELERO_RESTIC_RESTORE_HELPER_REPO') }}"
-velero_restic_restore_helper_version: "{{ snapshot_tag | default(lookup( 'env', 'VELERO_RESTIC_RESTORE_HELPER_TAG')) }}"
-velero_restic_restore_helper_fqin: "{{ velero_restic_restore_helper_image }}:{{ velero_restic_restore_helper_version }}"
-velero_aws_plugin_image: "{{ registry }}/{{ project }}/{{ velero_aws_plugin_repo }}"
-velero_aws_plugin_repo: "{{ lookup( 'env', 'VELERO_AWS_PLUGIN_REPO') }}"
-velero_aws_plugin_version: "{{ snapshot_tag | default(lookup( 'env', 'VELERO_AWS_PLUGIN_TAG')) }}"
-velero_aws_plugin_fqin: "{{ velero_aws_plugin_image }}:{{ velero_aws_plugin_version }}"
-velero_gcp_plugin_image: "{{ registry }}/{{ project }}/{{ velero_gcp_plugin_repo }}"
-velero_gcp_plugin_repo: "{{ lookup( 'env', 'VELERO_GCP_PLUGIN_REPO') }}"
-velero_gcp_plugin_version: "{{ snapshot_tag | default(lookup( 'env', 'VELERO_GCP_PLUGIN_TAG')) }}"
-velero_gcp_plugin_fqin: "{{ velero_gcp_plugin_image }}:{{ velero_gcp_plugin_version }}"
-velero_azure_plugin_image: "{{ registry }}/{{ project }}/{{ velero_azure_plugin_repo }}"
-velero_azure_plugin_repo: "{{ lookup( 'env', 'VELERO_AZURE_PLUGIN_REPO') }}"
-velero_azure_plugin_version: "{{ snapshot_tag | default(lookup( 'env', 'VELERO_AZURE_PLUGIN_TAG')) }}"
-velero_azure_plugin_fqin: "{{ velero_azure_plugin_image }}:{{ velero_azure_plugin_version }}"
+velero_use_legacy_aws: false
 mtc_velero_plugin_repo: "{{ lookup( 'env', 'VELERO_MTC_PLUGIN_REPO') }}"
 mtc_velero_plugin_image: "{{ registry }}/{{ project }}/{{ mtc_velero_plugin_repo }}"
 mtc_velero_plugin_version: "{{ snapshot_tag | default(lookup( 'env', 'VELERO_MTC_PLUGIN_TAG')) }}"
 mtc_velero_plugin_fqin: "{{ mtc_velero_plugin_image }}:{{ mtc_velero_plugin_version }}"
 velero_requests_cpu: "100m"
 velero_state: absent
-velero_qps: 100
-velero_burst: 1000

@@ -35,7 +35,11 @@ spec:
         image: "{{ mtc_velero_plugin_fqin }}"
       defaultPlugins:
       - openshift
+{% if velero_use_legacy_aws|bool %}
+      - legacy-aws
+{% else %}
       - aws
+{% endif %}
       - gcp
       - azure
       noDefaultBackupLocation: true
