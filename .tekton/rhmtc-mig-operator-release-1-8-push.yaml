@@ -26,6 +26,10 @@ spec:
     value: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-mig-operator-release-1-8:{{revision}}
   - name: dockerfile
     value: Dockerfile.rhmtc
+  - name: hermetic
+    value: "true"
+  - name: prefetch-input
+    value: '{"type": "rpm", "path": "."}'
   pipelineSpec:
     description: |
       This pipeline is ideal for building container images from a Containerfile while maintaining trust after pipeline customization.
@@ -170,6 +174,8 @@ spec:
         workspace: git-auth
     - name: prefetch-dependencies
       params:
+      - name: dev-package-managers
+        value: "true"
       - name: input
         value: $(params.prefetch-input)
       - name: SOURCE_ARTIFACT
