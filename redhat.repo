@@ -1,0 +1,108 @@
+[ansible-2.9-for-rhel-8-x86_64-rpms]
+baseurl = https://cdn.redhat.com/content/dist/layered/rhel8/x86_64/ansible/2.9/os
+enabled = 1
+enabled_metadata = 0
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+metadata_expire = 86400
+name = Red Hat Ansible Engine 2.9 for RHEL 8 x86_64 (RPMs)
+sslcacert = /etc/rhsm/ca/redhat-uep.pem
+sslverify = 1
+sslverifystatus = 1
+
+[ansible-2.9-for-rhel-8-x86_64-source-rpms]
+baseurl = https://cdn.redhat.com/content/dist/layered/rhel8/x86_64/ansible/2.9/source/SRPMS
+enabled = 1
+enabled_metadata = 0
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+metadata_expire = 86400
+name = Red Hat Ansible Engine 2.9 for RHEL 8 x86_64 (Source RPMs)
+sslcacert = /etc/rhsm/ca/redhat-uep.pem
+sslverify = 1
+sslverifystatus = 1
+
+[codeready-builder-for-rhel-8-x86_64-source-rpms]
+baseurl = https://cdn.redhat.com/content/dist/rhel8/$releasever/x86_64/codeready-builder/source/SRPMS
+enabled = 1
+enabled_metadata = 0
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+metadata_expire = 86400
+name = Red Hat CodeReady Linux Builder for RHEL 8 x86_64 (Source RPMs)
+sslcacert = /etc/rhsm/ca/redhat-uep.pem
+sslverify = 1
+sslverifystatus = 1
+
+[rhel-8-for-x86_64-appstream-rpms]
+baseurl = https://cdn.redhat.com/content/dist/rhel8/$releasever/x86_64/appstream/os
+enabled = 1
+enabled_metadata = 1
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+metadata_expire = 86400
+name = Red Hat Enterprise Linux 8 for x86_64 - AppStream (RPMs)
+sslcacert = /etc/rhsm/ca/redhat-uep.pem
+sslverify = 1
+sslverifystatus = 1
+
+[rhel-8-for-x86_64-appstream-source-rpms]
+baseurl = https://cdn.redhat.com/content/dist/rhel8/$releasever/x86_64/appstream/source/SRPMS
+enabled = 1
+enabled_metadata = 0
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+metadata_expire = 86400
+name = Red Hat Enterprise Linux 8 for x86_64 - AppStream (Source RPMs)
+sslcacert = /etc/rhsm/ca/redhat-uep.pem
+sslverify = 1
+sslverifystatus = 1
+
+[rhel-8-for-x86_64-baseos-rpms]
+baseurl = https://cdn.redhat.com/content/dist/rhel8/$releasever/x86_64/baseos/os
+enabled = 1
+enabled_metadata = 1
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+metadata_expire = 86400
+name = Red Hat Enterprise Linux 8 for x86_64 - BaseOS (RPMs)
+sslcacert = /etc/rhsm/ca/redhat-uep.pem
+sslverify = 1
+sslverifystatus = 1
+
+[rhel-8-for-x86_64-baseos-source-rpms]
+baseurl = https://cdn.redhat.com/content/dist/rhel8/$releasever/x86_64/baseos/source/SRPMS
+enabled = 1
+enabled_metadata = 0
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+metadata_expire = 86400
+name = Red Hat Enterprise Linux 8 for x86_64 - BaseOS (Source RPMs)
+sslcacert = /etc/rhsm/ca/redhat-uep.pem
+sslverify = 1
+sslverifystatus = 1
+
+[rhocp-4.7-for-rhel-8-x86_64-rpms]
+baseurl = https://cdn.redhat.com/content/dist/layered/rhel8/x86_64/rhocp/4.7/os
+enabled = 1
+enabled_metadata = 0
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+metadata_expire = 86400
+name = Red Hat OpenShift Container Platform 4.7 for RHEL 8 x86_64 (RPMs)
+sslcacert = /etc/rhsm/ca/redhat-uep.pem
+sslverify = 1
+sslverifystatus = 1
+
+[rhocp-4.7-for-rhel-8-x86_64-source-rpms]
+baseurl = https://cdn.redhat.com/content/dist/layered/rhel8/x86_64/rhocp/4.7/source/SRPMS
+enabled = 1
+enabled_metadata = 0
+gpgcheck = 1
+gpgkey = file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+metadata_expire = 86400
+name = Red Hat OpenShift Container Platform 4.7 for RHEL 8 x86_64 (Source RPMs)
+sslcacert = /etc/rhsm/ca/redhat-uep.pem
+sslverify = 1
+sslverifystatus = 1
+

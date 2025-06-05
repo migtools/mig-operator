@@ -1,0 +1,8 @@
+packages:
+  - python3-boto3
+  - nss_wrapper
+arches:
+- x86_64
+contentOrigin:
+  repofiles:
+  - ./redhat.repo

@@ -1,0 +1,31 @@
+#@follow_tag(registry.redhat.io/openshift4/ose-ansible-operator:v4.17)
+FROM registry.redhat.io/openshift4/ose-ansible-operator:v4.17
+
+WORKDIR /workspace/
+
+USER root
+COPY third-party/pip3-install-dir/* /tmp/pip3-install-dir/
+RUN dnf -y erase python3-openshift && pip3 install /tmp/pip3-install-dir/* && rm -rvf /tmp/pip3-install-dir/
+RUN dnf -y install python3-boto3 nss_wrapper && dnf clean all && rm -rf /var/cache/yum /var/cache/dnf
+
+RUN ln -s ${HOME}/.ansible /.ansible
+
+USER 1001
+
+COPY watches.yaml ${HOME}/watches.yaml
+
+COPY roles ${HOME}/roles
+
+LABEL \
+        com.redhat.component="openshift-migration-operator-container" \
+        version="v1.8.7" \
+        name="rhmtc/openshift-migration-rhel8-operator" \
+        summary="Migration Toolkit for Containers Operator" \
+        maintainer="Migration Team <ocp-migrate-team@redhat.com>" \
+        License="ASL 2.0" \
+        io.k8s.display-name="Migration Toolkit for Containers" \
+        io.openshift.tags="migration" \
+        io.k8s.description="Migration Toolkit for Containers Operator" \
+        io.openshift.build.commit.id="677b2efba3c495495775f0729a67b5cc6e628fe6" \
+        io.openshift.build.source-location="https://github.com/migtools/mig-operator" \
+        io.openshift.build.commit.url="https://github.com/migtools/mig-operator/commit/677b2efba3c495495775f0729a67b5cc6e628fe6"
