@@ -28,6 +28,8 @@ spec:
     - linux/x86_64
   - name: dockerfile
     value: deploy/olm-catalog/Dockerfile-bundle.rhmtc
+  - name: build-image-index
+    value: 'false'
   pipelineSpec:
     description: |
       This pipeline is ideal for building multi-arch container images from a Containerfile while maintaining trust after pipeline customization.
