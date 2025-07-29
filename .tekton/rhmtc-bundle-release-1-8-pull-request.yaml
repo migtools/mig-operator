@@ -12,7 +12,7 @@ metadata:
     pipelinesascode.tekton.dev/on-cel-expression: event == "pull_request" && target_branch == "release-1.8" &&
       (".tekton/rhmtc-bundle-release-1-8-pull-request.yaml".pathChanged() ||
       ".tekton/rhmtc-bundle-release-1-8-push.yaml".pathChanged() ||
-      "deploy/olm-catalog/konflux/**".pathChanged())
+      "deploy/olm-catalog/konflux/***".pathChanged())
   creationTimestamp:
   labels:
     appstudio.openshift.io/application: rhmtc-1-8
