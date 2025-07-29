@@ -13,7 +13,5 @@ RUN ln -s ${HOME}/.ansible /.ansible
 USER 1001
 
 COPY watches.yaml ${HOME}/watches.yaml
-
 COPY roles ${HOME}/roles
-
 COPY LICENSE /licenses/
