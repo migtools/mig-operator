@@ -34,7 +34,7 @@ spec:
     value:
     - linux/x86_64
   - name: dockerfile
-    value: deploy/olm-catalog/rhmtc/Dockerfile-bundle.rhmtc
+    value: deploy/olm-catalog/konflux/Dockerfile-bundle.rhmtc
   - name: build-image-index
     value: 'false'
   pipelineSpec:
