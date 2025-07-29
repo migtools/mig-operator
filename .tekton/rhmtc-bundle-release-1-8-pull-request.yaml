@@ -8,7 +8,11 @@ metadata:
     build.appstudio.redhat.com/target_branch: '{{target_branch}}'
     pipelinesascode.tekton.dev/cancel-in-progress: "true"
     pipelinesascode.tekton.dev/max-keep-runs: "3"
-    pipelinesascode.tekton.dev/on-cel-expression: event == "pull_request" && target_branch == "release-1.8"
+    # pipelinesascode.tekton.dev/on-cel-expression: event == "pull_request" && target_branch == "release-1.8"
+    pipelinesascode.tekton.dev/on-cel-expression: event == "pull_request" && target_branch == "release-1.8" &&
+      (".tekton/rhmtc-bundle-release-1-8-pull-request.yaml".pathChanged() ||
+      ".tekton/rhmtc-bundle-release-1-8-push.yaml".pathChanged() ||
+      "deploy/olm-catalog/konflux/**".pathChanged())
   creationTimestamp:
   labels:
     appstudio.openshift.io/application: rhmtc-1-8
@@ -30,7 +34,7 @@ spec:
     value:
     - linux/x86_64
   - name: dockerfile
-    value: deploy/olm-catalog/Dockerfile-bundle.rhmtc
+    value: deploy/olm-catalog/rhmtc/Dockerfile-bundle.rhmtc
   - name: build-image-index
     value: 'false'
   pipelineSpec:
@@ -237,6 +241,33 @@ spec:
         value: $(tasks.prefetch-dependencies.results.CACHI2_ARTIFACT)
       - name: IMAGE_APPEND_PLATFORM
         value: "true"
+      - name: LABELS
+        value:
+        - $(tasks.generate-labels.results.labels[*])
+        - License=ASL 2.0
+        - com.redhat.component=openshift-migration-operator-metadata-container
+        - com.redhat.delivery.backport=false
+        - com.redhat.delivery.operator.bundle=true
+        - com.redhat.openshift.versions==v4.14|=v4.15|=v4.16|=v4.17|=v4.18|=v4.19|=v4.20
+        - io.k8s.description=Migration Toolkit for Containers Operator OLM Metadata
+        - io.k8s.display-name=Migration Toolkit for Containers
+        - io.openshift.tags=migration
+        - maintainer=Migration Team <ocp-migrate-team@redhat.com>
+        - name=rhmtc/openshift-migration-operator-metadata
+        - operators.operatorframework.io.bundle.channel.default.v1=release-v1.8
+        - operators.operatorframework.io.bundle.channels.v1=release-v1.8
+        - operators.operatorframework.io.bundle.manifests.v1=manifests/
+        - operators.operatorframework.io.bundle.mediatype.v1=registry+v1
+        - operators.operatorframework.io.bundle.metadata.v1=metadata/
+        - operators.operatorframework.io.bundle.package.v1=mtc-operator
+        - operators.operatorframework.io.metrics.builder=operator-sdk-unknown
+        - operators.operatorframework.io.metrics.mediatype.v1=metrics+v1
+        - operators.operatorframework.io.metrics.project_layout=ansible.sdk.operatorframework.io/v1
+        - operators.operatorframework.io.test.config.v1=tests/scorecard/
+        - operators.operatorframework.io.test.mediatype.v1=scorecard+v1
+        - summary=Migration Toolkit for Containers Operator OLM Metadata
+        - vendor=Red Hat, Inc.
+        - version=v1.8.9
       runAfter:
       - prefetch-dependencies
       taskRef:
@@ -553,6 +584,9 @@ spec:
         value: $(tasks.build-image-index.results.IMAGE_URL)
       - name: IMAGE_DIGEST
         value: $(tasks.build-image-index.results.IMAGE_DIGEST)
+      - name: ADDITIONAL_TAGS
+        value:
+        - 'pull-request-{{pull_request_number}}'
       runAfter:
       - build-image-index
       taskRef:
@@ -627,7 +661,7 @@ spec:
         - name: name
           value: generate-labels
         - name: bundle
-          value: quay.io/konflux-ci/tekton-catalog/task-generate-labels:0.1@sha256:7d3895b11c66998c5c7c0deac168c514114e990cbb2fcda8d3dfb1dbd3440c60
+          value: quay.io/konflux-ci/tekton-catalog/task-generate-labels:0.1@sha256:e1f4746dc33206a17867ead8f5c82a569cd925d352a19d108f205f54efc5589d
         - name: kind
           value: task
         resolver: bundles
