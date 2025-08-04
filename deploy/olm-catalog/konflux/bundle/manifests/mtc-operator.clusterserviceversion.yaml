@@ -706,7 +706,7 @@ spec:
                 - name: RELATED_IMAGE_UI
                   value: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-ui-release-1-8@sha256:1012563fd310db5b5b8a63c0a11b4e9232641cb6b1f63005a279d18f39854e3c 
                 - name: RELATED_IMAGE_PLUGIN_FOR_MTC
-                  value: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-velero-plugin-for-mtc-release-1-8@sha256:f603139b6142f2243ca2e614f8a041faa1c2cbf4b3bdeeb6e3cea18cb0de8f64
+                  value: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-velero-plugin-for-mtc-release-1-8@sha256:43f3dd556d8c424acc3a508d961be2bc53efb99162094c801d4d14bb41997ad6
                 - name: RELATED_IMAGE_MUST_GATHER
                   value: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-must-gather-release-1-8@sha256:9a8042bd5636217c8088e0d7fbf15adab316836e74f43fc5c9041df29ac6642b
                 securityContext:
@@ -808,7 +808,7 @@ spec:
   - name: openshift_migration_ui
     image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-ui-release-1-8@sha256:1012563fd310db5b5b8a63c0a11b4e9232641cb6b1f63005a279d18f39854e3c 
   - name: openshift_migration_velero_plugin_for_mtc
-    image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-velero-plugin-for-mtc-release-1-8@sha256:f603139b6142f2243ca2e614f8a041faa1c2cbf4b3bdeeb6e3cea18cb0de8f64
+    image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-velero-plugin-for-mtc-release-1-8@sha256:43f3dd556d8c424acc3a508d961be2bc53efb99162094c801d4d14bb41997ad6
   - name: openshift_migration_registry
     image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-registry-release-1-8@sha256:7959616505f520f5a273f769b77a3d00f6b2fd5f0193830abdf26c494541b40f
   - name: openshift_migration_hook_runner
