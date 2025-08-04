@@ -694,7 +694,7 @@ spec:
                 - name: RELATED_IMAGE_CONTROLLER
                   value: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-controller-release-1-8@sha256:9b87c72982144c7b57d6baa1e720e1799ff4b77d35cb59491795d4f32ee199f6 
                 - name: RELATED_IMAGE_HOOK_RUNNER
-                  value: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-hook-runner-release-1-8@sha256:53651633893bf114aa8a6d4ec7b9bd925caa4f192973f4c88005053a381e587b
+                  value: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-hook-runner-release-1-8@sha256:661b6c457ba2ebb708b4a888fe912e95fa88825de9a308353a8f8751d02b106f
                 - name: RELATED_IMAGE_LOG_READER
                   value: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-log-reader-release-1-8@sha256:18970216459f4238afede85624d401749d6dee941cd993e858e86bfc4fad8d9f
                 - name: RELATED_IMAGE_OPENVPN
@@ -812,7 +812,7 @@ spec:
   - name: openshift_migration_registry
     image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-registry-release-1-8@sha256:7959616505f520f5a273f769b77a3d00f6b2fd5f0193830abdf26c494541b40f
   - name: openshift_migration_hook_runner
-    image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-hook-runner-release-1-8@sha256:53651633893bf114aa8a6d4ec7b9bd925caa4f192973f4c88005053a381e587b
+    image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-hook-runner-release-1-8@sha256:661b6c457ba2ebb708b4a888fe912e95fa88825de9a308353a8f8751d02b106f
   - name: openshift_migration_log_reader
     image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-log-reader-release-1-8@sha256:18970216459f4238afede85624d401749d6dee941cd993e858e86bfc4fad8d9f
   - name: openshift_migration_rsync_transfer
