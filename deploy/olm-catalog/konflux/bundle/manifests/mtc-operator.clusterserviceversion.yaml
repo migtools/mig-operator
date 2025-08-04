@@ -692,7 +692,7 @@ spec:
                 - name: RELATED_IMAGE_OPERATOR
                   value: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-operator-release-1-8@sha256:37176f84dd4a26ee2198dd4dd489e93a021cd6852247f28f5e4159aaf66066a3
                 - name: RELATED_IMAGE_CONTROLLER
-                  value: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-controller-release-1-8@sha256:9b87c72982144c7b57d6baa1e720e1799ff4b77d35cb59491795d4f32ee199f6 
+                  value: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-controller-release-1-8@sha256:7692503d0c60af88047bc213416e923024ebfadcddc020a6b125a788cc16cbb9 
                 - name: RELATED_IMAGE_HOOK_RUNNER
                   value: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-hook-runner-release-1-8@sha256:661b6c457ba2ebb708b4a888fe912e95fa88825de9a308353a8f8751d02b106f
                 - name: RELATED_IMAGE_LOG_READER
@@ -804,7 +804,7 @@ spec:
   - mtc-operator.v1.8.0
   relatedImages:
   - name: openshift_migration_controller
-    image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-controller-release-1-8@sha256:9b87c72982144c7b57d6baa1e720e1799ff4b77d35cb59491795d4f32ee199f6 
+    image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-controller-release-1-8@sha256:7692503d0c60af88047bc213416e923024ebfadcddc020a6b125a788cc16cbb9 
   - name: openshift_migration_ui
     image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-ui-release-1-8@sha256:1012563fd310db5b5b8a63c0a11b4e9232641cb6b1f63005a279d18f39854e3c 
   - name: openshift_migration_velero_plugin_for_mtc
