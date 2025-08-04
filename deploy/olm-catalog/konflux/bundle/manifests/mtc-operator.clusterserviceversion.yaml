@@ -708,7 +708,7 @@ spec:
                 - name: RELATED_IMAGE_PLUGIN_FOR_MTC
                   value: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-velero-plugin-for-mtc-release-1-8@sha256:43f3dd556d8c424acc3a508d961be2bc53efb99162094c801d4d14bb41997ad6
                 - name: RELATED_IMAGE_MUST_GATHER
-                  value: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-must-gather-release-1-8@sha256:9a8042bd5636217c8088e0d7fbf15adab316836e74f43fc5c9041df29ac6642b
+                  value: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-must-gather-release-1-8@sha256:b7ee934101c645377b5889ec8e7980eac520e58077551a3887a3ac5df5a2fc8b
                 securityContext:
                   allowPrivilegeEscalation: false
               securityContext:
@@ -822,4 +822,4 @@ spec:
   - name: openshift_migration_operator
     image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-operator-release-1-8@sha256:37176f84dd4a26ee2198dd4dd489e93a021cd6852247f28f5e4159aaf66066a3
   - name: openshift_migration_must_gather
-    image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-must-gather-release-1-8@sha256:9a8042bd5636217c8088e0d7fbf15adab316836e74f43fc5c9041df29ac6642b
+    image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-must-gather-release-1-8@sha256:b7ee934101c645377b5889ec8e7980eac520e58077551a3887a3ac5df5a2fc8b
