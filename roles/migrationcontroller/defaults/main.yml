@@ -29,10 +29,7 @@ stunnel_verify_ca: true
 stunnel_verify_ca_level: "2"
 image_pull_policy: Always
 cluster_subdomain: ""
-rsync_transfer_image: "{{ registry }}/{{ project }}/{{ rsync_transfer_repo }}"
-rsync_transfer_repo: "{{ lookup( 'env', 'RSYNC_TRANSFER_REPO') }}"
-rsync_transfer_version: "{{ snapshot_tag | default(lookup( 'env', 'RSYNC_TRANSFER_TAG')) }}"
-rsync_transfer_image_fqin: "{{ rsync_transfer_image }}:{{ rsync_transfer_version }}"
+rsync_transfer_image_fqin: "{{ lookup('env', 'RELATED_IMAGE_RSYNC_TRANSFER') }}"
 source_rsync_pod_cpu_limits: "1"
 source_rsync_pod_memory_limits: "1Gi"
 source_rsync_pod_cpu_requests: "100m"
@@ -46,21 +43,15 @@ target_rsync_pod_cpu_requests: '100m'
 target_rsync_pod_memory_limits: '1Gi'
 target_rsync_pod_memory_requests: '1Gi'
 enable_dvm_pv_resizing: false
-hook_runner_image: "{{ registry }}/{{ project }}/{{ hook_runner_repo }}"
-hook_runner_repo: "{{ lookup( 'env', 'HOOK_RUNNER_REPO') }}"
-hook_runner_version: "{{ snapshot_tag | default(lookup( 'env', 'HOOK_RUNNER_TAG')) }}"
-hook_runner_image_fqin: "{{ hook_runner_image }}:{{ hook_runner_version }}"
+hook_runner_image_fqin: "{{ lookup('env', 'RELATED_IMAGE_HOOK_RUNNER') }}"
 internal_cluster_api_url: "https://kubernetes.default.svc.cluster.local"
 internal_discovery_svc_url: "http://discovery.{{ mig_namespace }}.svc.cluster.local"
 jaeger_enabled: "false"
-mig_controller_image: "{{ registry }}/{{ project }}/{{ mig_controller_repo }}"
 mig_controller_limits_cpu: "1"
 mig_controller_limits_memory: "10Gi"
-mig_controller_repo: "{{ lookup( 'env', 'MIG_CONTROLLER_REPO') }}"
 mig_controller_requests_cpu: "100m"
 mig_controller_requests_memory: "350Mi"
-mig_controller_version: "{{ snapshot_tag | default(lookup( 'env', 'MIG_CONTROLLER_TAG')) }}"
-mig_controller_image_fqin: "{{ mig_controller_image }}:{{ mig_controller_version }}"
+mig_controller_image_fqin: "{{ lookup('env', 'RELATED_IMAGE_CONTROLLER') }}"
 mig_controller_enable_cache: false
 discovery_collect_events: true
 discovery_volume_path: "/var/cache/discovery"
@@ -74,27 +65,15 @@ mig_ui_cluster_api_endpoint: ""
 mig_ui_configmap_data: ""
 mig_ui_configmap_name: mig-ui-config
 mig_ui_config_namespace: openshift-migration
-mig_ui_image: "{{ registry }}/{{ project }}/{{ mig_ui_repo }}"
 mig_ui_oauth_user_scope: "user:full"
 mig_ui_oauth_redirect_url: ""
 mig_ui_oauth_secret: ""
-mig_ui_repo: "{{ lookup( 'env', 'MIG_UI_REPO') }}"
-mig_ui_version: "{{ snapshot_tag | default(lookup( 'env', 'MIG_UI_TAG')) }}"
-mig_ui_image_fqin: "{{ mig_ui_image }}:{{ mig_ui_version }}"
+mig_ui_image_fqin: "{{ lookup( 'env', 'RELATED_IMAGE_UI') }}"
 log_reader_state: absent
-mig_log_reader_repo: "{{ lookup( 'env', 'MIG_LOG_READER_REPO') }}"
-mig_log_reader_image: "{{ registry }}/{{ project }}/{{ mig_log_reader_repo }}"
-mig_log_reader_version: "{{ snapshot_tag | default(lookup( 'env', 'MIG_LOG_READER_TAG')) }}"
-mig_log_reader_image_fqin: "{{ mig_log_reader_image }}:{{ mig_log_reader_version }}"
+mig_log_reader_image_fqin: "{{ lookup( 'env', 'RELATED_IMAGE_MIG_LOG_READER') }}"
 migration_log_reader: true
-migration_registry_image: "{{ registry }}/{{ project }}/{{ migration_registry_repo }}"
-migration_registry_repo: "{{ lookup( 'env', 'MIGRATION_REGISTRY_REPO') }}"
-migration_registry_version: "{{ lookup( 'env', 'MIGRATION_REGISTRY_TAG') }}"
-migration_registry_image_fqin: "{{ migration_registry_image }}:{{ migration_registry_version }}"
-migration_stage_image: "{{ registry }}/{{ project }}/{{ migration_stage_repo }}"
-migration_stage_repo: "{{ lookup( 'env', 'RSYNC_TRANSFER_REPO') }}"
-migration_stage_version: "{{ snapshot_tag | default(lookup( 'env', 'RSYNC_TRANSFER_TAG')) }}"
-migration_stage_image_fqin: "{{ migration_stage_image }}:{{ migration_stage_version }}"
+migration_registry_image_fqin: "{{ lookup( 'env', 'RELATED_IMAGE_MIGRATION_REGISTRY') }}"
+migration_stage_image_fqin: "{{ lookup('env', 'RELATED_IMAGE_RSYNC_TRANSFER') }}"
 migration_rsync_privileged: false
 migration_rsync_super_privileged: false
 enable_intelligent_pv_resize: true
@@ -109,9 +88,6 @@ velero_aws_secret_name: cloud-credentials
 velero_gcp_secret_name: cloud-credentials-gcp
 velero_azure_secret_name: cloud-credentials-azure
 velero_use_legacy_aws: false
-mtc_velero_plugin_repo: "{{ lookup( 'env', 'VELERO_MTC_PLUGIN_REPO') }}"
-mtc_velero_plugin_image: "{{ registry }}/{{ project }}/{{ mtc_velero_plugin_repo }}"
-mtc_velero_plugin_version: "{{ snapshot_tag | default(lookup( 'env', 'VELERO_MTC_PLUGIN_TAG')) }}"
-mtc_velero_plugin_fqin: "{{ mtc_velero_plugin_image }}:{{ mtc_velero_plugin_version }}"
+mtc_velero_plugin_fqin: "{{ lookup('env', 'RELATED_IMAGE_PLUGIN') }}"
 velero_requests_cpu: "100m"
 velero_state: absent

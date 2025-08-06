@@ -190,7 +190,7 @@ spec:
     image: quay.io/konveyor/mig-controller:latest
   - name: ui
     image: quay.io/konveyor/mig-ui:latest
-  - name: migration_plugin
+  - name: migration_registry
     image: quay.io/konveyor/registry:latest
   - name: hook_runner
     image: quay.io/konveyor/hook-runner:latest
@@ -198,6 +198,8 @@ spec:
     image: quay.io/konveyor/mig-log-reader:latest
   - name: rsync_transfer
     image: quay.io/konveyor/rsync-transfer:latest
+  - name: plugin
+    image: quay.io/konveyor/velero-plugin-for-mtc:latest
   displayName: Crane Operator
   description: |
     The Crane Operator enables installation of the application migration tool components.
@@ -702,62 +704,20 @@ spec:
                   valueFrom:
                     fieldRef:
                       fieldPath: metadata.namespace
-                - name: REGISTRY
-                  value: quay.io
-                - name: PROJECT
-                  value: konveyor
-                - name: RSYNC_TRANSFER_REPO
-                  value: rsync-transfer
-                - name: RSYNC_TRANSFER_TAG
-                  value: latest
-                - name: HOOK_RUNNER_REPO
-                  value: hook-runner
-                - name: HOOK_RUNNER_TAG
-                  value: latest
-                - name: MIG_CONTROLLER_REPO
-                  value: mig-controller
-                - name: MIG_CONTROLLER_TAG
-                  value: latest
-                - name: MIG_UI_REPO
-                  value: mig-ui
-                - name: MIG_UI_TAG
-                  value: latest
-                - name: MIG_LOG_READER_REPO
-                  value: mig-log-reader
-                - name: MIG_LOG_READER_TAG
-                  value: latest
-                - name: MIGRATION_REGISTRY_REPO
-                  value: registry
-                - name: MIGRATION_REGISTRY_TAG
-                  value: latest
-                - name: VELERO_REPO
-                  value: velero
-                - name: VELERO_TAG
-                  value: latest
-                - name: VELERO_PLUGIN_REPO
-                  value: openshift-velero-plugin
-                - name: VELERO_PLUGIN_TAG
-                  value: latest
-                - name: VELERO_AWS_PLUGIN_REPO
-                  value: velero-plugin-for-aws
-                - name: VELERO_AWS_PLUGIN_TAG
-                  value: latest
-                - name: VELERO_GCP_PLUGIN_REPO
-                  value: velero-plugin-for-gcp
-                - name: VELERO_GCP_PLUGIN_TAG
-                  value: latest
-                - name: VELERO_MTC_PLUGIN_REPO
-                  value: velero-plugin-for-mtc
-                - name: VELERO_MTC_PLUGIN_TAG
-                  value: latest
-                - name: VELERO_AZURE_PLUGIN_REPO
-                  value: velero-plugin-for-microsoft-azure
-                - name: VELERO_AZURE_PLUGIN_TAG
-                  value: latest
-                - name: VELERO_RESTIC_RESTORE_HELPER_REPO
-                  value: velero-restic-restore-helper
-                - name: VELERO_RESTIC_RESTORE_HELPER_TAG
-                  value: latest
+                - name: RELATED_IMAGE_RSYNC_TRANSFER
+                  value: quay.io/konveyor/rsync-transfer:latest
+                - name: RELATED_IMAGE_HOOK_RUNNER
+                  value: quay.io/konveyor/hook-runner:latest
+                - name: RELATED_IMAGE_CONTROLLER
+                  value: quay.io/konveyor/mig-controller:latest
+                - name: RELATED_IMAGE_UI
+                  value: quay.io/konveyor/mig-ui:latest
+                - name: RELATED_IMAGE_MIG_LOG_READER
+                  value: quay.io/konveyor/mig-log-reader:latest
+                - name: RELATED_IMAGE_MIGRATION_REGISTRY
+                  value: quay.io/konveyor/registry:latest
+                - name: RELATED_IMAGE_PLUGIN
+                  value: quay.io/konveyor/velero-plugin-for-mtc:latest
                 securityContext:
                   allowPrivilegeEscalation: false
               securityContext:
