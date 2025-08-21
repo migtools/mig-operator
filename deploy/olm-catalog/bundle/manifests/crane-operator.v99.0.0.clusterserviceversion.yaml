@@ -712,11 +712,11 @@ spec:
                   value: quay.io/konveyor/mig-controller:latest
                 - name: RELATED_IMAGE_UI
                   value: quay.io/konveyor/mig-ui:latest
-                - name: RELATED_IMAGE_MIG_LOG_READER
+                - name: RELATED_IMAGE_LOG_READER
                   value: quay.io/konveyor/mig-log-reader:latest
-                - name: RELATED_IMAGE_MIGRATION_REGISTRY
+                - name: RELATED_IMAGE_REGISTRY
                   value: quay.io/konveyor/registry:latest
-                - name: RELATED_IMAGE_PLUGIN
+                - name: RELATED_IMAGE_PLUGIN_FOR_MTC
                   value: quay.io/konveyor/velero-plugin-for-mtc:latest
                 securityContext:
                   allowPrivilegeEscalation: false
