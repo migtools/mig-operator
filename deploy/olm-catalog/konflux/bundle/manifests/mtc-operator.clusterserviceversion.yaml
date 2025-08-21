@@ -641,7 +641,7 @@ spec:
               serviceAccount: migration-operator
               containers:
               - name: operator
-                image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-operator-release-1-8@sha256:37176f84dd4a26ee2198dd4dd489e93a021cd6852247f28f5e4159aaf66066a3
+                image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-operator-release-1-8@sha256:9f0fc02eb5a16c40ed1d51fd62b90ed3dec0c4922889bd7d6da17da9ef401419
                 imagePullPolicy: Always
                 volumeMounts:
                 - mountPath: /tmp/ansible-operator/runner
@@ -690,7 +690,7 @@ spec:
                 - name: VELERO_MTC_PLUGIN_TAG
                   value: 79d5b94ec091fe0e08854e714ca45b2a3c99a35c8415f67f238cc49eb7bd706f
                 - name: RELATED_IMAGE_OPERATOR
-                  value: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-operator-release-1-8@sha256:37176f84dd4a26ee2198dd4dd489e93a021cd6852247f28f5e4159aaf66066a3
+                  value: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-operator-release-1-8@sha256:9f0fc02eb5a16c40ed1d51fd62b90ed3dec0c4922889bd7d6da17da9ef401419
                 - name: RELATED_IMAGE_CONTROLLER
                   value: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-controller-release-1-8@sha256:7692503d0c60af88047bc213416e923024ebfadcddc020a6b125a788cc16cbb9
                 - name: RELATED_IMAGE_HOOK_RUNNER
@@ -821,6 +821,6 @@ spec:
   - name: openshift_migration_openvpn
     image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-openvpn-release-1-8@sha256:b93abd8ced2376f7d03e8cec2bc8d3d9edc90202f678286f4216fe2ce83d3fa4
   - name: openshift_migration_operator
-    image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-operator-release-1-8@sha256:37176f84dd4a26ee2198dd4dd489e93a021cd6852247f28f5e4159aaf66066a3
+    image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-operator-release-1-8@sha256:9f0fc02eb5a16c40ed1d51fd62b90ed3dec0c4922889bd7d6da17da9ef401419
   - name: openshift_migration_must_gather
     image: quay.io/redhat-user-workloads/ocp-art-tenant/rhmtc-must-gather-release-1-8@sha256:b7ee934101c645377b5889ec8e7980eac520e58077551a3887a3ac5df5a2fc8b
