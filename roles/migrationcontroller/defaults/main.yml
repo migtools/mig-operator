@@ -70,9 +70,9 @@ mig_ui_oauth_redirect_url: ""
 mig_ui_oauth_secret: ""
 mig_ui_image_fqin: "{{ lookup( 'env', 'RELATED_IMAGE_UI') }}"
 log_reader_state: absent
-mig_log_reader_image_fqin: "{{ lookup( 'env', 'RELATED_IMAGE_MIG_LOG_READER') }}"
+mig_log_reader_image_fqin: "{{ lookup( 'env', 'RELATED_IMAGE_LOG_READER') }}"
 migration_log_reader: true
-migration_registry_image_fqin: "{{ lookup( 'env', 'RELATED_IMAGE_MIGRATION_REGISTRY') }}"
+migration_registry_image_fqin: "{{ lookup( 'env', 'RELATED_IMAGE_REGISTRY') }}"
 migration_stage_image_fqin: "{{ lookup('env', 'RELATED_IMAGE_RSYNC_TRANSFER') }}"
 migration_rsync_privileged: false
 migration_rsync_super_privileged: false
@@ -88,6 +88,6 @@ velero_aws_secret_name: cloud-credentials
 velero_gcp_secret_name: cloud-credentials-gcp
 velero_azure_secret_name: cloud-credentials-azure
 velero_use_legacy_aws: false
-mtc_velero_plugin_fqin: "{{ lookup('env', 'RELATED_IMAGE_PLUGIN') }}"
+mtc_velero_plugin_fqin: "{{ lookup('env', 'RELATED_IMAGE_PLUGIN_FOR_MTC') }}"
 velero_requests_cpu: "100m"
 velero_state: absent
