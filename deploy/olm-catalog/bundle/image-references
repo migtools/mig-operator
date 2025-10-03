@@ -1,0 +1,45 @@
+---
+kind: ImageStream
+apiVersion: image.openshift.io/v1
+spec:
+  tags:
+  - name: openshift-migration-rhel8-operator
+    from:
+      kind: DockerImage
+      name: quay.io/konveyor/mig-operator-container:release-1.8
+  - name: openshift-migration-controller-rhel8
+    from:
+      kind: DockerImage
+      name: quay.io/konveyor/mig-controller:release-1.8
+  - name: openshift-migration-ui-rhel8
+    from:
+      kind: DockerImage
+      name: quay.io/konveyor/mig-ui:release-1.8
+  - name: openshift-migration-registry-rhel8
+    from:
+      kind: DockerImage
+      name: quay.io/konveyor/registry:release-1.8
+  - name: openshift-migration-hook-runner-rhel8
+    from:
+      kind: DockerImage
+      name: quay.io/konveyor/hook-runner:release-1.8
+  - name: openshift-migration-log-reader-rhel8
+    from:
+      kind: DockerImage
+      name: quay.io/konveyor/mig-log-reader:release-1.8
+  - name: openshift-migration-rsync-transfer-rhel8
+    from:
+      kind: DockerImage
+      name: quay.io/konveyor/rsync-transfer:release-1.8
+  - name: openshift-migration-velero-plugin-for-mtc-rhel8
+    from:
+      kind: DockerImage
+      name: quay.io/konveyor/velero-plugin-for-mtc:release-1.8
+  - name: openshift-migration-must-gather-rhel8
+    from:
+      kind: DockerImage
+      name: quay.io/konveyor/must-gather:release-1.8
+  - name: openshift-migration-openvpn-rhel8
+    from:
+      kind: DockerImage
+      name: quay.io/konveyor/openvpn:release-1.8
