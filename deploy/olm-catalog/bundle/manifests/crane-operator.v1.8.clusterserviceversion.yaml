@@ -140,20 +140,26 @@ spec:
   - mtc-operator.v1.8.8
   - mtc-operator.v1.8.9
   relatedImages:
+  - name: operator
+    image: quay.io/konveyor/mig-operator-container:release-1.8
   - name: controller
     image: quay.io/konveyor/mig-controller:release-1.8
-  - name: ui
-    image: quay.io/konveyor/mig-ui:release-1.8
-  - name: migration_registry
-    image: quay.io/konveyor/registry:release-1.8
   - name: hook_runner
     image: quay.io/konveyor/hook-runner:release-1.8
-  - name: mig_log_reader
+  - name: log_reader
     image: quay.io/konveyor/mig-log-reader:release-1.8
+  - name: openvpn
+    image: quay.io/konveyor/openvpn:release-1.8
+  - name: registry
+    image: quay.io/konveyor/registry:release-1.8
   - name: rsync_transfer
     image: quay.io/konveyor/rsync-transfer:release-1.8
-  - name: plugin
+  - name: ui
+    image: quay.io/konveyor/mig-ui:release-1.8
+  - name: plugin_for_mtc
     image: quay.io/konveyor/velero-plugin-for-mtc:release-1.8
+  - name: must_gather
+    image: quay.io/konveyor/must-gather:release-1.8
   displayName: Crane Operator
   description: |
     The Crane Operator enables installation of the application migration tool components.
@@ -672,6 +678,12 @@ spec:
                   value: quay.io/konveyor/registry:release-1.8
                 - name: RELATED_IMAGE_PLUGIN_FOR_MTC
                   value: quay.io/konveyor/velero-plugin-for-mtc:release-1.8
+                - name: RELATED_IMAGE_OPERATOR
+                  value: quay.io/konveyor/mig-operator-container:release-1.8
+                - name: RELATED_IMAGE_OPENVPN
+                  value: quay.io/konveyor/openvpn:release-1.8
+                - name: RELATED_IMAGE_MUST_GATHER
+                  value: quay.io/konveyor/must-gather:release-1.8
                 securityContext:
                   allowPrivilegeEscalation: false
               securityContext:

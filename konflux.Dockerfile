@@ -1,4 +1,3 @@
-#@follow_tag(registry.redhat.io/openshift4/ose-ansible-operator:v4.17)
 FROM registry.redhat.io/openshift4/ose-ansible-operator:v4.17
 
 WORKDIR /workspace/
