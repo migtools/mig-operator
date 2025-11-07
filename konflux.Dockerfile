@@ -14,3 +14,10 @@ USER 1001
 COPY watches.yaml ${HOME}/watches.yaml
 COPY roles ${HOME}/roles
 COPY LICENSE /licenses/
+
+LABEL \
+        "io.k8s.description"="Migration Toolkit for Containers Operator" \
+        "io.k8s.display-name"="Migration Toolkit for Containers" \
+        "io.openshift.tags"="migration" \
+        "summary"="Migration Toolkit for Containers Operator" \
+        "io.openshift.maintainer.project"="MIG"
