@@ -9,6 +9,8 @@ updates:
     replace: image/svg+xml
   - search: crane-operator
     replace: mtc-operator
+  - search: "Crane Operator"
+    replace: "Migration Toolkit for Containers Operator"
 - file: "metadata/annotations.yaml"
   update_list:
   - search: crane-operator
