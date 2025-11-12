@@ -1,7 +1,5 @@
 FROM registry.redhat.io/openshift4/ose-ansible-operator:v4.17
 
-WORKDIR /workspace/
-
 USER root
 COPY hack/build/third-party/pip3-install-dir/* /tmp/pip3-install-dir/
 RUN dnf -y erase python3-openshift && pip3 install /tmp/pip3-install-dir/* && rm -rvf /tmp/pip3-install-dir/
