@@ -11,6 +11,18 @@ metadata:
     categories: 'Modernization & Migration, OpenShift Optional'
     containerImage: quay.io/konveyor/mig-operator-container:release-1.8
     createdAt: 2019-07-25T10:21:00Z
+    features.operators.openshift.io/cnf: 'false'
+    features.operators.openshift.io/cni: 'false'
+    features.operators.openshift.io/csi: 'false'
+    features.operators.openshift.io/disconnected: 'true'
+    features.operators.openshift.io/fips-compliant: 'true'
+    features.operators.openshift.io/proxy-aware: 'false'
+    features.operators.openshift.io/tls-profiles: 'false'
+    features.operators.openshift.io/token-auth-aws: 'false'
+    features.operators.openshift.io/token-auth-azure: 'false'
+    features.operators.openshift.io/token-auth-gcp: 'false'
+    operatorframework.io/cluster-monitoring: 'true'
+    operators.openshift.io/infrastructure-features: '["Disconnected"]'
     repository: https://github.com/konveyor/mig-operator
     alm-examples: |-
       [
