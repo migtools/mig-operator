@@ -152,6 +152,7 @@ spec:
   - mtc-operator.v1.8.8
   - mtc-operator.v1.8.9
   - mtc-operator.v1.8.10
+  - mtc-operator.v1.8.11
   relatedImages:
   - name: operator
     image: quay.io/konveyor/mig-operator-container:release-1.8
