@@ -2,10 +2,10 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
-  name: crane-operator.v1.8.11
+  name: crane-operator.v1.8.12
   namespace: openshift-migration
   annotations:
-    olm.skipRange: '>=0.0.0 <1.8.11'
+    olm.skipRange: '>=0.0.0 <1.8.12'
     capabilities: Seamless Upgrades
     description: Facilitates migration of container workloads from OpenShift 3.x to OpenShift 4.x
     categories: 'Modernization & Migration, OpenShift Optional'
@@ -152,6 +152,7 @@ spec:
   - mtc-operator.v1.8.8
   - mtc-operator.v1.8.9
   - mtc-operator.v1.8.10
+  - mtc-operator.v1.8.11
   relatedImages:
   - name: operator
     image: quay.io/konveyor/mig-operator-container:release-1.8
@@ -206,7 +207,7 @@ spec:
     url: https://github.com/konveyor/mig-operator
 
   labels:
-    alm-status-descriptors: crane-operator.v1.8.11
+    alm-status-descriptors: crane-operator.v1.8.12
     alm-owner-prometheus: crane-operator
 
   selector:
@@ -705,7 +706,7 @@ spec:
               - name: runner
                 emptyDir: {}
   maturity: alpha
-  version: 1.8.11
+  version: 1.8.12
   customresourcedefinitions:
     owned:
     - name: directvolumemigrations.migration.openshift.io
