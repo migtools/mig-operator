@@ -210,7 +210,7 @@ spec:
     url: https://github.com/konveyor/mig-operator
 
   labels:
-    alm-status-descriptors: crane-operator.v1.8.13
+    alm-status-descriptors: crane-operator.v1.8.14
     alm-owner-prometheus: crane-operator
 
   selector:
@@ -709,7 +709,7 @@ spec:
               - name: runner
                 emptyDir: {}
   maturity: alpha
-  version: 1.8.13
+  version: 1.8.14
   customresourcedefinitions:
     owned:
     - name: directvolumemigrations.migration.openshift.io
