@@ -3,7 +3,7 @@ FROM registry.redhat.io/openshift4/ose-ansible-operator:v4.17
 USER root
 COPY hack/build/third-party/pip3-install-dir/* /tmp/pip3-install-dir/
 RUN dnf -y erase python3-openshift && pip3 install /tmp/pip3-install-dir/* && rm -rvf /tmp/pip3-install-dir/
-RUN dnf -y install python3-boto3 nss_wrapper && dnf clean all && rm -rf /var/cache/yum /var/cache/dnf
+RUN dnf -y install python3-boto3 nss_wrapper && dnf -y update && dnf clean all && rm -rf /var/cache/yum /var/cache/dnf
 
 RUN ln -s ${HOME}/.ansible /.ansible
 
