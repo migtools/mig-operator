@@ -2,5 +2,5 @@
 packageName: mtc-operator
 channels:
 - name: release-v1.8
-  currentCSV: mtc-operator.1.8.16
+  currentCSV: mtc-operator.1.8.17
 defaultChannel: release-v1.8
