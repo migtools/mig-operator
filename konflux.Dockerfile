@@ -1,4 +1,4 @@
-FROM registry.redhat.io/openshift4/ose-ansible-rhel9-operator:v4.17
+FROM registry.redhat.io/openshift4/ose-ansible-operator:v4.17
 
 USER root
 COPY hack/build/third-party/pip3-install-dir/* /tmp/pip3-install-dir/
